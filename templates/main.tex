@@ -27,11 +27,28 @@
 
 %\documentclass[12pt,twoside]{mitthesis}
 \usepackage{lgrind}
+
 %% These have been added at the request of the MIT Libraries, because
 %% some PDF conversions mess up the ligatures.  -LB, 1/22/2014
 \usepackage{cmap}
 \usepackage[T1]{fontenc}
 \pagestyle{plain}
+
+% for List of Acronyms
+\usepackage[acronym]{glossaries}
+\makeglossaries
+
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks = true,
+    linkcolor = blue,
+    citecolor = blue
+}
+
+%% Add these packages for APA citations
+\usepackage{apacite}
+\usepackage{natbib}
 
 %% This bit allows you to either specify only the files which you wish to
 %% process, or `all' to process all files which you \include.
@@ -50,6 +67,7 @@
 % \include{signature}
 \pagestyle{plain}
 \include{contents}
+\include{acronyms}
 \include{chap1}
 \include{chap2}
 \appendix
