@@ -28,6 +28,11 @@
 %\documentclass[12pt,twoside]{mitthesis}
 \usepackage{lgrind}
 
+%% for figures
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{{templates/images/}}
+
 %% These have been added at the request of the MIT Libraries, because
 %% some PDF conversions mess up the ligatures.  -LB, 1/22/2014
 \usepackage{cmap}
@@ -35,8 +40,9 @@
 \pagestyle{plain}
 
 % for List of Acronyms
-\usepackage[acronym]{glossaries}
-\makeglossaries
+\usepackage[acronym,toc]{glossaries}
+\makenoidxglossaries
+%\makeglossaries
 
 \usepackage{hyperref}
 \usepackage{xcolor}
@@ -58,6 +64,9 @@
 \def\all{all}
 \ifx\files\all \typeout{Including all files.} \else %\typeout{Including only \files.} \includeonly{\files} \fi
 
+%% define list of acronyms
+\include{acronyms}
+
 \begin{document}
 
 \include{cover}
@@ -67,7 +76,7 @@
 % \include{signature}
 \pagestyle{plain}
 \include{contents}
-\include{acronyms}
+\include{insertloa}
 \include{chap1}
 \include{chap2}
 \appendix
