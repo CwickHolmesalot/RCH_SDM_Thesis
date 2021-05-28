@@ -39,11 +39,11 @@
 \usepackage[T1]{fontenc}
 \pagestyle{plain}
 
-% for List of Acronyms
+%% for List of Acronyms
 \usepackage[acronym,toc]{glossaries}
 \makenoidxglossaries
-%\makeglossaries
 
+%% stylize hyperlinks
 \usepackage{hyperref}
 \usepackage{xcolor}
 \hypersetup{
@@ -52,7 +52,7 @@
     citecolor = blue
 }
 
-%% Add these packages for APA citations
+%% APA citations
 \usepackage{apacite}
 \usepackage{natbib}
 
@@ -66,6 +66,9 @@
 
 %% define list of acronyms
 \include{acronyms}
+
+%% zotero integration
+%\addbibresource{zotero}
 
 \begin{document}
 
@@ -84,4 +87,3 @@
 \include{appb}
 \include{biblio}
 \end{document}
-
