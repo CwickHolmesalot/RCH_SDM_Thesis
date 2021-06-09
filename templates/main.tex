@@ -33,6 +33,10 @@
 \usepackage{graphicx}
 \graphicspath{{templates/images/}}
 
+%% for tables
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
 %% These have been added at the request of the MIT Libraries, because
 %% some PDF conversions mess up the ligatures.  -LB, 1/22/2014
 \usepackage{cmap}
@@ -55,6 +59,52 @@
 %% APA citations
 \usepackage{apacite}
 \usepackage{natbib}
+
+\usepackage{xparse}
+\ExplSyntaxOn
+
+\makeatletter
+\NewDocumentCommand{\multicitep}{m}
+ {
+  \NAT@open
+  \mjb_multicitep:n { #1 }
+  \NAT@close
+ }
+\makeatother
+
+\seq_new:N \l_mjb_multicite_in_seq
+\seq_new:N \l_mjb_multicite_out_seq
+\seq_new:N \l_mjb_cite_seq
+
+\cs_new_protected:Npn \mjb_multicitep:n #1
+ {
+  \seq_set_split:Nnn \l_mjb_multicite_in_seq { ; } { #1 }
+  \seq_clear:N \l_mjb_multicite_out_seq
+  \seq_map_inline:Nn \l_mjb_multicite_in_seq
+   {
+    \mjb_cite_process:n { ##1 }
+   }
+  \seq_use:Nn \l_mjb_multicite_out_seq { ;~ }
+ }
+
+\cs_new_protected:Npn \mjb_cite_process:n #1
+ {
+  \seq_set_split:Nnn \l_mjb_cite_seq { , } { #1 }
+  \int_compare:nTF { \seq_count:N \l_mjb_cite_seq == 1 }
+   {
+    \seq_put_right:Nn \l_mjb_multicite_out_seq
+     { \citeauthor{#1},~\citeyear{#1} }
+   }
+   {
+    \seq_put_right:Nx \l_mjb_multicite_out_seq
+     {
+      \exp_not:N \citeauthor{\seq_item:Nn \l_mjb_cite_seq { 1 }},~
+      \exp_not:N \citeyear{\seq_item:Nn \l_mjb_cite_seq { 1 }},~
+      \seq_item:Nn \l_mjb_cite_seq { 2 }
+     }
+   }
+ }
+\ExplSyntaxOff
 
 %% This bit allows you to either specify only the files which you wish to
 %% process, or `all' to process all files which you \include.
