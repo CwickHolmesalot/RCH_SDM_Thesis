@@ -11,7 +11,7 @@ This investigation brings together a total of twenty-five (25) data sets coverin
 \label{tab:features}
 \end{table}
 
-As discussed in Section \ref{ch2:sysfund}, geothermal systems require permeability, heat, subsurface fluids, a trapping mechanism, and recharge. Following the slightly more simplified PFA assumptions of \citeauthor{bielicki_hydrogeolgic_2015} (\citeyear{bielicki_hydrogeolgic_2015}), an explorationist will want to quickly identify where heat, permeability, and fluids together define a favorable setting for a geothermal prospect. The prepared independent data inputs collectively address all three elements as noted in Table xx. Rather than defining a dependent (predicted) variable that describes a total favorability score, this thesis focuses on a proof of concept prediction for a measurable quantity addressing just the heat risk element: geothermal gradient. This choice was made because a) geothermal gradient provides a direct proxy for accessible heat content, b) gradient point data is available from suitable compilations of well measurements collected across the study area, and c) for EGS applications, the only risk element that must be naturally present is heat. Heat flow might be a reasonable alternative dependent variable, however point values for heat flow in the available well database were derived directly from geothermal gradient values. Geothermometer measurements also suggest resource temperatures, but the uncertainty in fluid pathways leading to the sample location means these values suffer from less spatial and depth certainty than geothermal gradient.
+As discussed in Section \ref{ch2:sysfund}, geothermal systems require permeability, heat, subsurface fluids, a trapping mechanism, and recharge. Following the slightly more simplified PFA assumptions of \citeauthor{bielicki_hydrogeolgic_2015} (\citeyear{bielicki_hydrogeolgic_2015}), an explorationist will want to quickly identify where heat, permeability, and fluids together define a favorable setting for a geothermal prospect. The prepared independent data inputs collectively address all three elements as noted in Table \ref{tab:features}. Rather than defining a dependent (predicted) variable that describes a total favorability score, this thesis focuses on a proof of concept prediction for a measurable quantity addressing just the heat risk element: geothermal gradient. This choice was made because a) geothermal gradient provides a direct proxy for accessible heat content, b) gradient point data is available from suitable compilations of well measurements collected across the study area, and c) for EGS applications, the only risk element that must be naturally present is heat. Heat flow might be a reasonable alternative dependent variable, however point values for heat flow in the available well database were derived directly from geothermal gradient values. Geothermometer measurements also suggest resource temperatures, but the uncertainty in fluid pathways leading to the sample location means these values suffer from less spatial and depth certainty than geothermal gradient.
 
 Regarding the remaining two risk elements: direct measurements of permeability (i.e., from downhole logs or core analysis) or fluids (e.g., flow rate from well tests) can be separately predicted using the same methods described in this study. A final favorability score, which is less straight-forward to calibrate for model validation and verification, could potentially be derived from the combined predictions as done in PFA risk assessments. This suggestion is outside of the scope of this thesis and thus appears in the list of future work opportunities (see Chapter 9).
 
@@ -202,6 +202,50 @@ Measurements of Lithium concentration were originally assembled by \citet{bielic
 \includegraphics[scale=.50]{templates/images/Figure-Lithium.png}
 \caption[Lithium concentration data layer]{Lithium concentration data layer. Units in ppm or mg/L. Black dots indicate sample locations in complete data set from \protect\citep{bielicki_hydrogeolgic_2015}}.
 \label{fig:feat_lithium}
+\end{figure}
+
+\subsubsection{Magnetic Anomaly}
+
+USGS magnetic anomaly data derived from aerial surveys \citep{bankey_digital_2002} were used in both the southwest NM PFA analysis \citep{bielicki_hydrogeolgic_2015} and cluster analysis \citep{pepin_new_2018}. After downloading the raster from the southwest NM PFA OpenEI submission \citep{kelley_geothermal_2015}, it was loaded into ArcGIS. The layer (Figure \ref{fig:feat_magnetics}) required no further processing.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{templates/images/Figure-MagneticAnomaly.png}
+\caption[Magnetic anomaly data layer]{Magnetic anomaly data layer. Units are in nanoteslas (nT). Raster originally created by \protect\citet{bielicki_hydrogeolgic_2015}.}.
+\label{fig:feat_magnetics}
+\end{figure}
+
+\subsubsection{Magnetic Anomaly Gradient}
+
+The gradient of the magnetic anomaly was calculated using the ArcGIS Slope function on the final magnetic anomaly raster. Parameters used to create the final layer (Figure \ref{fig:feat_magnetic_gradient}) include: Geodesic method, Z unit of meters, and output measurement of degrees.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{templates/images/Figure-MagneticGradient.png}
+\caption[Magnetic anomaly gradient data layer]{Magnetic anomaly gradient data layer. Units are in nT/degrees.}.
+\label{fig:feat_magnetic_gradient}
+\end{figure}
+
+\subsubsection{Quaternary Fault Density}
+
+Faults showing Quaternary displacement were digitized at the 1:24,000 scale by the New Mexico Bureau of Geology and Mineral Resources and provided by NM BGMR to \citet{bielicki_hydrogeolgic_2015} and \citet{pepin_new_2018} in support of their investigations. The associated polyline features were downloaded from the PFA OpenEI submission \citep{kelley_geothermal_2015} and loaded into ArcGIS. As discussed for the Drainage density layer, a Python-based kernel density workflow using extracted points from these polylines failed to produce satisfactory results. Instead, the ArcGIS \textit{Kernel Density} function was applied to create the final layer map (Figure \ref{fig:feat_qfaults}). Selected parameters for this function include an output cell size of 0.0025 degrees and an auto-generated search radius of 0.3672.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{templates/images/Figure-QFaultDensity.png}
+\caption[Quaternary fault density data layer]{Quaternary fault density data layer. Units are in degrees/square degress. Black lines show the fault polyline data set archived by \protect\citet{bielicki_hydrogeolgic_2015}.}.
+\label{fig:feat_qfaults}
+\end{figure}
+
+\subsubsection{Silica Geothermometer Temperature}
+
+Silica concentration data from across the study area were compiled by \citet{bielicki_hydrogeolgic_2015}, and converted to reservoir temperatures using the Fournier chalcedony geothermometer relationship \citep{fournier_chemical_1977}. These data were downloaded from the PFA OpenEI submission \citep{kelley_geothermal_2015} and merged together using ArcGIS and Python to create a single dataframe of 7259 measurements, all within the broader Extent Polygon bounds to avoid surface creation edge effects within the tighter AOI. As described for the Boron concentration data layer, attempts to model Si geothermometer estimates using Gaussian Processes provided unsatisfactory results. Instead, the final layer was generated using the ArcGIS \textit{Empirical Bayes Kriging} routine. Selected parameters include: Empirical data transformation type, a maximum of 100 points in each local model, 100 simulated semivariograms with K-Bessel model type, and a standard circular search neighborhood with a radius of 1.1957 (auto-generated), minimum of 10 neighbors, and maximum of 15 neighbors. The output grid cell size was set to 0.01 degrees. All coincident data was included in the calculation, so any overlapping measurements were considered in generating the final layer (Figure \ref{fig:feat_si_temp}).
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{templates/images/Figure-SiTemp.png}
+\caption[Silica geothermometer temperature data layer]{Chalcedony geothermometer data layer. Units are in degrees C. Black dots indicate locations where silica concentration was sampled, as collected by \protect\citet{bielicki_hydrogeolgic_2015}}.
+\label{fig:feat_si_temp}
 \end{figure}
 
 \subsubsection{Water Table Depth}
