@@ -26,7 +26,7 @@ In order to experiment with a variety of machine learning methods, all input dat
 Large data sets imported into ArcGIS or Python for feature preparation required cropping to the southwest New Mexico study area. Two polygons were used for this purpose:
 
 \begin{itemize}
-\item Extent Polygon: this is a simple rectangular polygon capturing the broader southwestern NM region. It is defined by the following corner points in degrees N Latitude and degrees E Longitude: \\ (-31.3, -109.1), (31.3, -105.9), (35.4, -105.9), (31.3, -109.1)
+\item Regional Polygon: this is a simple rectangular polygon capturing the broader southwestern NM region. It is defined by the following corner points in degrees N Latitude and degrees E Longitude: \\ (-31.3, -109.1), (31.3, -105.9), (35.4, -105.9), (31.3, -109.1)
 \item \acrlong{aoi} (\acrshort{aoi}): this polygon appears in most map figures in this thesis and is the perimeter outlining the nine counties in Southwest New Mexico: Cibola, Valencia, Catron, Socorro, Grant, Sierra, Luna, Dona Ana, and Hidalgo.
 \end{itemize}
 
@@ -46,7 +46,7 @@ Large data sets imported into ArcGIS or Python for feature preparation required 
 
 \subsubsection{Average Air Temperature}
 
-The University of Oregon PRISM Climate Group hosts regularly-updated spatial data sets of climate-related observations captured from different monitoring networks, including 30-year normals that describe average monthly or annual conditions \citep{daly_physiographically_2008, prism_prism_2021}. 800 m or 4 km resolution grids can be accessed directly from the website. The 800 m resolution air temperature grid was downloaded and imported into ArcGIS, then cropped using the Extent Polygon (Figure \ref{fig:feat_airtemp}). The layer required no further processing.
+The University of Oregon PRISM Climate Group hosts regularly-updated spatial data sets of climate-related observations captured from different monitoring networks, including 30-year normals that describe average monthly or annual conditions \citep{daly_physiographically_2008, prism_prism_2021}. 800 m or 4 km resolution grids can be accessed directly from the website. The 800 m resolution air temperature grid was downloaded and imported into ArcGIS, then cropped using the Regional Polygon (Figure \ref{fig:feat_airtemp}). The layer required no further processing.
 
 \begin{figure}[!htp]
 \centering
@@ -57,7 +57,7 @@ The University of Oregon PRISM Climate Group hosts regularly-updated spatial dat
 
 \subsubsection{Average Precipitation}
 
-The University of Oregon PRISM Climate Group also compiles 30-year normals for average precipitation \citep{daly_physiographically_2008, prism_prism_2021}. The 800 m resolution precipitation grid was downloaded and imported into ArcGIS, then cropped to the Extent Polygon boundaries (Figure \ref{fig:feat_precip}). The layer required no further processing.
+The University of Oregon PRISM Climate Group also compiles 30-year normals for average precipitation \citep{daly_physiographically_2008, prism_prism_2021}. The 800 m resolution precipitation grid was downloaded and imported into ArcGIS, then cropped to the Regional Polygon boundaries (Figure \ref{fig:feat_precip}). The layer required no further processing.
 
 \begin{figure}[!htp]
 \centering
@@ -79,7 +79,7 @@ Following the procedure of \citeauthor{pepin_new_2018} (\citeyear{pepin_new_2018
 
 \subsubsection{Boron Concentration}
 
-Measurements of boron concentration were originally assembled by \citeauthor{bielicki_hydrogeolgic_2015} (\citeyear{bielicki_hydrogeolgic_2015}) from multiple sources ranging from USGS records to student dissertations. These data were downloaded from the OpenEI submission \citep{kelley_geothermal_2015} and merged together using ArcGIS and Python to create a single dataframe of 5686 measurements, all within the broader Extent Polygon bounds to avoid surface creation edge effects within the tighter AOI. The inconsistent spatial distribution of the data and sometimes significant variation among overlapping values from different measurement years created a unique challenge for making a representative GIS layer to use for analysis. An initial attempt to fit and interpolate the data using tuned Gaussian Process models created feature layers with too much local structure and little character away from the input data points. The ArcGIS \textit{Empirical Bayes Kriging} routine was selected instead due to its unique characteristics. For the final layer, EBK was applied with the Empirical data transformation type, a maximum of 100 points in each local model, 100 simulated semivariograms with K-Bessel model type, and a standard circular search neighborhood with a radius of 1.1957 (auto-generated), minimum of 10 neighbors, and maximum of 15 neighbors. The output grid cell size was set to 0.01 degrees. Of important note: the calculation option to include all coincident data was selected, so all overlapping measurements were considered in generating the final layer (Figure \ref{fig:feat_boron}).
+Measurements of boron concentration were originally assembled by \citeauthor{bielicki_hydrogeolgic_2015} (\citeyear{bielicki_hydrogeolgic_2015}) from multiple sources ranging from USGS records to student dissertations. These data were downloaded from the OpenEI submission \citep{kelley_geothermal_2015} and merged together using ArcGIS and Python to create a single dataframe of 5686 measurements, all within the broader Regional Polygon bounds to avoid surface creation edge effects within the tighter AOI. The inconsistent spatial distribution of the data and sometimes significant variation among overlapping values from different measurement years created a unique challenge for making a representative GIS layer to use for analysis. An initial attempt to fit and interpolate the data using tuned Gaussian Process models created feature layers with too much local structure and little character away from the input data points. The ArcGIS \textit{Empirical Bayes Kriging} routine was selected instead due to its unique characteristics. For the final layer, EBK was applied with the Empirical data transformation type, a maximum of 100 points in each local model, 100 simulated semivariograms with K-Bessel model type, and a standard circular search neighborhood with a radius of 1.1957 (auto-generated), minimum of 10 neighbors, and maximum of 15 neighbors. The output grid cell size was set to 0.01 degrees. Of important note: the calculation option to include all coincident data was selected, so all overlapping measurements were considered in generating the final layer (Figure \ref{fig:feat_boron}).
 
 \begin{figure}[!htp]
 \centering
@@ -112,7 +112,7 @@ Drainage polyline data comes from the \citep{bielicki_hydrogeolgic_2015} PFA Ope
 
 \subsubsection{Earthquake Density}
 
-Following the procedure outlined by \citeauthor{pepin_new_2018} (\citeyear{pepin_new_2018}), an earthquake data set for southwest New Mexico was created by combining historical earthquake catalogs for 1869-1998 \citep{sanford_earthquake_2002}, 1999-2004 \citep{sanford_earthquake_2006}, and 2005-2009 \citep{pursley_earthquake_2013} with data pulled from the USGS Earthquake catalog \citep{usgs_earthquake_2021} through to January 2021. All events were combined into a single dataframe in Python, and event duplicates were removed. The final catalog, cropped to the Extent Polygon boundary, consists of 2539 events spanning 1962-2020. This point set was loaded into a KDE Python script, which used a grid search routine to determine the best radius for a Gaussian kernel density operator. Ten-fold cross validation was employed, which splits the data into 10 subsets and then interchangeably trains on 9 and tests on one to get an average performance score. The maximum negative log likelihood indicates a best radius value of 11,600 m (Figure \ref{fig:EQ_cv}). 
+Following the procedure outlined by \citeauthor{pepin_new_2018} (\citeyear{pepin_new_2018}), an earthquake data set for southwest New Mexico was created by combining historical earthquake catalogs for 1869-1998 \citep{sanford_earthquake_2002}, 1999-2004 \citep{sanford_earthquake_2006}, and 2005-2009 \citep{pursley_earthquake_2013} with data pulled from the USGS Earthquake catalog \citep{usgs_earthquake_2021} through to January 2021. All events were combined into a single dataframe in Python, and event duplicates were removed. The final catalog, cropped to the Regional Polygon boundary, consists of 2539 events spanning 1962-2020. This point set was loaded into a KDE Python script, which used a grid search routine to determine the best radius for a Gaussian kernel density operator. Ten-fold cross validation was employed, which splits the data into 10 subsets and then interchangeably trains on 9 and tests on one to get an average performance score. The maximum negative log likelihood indicates a best radius value of 11,600 m (Figure \ref{fig:EQ_cv}). 
 
 \begin{figure}[!htp]
 \centering
@@ -121,7 +121,7 @@ Following the procedure outlined by \citeauthor{pepin_new_2018} (\citeyear{pepin
 \label{fig:EQ_cv}
 \end{figure}
 
-KDE values calculated at each fishnet point location were loaded into ArcGIS, and \textit{Kriging} was used to generate a final surface for plotting purposes. textit{Kriging} parameters included Ordinary kriging method, Spherical semivariogram model, lag size of 1e-6, and a variable search radius with 12-point requirement. The final earthquake density map (Figure \ref{fig:feat_EQ_density}) appears similar to Figure 3.10 in (Pepin, 2018). 
+KDE values calculated at each fishnet point location were loaded into ArcGIS, and \textit{Kriging} was used to generate a final surface (Figure \ref{fig:feat_EQ_density}) for plotting purposes. textit{Kriging} parameters included Ordinary kriging method, Spherical semivariogram model, lag size of 1e-6, a variable search radius with 12-point requirement, and an output cell size of 0.01.. 
 
 \begin{figure}[!htp]
 \centering
@@ -134,7 +134,7 @@ KDE values calculated at each fishnet point location were loaded into ArcGIS, an
 
 Aerial gamma-ray surveys conducted across the United States in the late 1970-1980s allowed for the construction of Potassium concentration (K, in percent K), Uranium concentration (eU, in ppm), and Thorium concentration (eTh in ppm) maps, which relate to mineralogy, lithology, and hence, stratigraphy. These measures collectively define the absorbed dose rate, which can be calculated from the following equation: \( D = 13.2 K + 5.48 eU + 2.72 eTh \) \citep{duval_terrestrial_2005}.
 
-The absorbed dose rate for West Central USA was downloaded from the USGS Open-File Report 2005-1413 site \citep{duval_terrestrial_2005}, loaded into ArcGIS, and cropped to the Extent Polygon bounds. A data gap in the vicinity of the White Sands Missile Range to the southeast of the study area necessitated layer interpolation using kriging. Grid values were extracted using the fishnet of points, then passed through the ArcGIS \textit{Kriging} function for the final layer (Figure \ref{fig:feat_gamma}) with the following parameters: Ordinary kriging method, Spherical semivariogram model, auto-generated lag size of 0.096969, and a variable search radius with a 4-point requirement.
+The absorbed dose rate for West Central USA was downloaded from the USGS Open-File Report 2005-1413 site \citep{duval_terrestrial_2005}, loaded into ArcGIS, and cropped to the Regional Polygon bounds. A data gap in the vicinity of the White Sands Missile Range to the southeast of the study area necessitated layer interpolation using kriging. Grid values were extracted using the fishnet of points, then passed through the ArcGIS \textit{Kriging} function for the final layer (Figure \ref{fig:feat_gamma}) with the following parameters: Ordinary kriging method, Spherical semivariogram model, auto-generated lag size of 0.096969, and a variable search radius with a 4-point requirement.
 
 \begin{figure}[!htp]
 \centering
@@ -151,7 +151,7 @@ GPS stations worldwide record local movements in the Earth’s crust. These move
 \left\lVert\dot{\epsilon}\right\rVert = \sqrt{\dot{\varepsilon}_{\phi\phi}^2+\dot{\varepsilon}_{\theta\theta}^2+2\dot{\varepsilon}_{\phi\theta}^2}
 \end{equation}
 
-Due to the size of the model file and complexity of this calculation, the data was first loaded into Python, cropped to the Extent Polygon bounds, and the strain rate magnitude was calculated for each point. These data were then loaded into ArcGIS and gridded using the \textit{Spline} function for a smooth interpolation of the coarser GSRM grid. The final layer (Figure \ref{fig:feat_strain}) was created using \textit{Spline} parameters: Regularized type, weight of 0.1, a 4-point requirement, and an output cell size of 0.025 degrees.
+Due to the size of the model file and complexity of this calculation, the data was first loaded into Python, cropped to the Regional Polygon bounds, and the strain rate magnitude was calculated for each point. These data were then loaded into ArcGIS and gridded using the \textit{Spline} function for a smooth interpolation of the coarser GSRM grid. The final layer (Figure \ref{fig:feat_strain}) was created using \textit{Spline} parameters: Regularized type, weight of 0.1, a 4-point requirement, and an output cell size of 0.025 degrees.
 
 \begin{figure}[!htp]
 \centering
@@ -184,7 +184,7 @@ Gradient of the gravity anomaly was calculated using the ArcGIS Slope function o
 
 \subsubsection{Heat Flow}
 
-The recent $0.5^\circ$ x$0.5^\circ$ resolution heat flow model from \citet{lucazeau_analysis_2019} offers coarse coverage across the southwest NM AOI. The model output was downloaded from the supporting information section of the publication page \citep{lucazeau_analysis_2019}, loaded into ArcGIS, and cropped to the Extent Polygon boundaries. After testing several gridding algorithms for a smooth representation of this sparse data, the ArcGIS \textit{Topo to Raster} function produced the best results. The final layer (Figure \ref{fig:feat_heatflow}) parameters include: tolerance 1 of 2.5, tolerance 2 of 100, drainage enforcement set to Enforce, Contour selected for primary type of input data, and output cell size of 0.01. 
+The recent $0.5^\circ$ x$0.5^\circ$ resolution heat flow model from \citet{lucazeau_analysis_2019} offers coarse coverage across the southwest NM AOI. The model output was downloaded from the supporting information section of the publication page \citep{lucazeau_analysis_2019}, loaded into ArcGIS, and cropped to the Regional Polygon boundaries. After testing several gridding algorithms for a smooth representation of this sparse data, the ArcGIS \textit{Topo to Raster} function produced the best results. The final layer (Figure \ref{fig:feat_heatflow}) parameters include: tolerance 1 of 2.5, tolerance 2 of 100, drainage enforcement set to Enforce, Contour selected for primary type of input data, and output cell size of 0.01. 
 
 \begin{figure}[!htp]
 \centering
@@ -195,7 +195,7 @@ The recent $0.5^\circ$ x$0.5^\circ$ resolution heat flow model from \citet{lucaz
 
 \subsubsection{Lithium Concentration}
 
-Measurements of Lithium concentration were originally assembled by \citet{bielicki_hydrogeolgic_2015} from several sources ranging from USGS records to student dissertations. These data were downloaded from the OpenEI submission \citep{kelley_geothermal_2015} and merged together using ArcGIS and Python to create a single dataframe of 3595 measurements, all within the broader Extent Polygon bounds to avoid surface creation edge effects within the tighter AOI. As described for the Boron concentration data layer, attempts to model Lithium concentration using Gaussian Processes provided unsatisfactory results. Instead, the final layer was generated using the ArcGIS \textit{Empirical Bayes Kriging} routine. Selected parameters include: Empirical data transformation type, a maximum of 100 points in each local model, 100 simulated semivariograms with K-Bessel model type, and a standard circular search neighborhood with a radius of 1.1957 (auto-generated), minimum of 10 neighbors, and maximum of 15 neighbors. The output grid cell size was set to 0.01 degrees. All coincident data was included in the calculation, so any overlapping measurements were considered in generating the final layer (Figure \ref{fig:feat_lithium}).
+Measurements of Lithium concentration were originally assembled by \citet{bielicki_hydrogeolgic_2015} from several sources ranging from USGS records to student dissertations. These data were downloaded from the OpenEI submission \citep{kelley_geothermal_2015} and merged together using ArcGIS and Python to create a single dataframe of 3595 measurements, all within the broader Regional Polygon bounds to avoid surface creation edge effects within the tighter AOI. As described for the Boron concentration data layer, attempts to model Lithium concentration using Gaussian Processes provided unsatisfactory results. Instead, the final layer was generated using the ArcGIS \textit{Empirical Bayes Kriging} routine. Selected parameters include: Empirical data transformation type, a maximum of 100 points in each local model, 100 simulated semivariograms with K-Bessel model type, and a standard circular search neighborhood with a radius of 1.1957 (auto-generated), minimum of 10 neighbors, and maximum of 15 neighbors. The output grid cell size was set to 0.01 degrees. All coincident data was included in the calculation, so any overlapping measurements were considered in generating the final layer (Figure \ref{fig:feat_lithium}).
 
 \begin{figure}[!htp]
 \centering
@@ -233,19 +233,61 @@ Faults showing Quaternary displacement were digitized at the 1:24,000 scale by t
 \begin{figure}[!htp]
 \centering
 \includegraphics[scale=.50]{templates/images/Figure-QFaultDensity.png}
-\caption[Quaternary fault density data layer]{Quaternary fault density data layer. Units are in degrees/square degress. Black lines show the fault polyline data set archived by \protect\citet{bielicki_hydrogeolgic_2015}.}.
+\caption[Quaternary fault density data layer]{Quaternary fault density data layer. Units are in degrees/square degrees. Black lines show the fault polyline data set archived by \protect\citet{bielicki_hydrogeolgic_2015}.}.
 \label{fig:feat_qfaults}
 \end{figure}
 
 \subsubsection{Silica Geothermometer Temperature}
 
-Silica concentration data from across the study area were compiled by \citet{bielicki_hydrogeolgic_2015}, and converted to reservoir temperatures using the Fournier chalcedony geothermometer relationship \citep{fournier_chemical_1977}. These data were downloaded from the PFA OpenEI submission \citep{kelley_geothermal_2015} and merged together using ArcGIS and Python to create a single dataframe of 7259 measurements, all within the broader Extent Polygon bounds to avoid surface creation edge effects within the tighter AOI. As described for the Boron concentration data layer, attempts to model Si geothermometer estimates using Gaussian Processes provided unsatisfactory results. Instead, the final layer was generated using the ArcGIS \textit{Empirical Bayes Kriging} routine. Selected parameters include: Empirical data transformation type, a maximum of 100 points in each local model, 100 simulated semivariograms with K-Bessel model type, and a standard circular search neighborhood with a radius of 1.1957 (auto-generated), minimum of 10 neighbors, and maximum of 15 neighbors. The output grid cell size was set to 0.01 degrees. All coincident data was included in the calculation, so any overlapping measurements were considered in generating the final layer (Figure \ref{fig:feat_si_temp}).
+Silica concentration data from across the study area were compiled by \citet{bielicki_hydrogeolgic_2015}, and converted to reservoir temperatures using the Fournier chalcedony geothermometer relationship \citep{fournier_chemical_1977}. These data were downloaded from the PFA OpenEI submission \citep{kelley_geothermal_2015} and merged together using ArcGIS and Python to create a single dataframe of 7259 measurements, all within the broader Regional Polygon bounds to avoid surface creation edge effects within the tighter AOI. As described for the Boron concentration data layer, attempts to model Si geothermometer estimates using Gaussian Processes provided unsatisfactory results. Instead, the final layer was generated using the ArcGIS \textit{Empirical Bayes Kriging} routine. Selected parameters include: Empirical data transformation type, a maximum of 100 points in each local model, 100 simulated semivariograms with K-Bessel model type, and a standard circular search neighborhood with a radius of 1.1957 (auto-generated), minimum of 10 neighbors, and maximum of 15 neighbors. The output grid cell size was set to 0.01 degrees. All coincident data was included in the calculation, so any overlapping measurements were considered in generating the final layer (Figure \ref{fig:feat_si_temp}).
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[scale=.50]{templates/images/Figure-SiTemp.png}
 \caption[Silica geothermometer temperature data layer]{Chalcedony geothermometer data layer. Units are in degrees C. Black dots indicate locations where silica concentration was sampled, as collected by \protect\citet{bielicki_hydrogeolgic_2015}}.
 \label{fig:feat_si_temp}
+\end{figure}
+
+\subsubsection{Spring Density}
+
+The locations of springs across the study area were downloaded from the USGS National Water Information System \citep{usgs_national_2021}. A total of 2565 springs were recorded to be present within the geographic bounds of the Regional Polygon. As with the Earthquake density layer, the point set was loaded into a KDE Python script, which used a grid search routine to determine the best radius for a Gaussian kernel density operator. Ten-fold cross validation identified the best radius value of 31400 m (Figure \ref{fig:spring_cv}). 
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{templates/images/Figure-Springs_kde_gridsearchcv2.png}
+\caption[Spring density parameter tuning]{Cross-validation results for springs KDE. Red dashed line indicates maximum negative log likelihood value identifying the best choice for Gaussian kernel radius.}
+\label{fig:spring_cv}
+\end{figure}
+
+KDE values calculated at each fishnet point location were loaded into ArcGIS, and \textit{Kriging} was used to generate a final layer (Figure \ref{fig:feat_spring}) for plotting purposes. \textit{Kriging} parameters included Ordinary kriging method, Spherical semivariogram model, lag size of 1e-6, variable search radius with 12-point requirement, and an output cell size of 0.01. 
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{templates/images/Figure-SpringDensity.png}
+\caption[Spring density data layer]{Spring density data layer. Units in log density \((points/km^2)\). Block dots indicate spring locations.}
+\label{fig:feat_spring}
+\end{figure}
+
+\subsubsection{State Map Fault Density}
+
+Digitized state geologic map fault outlines are available for download from the USGS Energy and Environment in the Rocky Mountain Area data portal \citep{usgs_eerma_2021}, including New Mexico faults \citep{stoeser_new_2005}. This data layer was loaded into ArcGIS and, like the Quaternary fault data set, converted to a density layer using the Kernel Density operation (Figure \ref{fig:state_faults}). Selected parameters for this function include an output cell size of 0.0025 degrees and an auto-generated search radius of 0.2520.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{templates/images/Figure-StateFaultDensity.png}
+\caption[State fault density data layer]{State fault density data layer. Units are in degrees/square degrees. Dark gray lines show the fault polyline data set obtained from USGS Open-File Report 2005-1351 \protect\citep{stoeser_new_2005}}
+\label{fig:state_faults}
+\end{figure}
+
+\subsubsection{Surface Topography}
+
+The southwest NM PFA data archive \citep{kelley_geothermal_2015} includes a Digital Elevation Model layer with surface elevations at a 1 arcsec resolution. This layer was downloaded and imported into ArcGIS, however a data gap along the easternmost section of the AOI required two additional $1^\circ$x$1^\circ$ DEM tiles at the same resolution to fully complete the layer. These tiles were downloaded from the USGS The National Map website \citep{usgs_tnm_2021} and merged with the original DEM. The final layer (Figure \ref{fig:feat_dem}) required no further processing.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{templates/images/Figure-DEM.png}
+\caption[Surface topography data layer]{Surface topography data layer. Units are in meters. Layer combines the DEM raster from \citep{bielicki_hydrogeolgic_2015} with data from The National Map online \citep{usgs_tnm_2021}.}
+\label{fig:feat_dem}
 \end{figure}
 
 \subsubsection{Water Table Depth}
