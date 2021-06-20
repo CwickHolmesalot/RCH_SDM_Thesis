@@ -7,7 +7,7 @@ This investigation brings together a total of twenty-six (25) data sets covering
 \begin{table}[htp]
 \centering
 \includegraphics[scale=1]{Table-Features.png}
-\caption[Features considered in this the exploration analytics study]{List of data sets considered in this study. Data type, provider, and source location are listed. Numbered features are treated as predictor variables. 'D' indicates the dependent or response variable.}
+\caption[Southwestern New Mexico features list]{List of data sets considered in this study. Data type, provider, and source location are listed. Numbered features are treated as predictor variables. 'D' indicates the dependent or response variable.}
 \label{tab:features}
 \end{table}
 
@@ -19,7 +19,7 @@ Regarding the remaining two risk elements: direct measurements of permeability (
 
 In order to experiment with a variety of machine learning methods, all input data sets first need to be transformed into fully-complete \acrlong{gis} (\acrshort{gis}) layers such that any point on the map of the study area has a corresponding set of 25 predictor values. Steps taken to condition, process, and otherwise prepare each layer are outlined later in this chapter. As a preface, the following section reviews several key concepts and algorithms referred to in the preparation of one or more of the layers.
 
-\subsection{Data Preparation Fundamentals}
+\subsection{Fundamentals}
 
 \subsubsection{Extents}
 
@@ -30,20 +30,20 @@ The large data sets imported into ArcGIS or Python scripts for feature preparati
 \item \textbf{\acrlong{aoi} (\acrshort{aoi})}: this polygon appears in most map figures in this thesis and is the perimeter outlining nine counties in Southwest New Mexico: Cibola, Valencia, Catron, Socorro, Grant, Sierra, Luna, Dona Ana, and Hidalgo.
 \end{itemize}
 
-\subsubsection{Fishnet Subsampling}\label{ssn:fishnet}
+\subsubsection{Subsampling}\label{ssn:fishnet}
 
 Machine learning models generally treat data as a matrix of observations. The concept of a geospatial dataframe follows this paradigm, where each row represents a discrete location defined in the latitude and longitude columns, and all other columns contain feature values for that location. Since the area outlined by the study AOI covers $97,469\ km^2$, and each location is described by 25 features and 2 map coordinates, the matrix of the study area at $1\ km^2$ resolution would be of size 2,631,663 values. However, exploration typically does not require this level of granularity. Also, the time complexity of many machine learning methods does not linearly scale with the data size, e.g., the decision tree model discussed in Section \textbf{XX} has $O(m*n*log_2 (n))$ complexity where n is the number of observations and m is the number of features \citep{sani_computational_2018}. As such, a coarser resolution of $0.025^\circ$ or 2.5 km on average across the AOI was selected as a manageable subsampling interval for this study. The ArcGIS \textit{Create Fishnet} tool generated a $0.025^\circ$ x $0.025^\circ$ mesh that, when constrained to the AOI polygon, consisted of 15,137-point locations (Figure \ref{fig:fishnet}). Data preparation steps use this fishnet point set where noted in Section \ref{ch3:layers}, and final model predictions are made on these points, allowing direct comparison between different models. 
 
-\begin{figure}[!htp]
+\begin{figure}[htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-Fishnet.png}
-\caption[Fishnet point mesh]{Fishnet of points spaced $0.025^\circ$ apart across by latitude and longitude.} 
+\includegraphics[scale=.50]{templates/images/Figure-Fishnet.pdf}
+\caption[Fishnet point mesh]{Fishnet of points spaced $0.025^\circ$ apart in latitude and longitude.} 
 \label{fig:fishnet}
 \end{figure}
 
-\subsubsection{\acrlong{kde} (\acrshort{kde})}
+\subsubsection{Density Estimation}
 
-One method for converting a discrete collection of points on a 2D plane into a continuous field with values everywhere on that plane applies the concept of point density. The KDE method determines the density of points by summing across smooth functions (kernels) that get fit to each of the points, where the volume under the kernel curve is exactly 1. For the ArcGIS \textit{Kernel Density} function, the values assigned to the output raster are based on Silverman quartic kernels \citep{esri_how_2021-3,silverman_density_1986}. The kernel density tool can provide an estimate of density anywhere within the AOI, but it requires a kernel radius that sets the distance over which a point can influence the density value. If left undefined, ArcGIS defaults to an optimal radius value based on a bandwidth formula \citep{esri_how_2021-3}. Polyline data can also be fit with smooth curves using the same concept. The maximum value of the elongate curve follows the trace of the polyline, and the curve decays in value away from the line over a distance determined by the radius, which defaults to the bandwidth estimate. One difference for line density is the volume under the curve scales with line length. For more details on the ArcGIS implementation, refer to the \textit{Density toolset} documentation on \textit{Kernel Density} \citep{esri_how_2021-3}.
+One method for converting a discrete collection of points on a 2D plane into a continuous field with values everywhere on that plane applies the concept of point density. The \acrlong{kde} (\acrshort{kde}) method determines the density of points by summing across smooth functions (kernels) that get fit to each of the points, where the volume under the kernel curve is exactly 1. For the ArcGIS \textit{Kernel Density} function, the values assigned to the output raster are based on Silverman quartic kernels \citep{esri_how_2021-3,silverman_density_1986}. The kernel density tool can provide an estimate of density anywhere within the AOI, but it requires a kernel radius that sets the distance over which a point can influence the density value. If left undefined, ArcGIS defaults to an optimal radius value based on a bandwidth formula \citep{esri_how_2021-3}. Polyline data can also be fit with smooth curves using the same concept. The maximum value of the elongate curve follows the trace of the polyline, and the curve decays in value away from the line over a distance determined by the radius, which defaults to the bandwidth estimate. One difference for line density is the volume under the curve scales with line length. For more details on the ArcGIS implementation, refer to the \textit{Density toolset} documentation on \textit{Kernel Density} \citep{esri_how_2021-3}.
 
 \subsubsection{Surface Fitting}
 
@@ -65,7 +65,7 @@ The University of Oregon PRISM Climate Group maintains regularly-updated spatial
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{Figure-AvgAirTemp}
+\includegraphics[scale=.50]{templates/images/Figure-AvgAirTemp.pdf}
 \caption[Average air temperature data layer]{Average air temperature data layer. Units are in degrees Celsius. Data retrieved from the PRISM website \protect\citep{prism_prism_2021}.}
 \label{fig:feat_airtemp}
 \end{figure}
@@ -76,7 +76,7 @@ The University of Oregon PRISM Climate Group also compiles 30-year normals for p
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{Figure-AvgPrecip}
+\includegraphics[scale=.50]{templates/images/Figure-AvgPrecip.pdf}
 \caption[Average precipitation data layer]{Average precipitation data layer in 800 m resolution. Units are in millimeters. Data retrieved from the PRISM website \protect\citep{prism_prism_2021}.}
 \label{fig:feat_precip}
 \end{figure}
@@ -85,9 +85,9 @@ The University of Oregon PRISM Climate Group also compiles 30-year normals for p
 
 Following the procedure of \citet{pepin_new_2018}, the basement elevation raster generated by \citet{bielicki_hydrogeolgic_2015} was downloaded, imported into ArcGIS, and processed to calculate depths. Specifically, a unit conversion from feet to meters was applied. Then, values were extracted on the point fishnet (see \ref{ssn:fishnet}), which highlighted missing data patches in the data. The ArcGIS \textit{Kriging} function interpolated values across these patches using a Spherical semivariogram, lag size of 0.0970 automatically determined by ArcGIS, and a variable search radius with a 4-point requirement. Basement depths were then calculated by subtracting the interpolated elevation layer from the Surface Topography (DEM) layer. However, the higher resolution of the DEM layer caused an imprint of detailed surface morphologies to appear on the calculated basement depth layer. To correct for this, the DEM layer was low-pass filtered using the ArcGIS \textit{Filter} method, which averages a 3x3 neighborhood around each point in the data set. The final basement elevation layer (Figure \ref{fig:feat_basementdepth}) was generated from the difference between the filtered DEM and the kriged basement depth layers.
 
-\begin{figure}[h!]
+\begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{Figure-BasementDepth}
+\includegraphics[scale=.50]{templates/images/Figure-BasementDepth.pdf}
 \caption[Basement depth data layer]{Basement depth data layer. Units are in meters. Layer based on basement elevation raster from \protect\citep{bielicki_hydrogeolgic_2015}.}
 \label{fig:feat_basementdepth}
 \end{figure}
@@ -98,7 +98,7 @@ Measurements of boron concentration were originally assembled by \citet{bielicki
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{Figure-Boron}
+\includegraphics[scale=.50]{templates/images/Figure-Boron.pdf}
 \caption[Boron concentration data layer]{Boron concentration data layer. Units are in ppm or mg/L. Black dots indicate sample locations in complete data set from \protect\citep{bielicki_hydrogeolgic_2015}.}
 \label{fig:feat_boron}
 \end{figure}
@@ -109,7 +109,7 @@ In the absence of a more recent seismic study constraining variations in crustal
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{Figure-CrustalThickness}
+\includegraphics[scale=.50]{templates/images/Figure-CrustalThickness.pdf}
 \caption[Crustal thickness data layer]{Crustal thickness data layer. Units are in kilometers. Black lines refer to contours digitized from \protect\citep{keller_comparative_1991}.}
 \label{fig:feat_crust}
 \end{figure}
@@ -120,7 +120,7 @@ Drainage polyline data comes from the \citet{bielicki_hydrogeolgic_2015} PFA Ope
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{Figure-Drainage}
+\includegraphics[scale=.50]{templates/images/Figure-DrainageDensity.pdf}
 \caption[Drainage density data layer]{Drainage density data layer. Units are in degrees/degrees$^2$. Blue lines show the drainage polyline data set from \protect\citep{bielicki_hydrogeolgic_2015}.}
 \label{fig:feat_drainage}
 \end{figure}
@@ -133,22 +133,14 @@ Drainage polyline data comes from the \citet{bielicki_hydrogeolgic_2015} PFA Ope
 \singlespacing
 \caption[Earthquake density parameter tuning]{Cross-validation results for earthquake KDE. Red dashed line indicates maximum negative log likelihood value identifying the best kernel radius.}
 \label{fig:EQ_cv}
-%%\captionsetup[figure]{skip=10pt}
 \end{wrapfigure}
 Following the procedure outlined by \citet{pepin_new_2018}, an earthquake data set for southwest New Mexico was created by combining historical earthquake catalogs for 1869-1998 \citep{sanford_earthquake_2002}, 1999-2004 \citep{sanford_earthquake_2006}, and 2005-2009 \citep{pursley_earthquake_2013} with data pulled from the USGS Earthquake catalog \citep{usgs_earthquake_2021} through to January 2021. All events were combined into a single dataframe in Python, and event duplicates were removed. The final catalog, cropped to the Regional Polygon boundary, consists of 2,539 events spanning 1962-2020. This point set was loaded into a KDE Python script, which used a grid search to determine the best radius for the \textit{sklearn.neighbors.KernelDensity} routine \citep{pedregosa_scikit-learn_2011}. Ten-fold cross validation was employed, which splits the data into 10 subsets and then interchangeably trains on 9 and tests on one to get an average performance score. The maximum negative log likelihood indicates a best radius value of 11,600 m (Figure \ref{fig:EQ_cv}). 
-
-%%\begin{figure}[!htp]
-%%\centering
-%%\includegraphics[scale=.60]{templates/images/Figure-Earthquake_kde_gridsearchcv_result.png}
-%%\caption[Earthquake density parameter tuning]{Cross-validation results for earthquake KDE. Red dashed line indicates maximum negative log likelihood value identifying the best choice for kernel radius.}
-%%\label{fig:EQ_cv}
-%%\end{figure}
 
 KDE values calculated at each fishnet point location were loaded into ArcGIS, and the \textit{Kriging} function created a final surface for plotting purposes (Figure \ref{fig:feat_EQ_density}). \textit{Kriging} parameters included: spherical semivariogram model, lag size of 1e-6, variable search radius with 12-point requirement, and output cell size of 0.01.
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{Figure-EarthquakeDensity}
+\includegraphics[scale=.50]{templates/images/Figure-EarthquakeDensity.pdf}
 \caption[Earthquake density data layer]{Earthquake density data layer. Units are in log(points/km$^2$). Black dots indicate earthquake locations.}
 \label{fig:feat_EQ_density}
 \end{figure}
@@ -161,7 +153,7 @@ The absorbed dose rate for West Central USA was downloaded from the USGS Open-Fi
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-AbsorbedDoseRate.png}
+\includegraphics[scale=.50]{templates/images/Figure-AbsorbedDose.pdf}
 \caption[Absorbed dose rate data layer]{Absorbed dose rate data layer. Units are in nanoGrays/hour (nGy/hr). Original data from USGS Open-File Report 2005-1413 \protect\citep{duval_terrestrial_2005}}.
 \label{fig:feat_gamma}
 \end{figure}
@@ -178,8 +170,8 @@ Due to the size of the model file and complexity of this calculation, the data w
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-StrainRate.png}
-\caption[Geodetic strain rate data layer]{Geodetic strain rate data layer. Units are in $10^-9 m/(m* yr)$. Layer is based on data from \protect\citep{kreemer_geodetic_2014}}.
+\includegraphics[scale=.50]{templates/images/Figure-StrainRate.pdf}
+\caption[Geodetic strain rate data layer]{Geodetic strain rate data layer. Units are in $10^-9$m/(m*yr). Layer is based on data from \protect\citep{kreemer_geodetic_2014}}.
 \label{fig:feat_strain}
 \end{figure}
 
@@ -189,7 +181,7 @@ Terrain-corrected gravity anomaly data available from the University of Texas El
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-GravityAnomaly.png}
+\includegraphics[scale=.50]{templates/images/Figure-GravityAnomaly.pdf}
 \caption[Gravity anomaly data layer]{Gravity anomaly data layer. Units are in milligals (mGal). Raster originally created by \protect\citet{bielicki_hydrogeolgic_2015}.}.
 \label{fig:feat_gravity}
 \end{figure}
@@ -200,7 +192,7 @@ Gradient of the gravity anomaly was calculated using the ArcGIS \textit{Slope} f
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-GravityGradient.png}
+\includegraphics[scale=.50]{templates/images/Figure-GravityGradient.pdf}
 \caption[Gravity anomaly gradient data layer]{Gravity anomaly gradient data layer. Units are in mGal/degrees.}.
 \label{fig:feat_gravity_gradient}
 \end{figure}
@@ -211,7 +203,7 @@ The recent $0.5^\circ$ x$0.5^\circ$ resolution heat flow model from \citet{lucaz
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-HeatFlow.png}
+\includegraphics[scale=.50]{templates/images/Figure-HeatFlow.pdf}
 \caption[Heat flow data layer]{Heat flow data layer. Units are in W/m-K. Original data from \protect\citep{lucazeau_analysis_2019}.}.
 \label{fig:feat_heatflow}
 \end{figure}
@@ -222,7 +214,7 @@ Measurements of Lithium concentration were originally assembled by \citet{bielic
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-Lithium.png}
+\includegraphics[scale=.50]{templates/images/Figure-Lithium.pdf}
 \caption[Lithium concentration data layer]{Lithium concentration data layer. Units are in ppm or mg/L. Black dots mark sample locations in the complete data set from \protect\citep{bielicki_hydrogeolgic_2015}}.
 \label{fig:feat_lithium}
 \end{figure}
@@ -233,7 +225,7 @@ USGS magnetic anomaly data derived from aerial surveys \citep{bankey_digital_200
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-MagneticAnomaly.png}
+\includegraphics[scale=.50]{templates/images/Figure-MagneticAnomaly.pdf}
 \caption[Magnetic anomaly data layer]{Magnetic anomaly data layer. Units are in nanoteslas (nT). Raster originally created by \protect\citet{bielicki_hydrogeolgic_2015}.}.
 \label{fig:feat_magnetics}
 \end{figure}
@@ -244,7 +236,7 @@ The gradient of the magnetic anomaly was calculated using the ArcGIS \textit{Slo
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-MagneticGradient.png}
+\includegraphics[scale=.50]{templates/images/Figure-MagneticGradient.pdf}
 \caption[Magnetic anomaly gradient data layer]{Magnetic anomaly gradient data layer. Units are in nT/degrees.}.
 \label{fig:feat_magnetic_gradient}
 \end{figure}
@@ -255,7 +247,7 @@ Faults showing Quaternary displacement were digitized at the 1:24,000 scale by t
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-QFaultDensity.png}
+\includegraphics[scale=.50]{templates/images/Figure-QFaultDensity.pdf}
 \caption[Quaternary fault density data layer]{Quaternary fault density data layer. Units are in degrees/degrees$^2$. Black lines show the fault polyline data set archived by \protect\citet{bielicki_hydrogeolgic_2015}.}.
 \label{fig:feat_qfaults}
 \end{figure}
@@ -266,7 +258,7 @@ Silica concentration data from across the study area were compiled by \citet{bie
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-SiTemp.png}
+\includegraphics[scale=.50]{templates/images/Figure-SiTemp.pdf}
 \caption[Silica geothermometer temperature data layer]{Chalcedony geothermometer data layer. Units are in degrees Celsius. Black dots indicate locations where silica concentration was sampled, as collected by \protect\citet{bielicki_hydrogeolgic_2015}}.
 \label{fig:feat_si_temp}
 \end{figure}
@@ -287,7 +279,7 @@ KDE values calculated at each fishnet point location were loaded into ArcGIS, an
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-SpringDensity.png}
+\includegraphics[scale=.50]{templates/images/Figure-SpringDensity.pdf}
 \caption[Spring density data layer]{Spring density data layer. Units are in log(points/km$^2$). Black dots indicate spring locations.}
 \label{fig:feat_spring}
 \end{figure}
@@ -298,7 +290,7 @@ Digitized state geologic map fault outlines are available for download from the 
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-StateFaultDensity.png}
+\includegraphics[scale=.50]{templates/images/Figure-StateFaultDensity.pdf}
 \caption[State fault density data layer]{State fault density data layer. Units are in degrees/degrees$^2$. Dark gray lines trace the fault polyline data set obtained from USGS Open-File Report 2005-1351 \protect\citep{stoeser_new_2005}}
 \label{fig:state_faults}
 \end{figure}
@@ -309,7 +301,7 @@ The southwest NM PFA data archive \citep{kelley_geothermal_2015} includes a \acr
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-DEM.png}
+\includegraphics[scale=.50]{templates/images/Figure-DEM.pdf}
 \caption[Surface topography data layer]{Surface topography data layer. Units are in meters. Layer combines the DEM raster from \citep{bielicki_hydrogeolgic_2015} with data from The National Map online \citep{usgs_tnm_2021}.}
 \label{fig:feat_dem}
 \end{figure}
@@ -320,7 +312,7 @@ Surface elevation gradient was calculated using the ArcGIS \textit{Slope} functi
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-DEM-Gradient.png}
+\includegraphics[scale=.50]{templates/images/Figure-DEMGradient.pdf}
 \caption[Topographic gradient data layer]{Topographic gradient data layer. Units are in meters/degrees.}
 \label{fig:feat_dem_gradient}
 \end{figure}
@@ -331,7 +323,7 @@ The USGS Energy and Environment in the Rocky Mountain Area data portal \citep{us
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-DikeDensity.png}
+\includegraphics[scale=.50]{templates/images/Figure-DikeDensity.pdf}
 \caption[Volcanic dike data layer]{Volcanic dike density data layer. Units are in degrees/degrees$^2$. Black lines trace the dike polyline data set obtained from USGS Open-File Report 2005-1351 \protect\citep{stoeser_new_2005-1}.}
 \label{fig:feat_dikes}
 \end{figure}
@@ -352,7 +344,7 @@ KDE values calculated at each fishnet point location were loaded into ArcGIS, an
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-VentDensity.png}
+\includegraphics[scale=.50]{templates/images/Figure-VentDensity.pdf}
 \caption[Volcanic vent data layer]{Volcanic vent density data layer. Units are in log(points/km$^2$). Black dots indicate vent locations from \protect\citep{nmbgmr_nmbgmr_2021}}
 \label{fig:feat_vents}
 \end{figure}
@@ -363,7 +355,7 @@ KDE values calculated at each fishnet point location were loaded into ArcGIS, an
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{Figure-WTDepth}
+\includegraphics[scale=.50]{templates/images/Figure-WTDepth.pdf}
 \caption[Water table depth data layer]{Water table depth data layer. Units are in feet. Adapted from raster created by \protect\citep{bielicki_hydrogeolgic_2015}.}
 \label{fig:feat_wtdepth}
 \end{figure}
@@ -374,7 +366,7 @@ A pre-calculated grid for the water table gradient is among the layers included 
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-WTGradient.png}
+\includegraphics[scale=.50]{templates/images/Figure-WTGradient.pdf}
 \caption[Water table gradient data layer]{Water table gradient data layer. Units are in feet/degrees. Based on raster from \protect\citep{bielicki_hydrogeolgic_2015}.}
 \label{fig:feat_wt_gradient}
 \end{figure}
@@ -385,7 +377,7 @@ The response variable for this analysis comes from observations stored in the SM
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-GeothermGrad_OrigWells.png}
+\includegraphics[scale=.50]{templates/images/Figure-GeothermalGrad_OrigWells.pdf}
 \caption[Geothermal gradient data layer]{Geothermal gradient observations from well data. Units are in degrees Celsius/km. Data retrieved from the SMU NGDS portal \protect\citep{smu_geothermal_2021}}
 \label{fig:feat_geotherm_gradient}
 \end{figure}
@@ -432,7 +424,7 @@ Histograms offer insights into the data distribution for the predictor variables
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.3]{templates/images/Figure-Unscaled_Histograms.png}
+\includegraphics[scale=.35]{templates/images/Figure-Unscaled_Histograms.png}
 \caption[Unscaled FDS histograms]{Histograms of the 25 features using 50 bins and the FDS. No scaling or transformations were applied to the data.}
 \label{fig:unscaled_hists}
 \end{figure}
@@ -469,7 +461,7 @@ Scikit-learn supports Yeo-Johnson through the \textit{PowerTransformer} preproce
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.3]{templates/images/Figure-Scaled_Histograms.png}
+\includegraphics[scale=.35]{templates/images/Figure-Scaled_Histograms.png}
 \caption[Scaled FDS histograms]{Histograms of the 25 features after standard scaling and Yeo-Johnson transformation of the FDS. Plots use 50 bins.}
 \label{fig:scaled_hist}
 \end{figure}
@@ -494,7 +486,82 @@ When $r$ is close to zero, no measurable covariance takes place between the two 
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.27]{templates/images/Figure-Scaled_Correlation_Matrix.png}
+\includegraphics[scale=.24]{templates/images/Figure-Scaled_Correlation_Matrix.png}
 \caption[Feature correlation matrix]{Correlation matrix with Pearson correlation scores for each feature pair based on the scaled and transformed version of the FDS.}
 \label{fig:corr_matrix}
 \end{figure}
+
+Focusing on the related Earth systems, the logic behind these relationships makes sense. High surface elevations recorded in the DEM layer will have correspondingly lower average air temperatures -- hence snow caps appearing on mountains. In addition, if the crust is assumed to be in isostatic equilibrium like an iceberg, topographic highs will be supported by thick roots and DEM will directly covary with crustal thickness. And since crustal densities are less than those of the underlying mantle, displacement of upper mantle by crustal roots (high crustal thickness) results in a lower average density and negative gravity anomaly values. The reverse is true as well; thinner crust will correspondingly tie to positive gravity anomaly values.  
+
+Of these variables, only Air Temperature and DEM have a correlation value over 0.9. In fact, a 0.97 r-value suggests Air Temperature and DEM are nearly interchangeable in the value of information they provide to a predictive model. Since air temperature does not directly relate to subsurface characteristics except for the thermal conditions at zero depth, Average Air Temperature can be removed from the main set of predictors to reduce overall collinearity in the data set. Crustal Thickness and Gravity Anomaly both similarly show non-ideal r-values, but feature ranking while modeling will provide another opportunity to consider which of them might need to be dropped.
+
+\subsubsection{Class Definition}
+
+Geothermal gradient can be treated as a continuous variable and predicted directly using regression methods. Alternatively, binning the geothermal gradient into discrete ranges changes the approach into a classification problem. In the context of exploration, geospatial classifications have a direct corollary in PFA favorability mapping and other simplified displays of complex risk. Furthermore, regression model results provide exact geothermal gradient estimates, which could be easily mistaken for certainty in a largely under-constrained problem. The binning approach is adopted in this thesis, largely based on the work of previous researchers.
+
+\begin{wraptable}{R}{0.4\linewidth}
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Gradient Range} & \textbf{Class} \\ \hline
+{[}\;0$^\circ$C/km, 30$^\circ$C/km)     & 0                    \\ \hline
+{[}\;30$^\circ$C/km, 40$^\circ$C/km)    & 1                    \\ \hline
+{[}\;40$^\circ$C/km, 60$^\circ$C/km)    & 2                    \\ \hline
+{[}\;60$^\circ$C/km, 999$^\circ$C/km)   & 3                    \\ \hline
+\end{tabular}
+\singlespacing
+\caption[Geothermal gradient classes]{Geothermal gradient ranges and assigned class values. Ranges are left-inclusive.}
+\label{tab:geothermal_gradient_classes}
+\end{wraptable}
+
+The \textit{Geothermal Gradient Map of the Conterminous United States} published in 1991 separates geothermal gradient into five 15 $^\circ$C/km bins that end with 60-75+ $^\circ$C/km \citep{lanl_geothermal_1991}. \citet{armstead_heat_1987} instead defined non-thermal gradients as 20-25 $^\circ$C/km, thermal gradients as $\leq$38 $^\circ$C/km, and hydrothermal gradients as 60-80 $^\circ$C/km on average. \citet{tester_economic_1990} reframed this model with representative values for three EGS grades: high = 80 $^\circ$C/km, mid = 50 $^\circ$C/km, and low = 30 $^\circ$C/km. In a later iteration, \citet{herzog_economic_1997} reasserted ranges for EGS resources: high-grade for >60 $^\circ$C/km, mid-grade for 40-60 $^\circ$C/km, and low-grade for <40 $^\circ$C/km. This thesis extends the Herzog model by adding a non-thermal range as <30 $^\circ$C/km, recognizing the average geothermal gradient ranges from 25-30 $^\circ$C/km and anything below that would be ill-suited for geothermal exploration and development (Table \ref{tab:geothermal_gradient_classes}).
+
+Preparation of well data sets WDS, WDS4, and WDS8 first involved removing records with NaN values or negative geothermal gradients. The remaining records were split into the gradient categories in Table \ref{tab:geothermal_gradient_classes}. Distributions of class values for all data sets are shown in Table \ref{tab:data_set_class_count}. For FDS, the class break-down is based on the extrapolated \citet{bielicki_hydrogeolgic_2015} geothermal gradient layer (Figure \ref{fig:feat_pfa_geotherm_gradient}) sampled using the point fishnet (Figure \ref{fig:fishnet}). Note that class imbalance exists in all data sets; mid-grade resource values dominate in the FDS, but the well data sets show a bias toward high-grade resource examples with few non-thermal examples. This is a common conundrum when using well data for characterization and analysis; drilling campaigns tend to target areas to drill based on chance of success rather than drilling at random, so low-side under-representation tends to be ubiquitous. The topic of class imbalance is discussed again in \textbf{Section XX}.  
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{}        & \textbf{FDS} & \textbf{WDS} & \textbf{WDS4} & \textbf{WDS8} \\ \hline
+\textbf{Class 0} & 2,394        & 20           & 101           & 184           \\ \hline
+\textbf{Class 1} & 4,432        & 99           & 499           & 905           \\ \hline
+\textbf{Class 2} & 6,243        & 232          & 1,144         & 2029          \\ \hline
+\textbf{Class 3} & 1,938        & 245          & 1,229         & 2226          \\ \hline
+\textbf{Total}   & 15,007       & 596          & 2,973         & 5,344         \\ \hline
+\end{tabular}
+\caption[Data set class distribution]{Distribution of geothermal gradient classes for each data set.}
+\label{tab:data_set_class_count}
+\end{table}
+
+\subsubsection{Stratified Sampling}
+
+Supervised machine learning models determine the attributes of a predictive model based on the input data provided during training. In approximating the target function, i.e., the response variable, the models seek to minimize an objective function as much as possible. The pitfall here lies in the representativeness of the training data set; if a model exactly matches the input data, it may not generalize well to other unseen observations. This would be a high variance model, meaning the model predictions are strongly coupled to the characteristics of the training data. Variance trades off with model bias, which includes simplifying assumptions on the form of the target function. The bias-variance trade-off is a core concept in machine learning \citep[~p. 33-36]{james_introduction_2013} and drives many of the model decisions made within this thesis.
+
+One method of reining in the high variance overfitting problem involves splitting the input data set into training and testing subsets. Model fitting uses the training set, while model evaluation relies on the test set. An additional split of the testing subset into separate validation and testing sets allows a modeler to validate model parameter choices with validation data not seen during model training, but then conduct a final model evaluation using completely unseen test data \citep[~p. 222]{hastie_elements_2009}. Creating such firm boundaries between seen and unseen data helps prevent the issue of data leakage.  Fundamentally, if a model trains or is tuned on data used to evaluate its performance, that evaluation no long reflects real world predictive ability because information from the evaluation data has already “leaked” into the model \citep{kaufman_leakage_2012}. When data leakage occurs, model performance after deployment will likely not match that seen during testing. In other words, it won’t be as good a model as the modeler thinks it is.
+
+For classification problems, randomly splitting input data set into 3 subsets will violate the balance between class proportions in the original input data. Luckily, sampling techniques exist that preserve the relative fractions of each class in the derivative subsets. Scikit-learn provides the \textit{StratifiedShuffleSplit} method for randomly sampling from each class subgroup to generate training, validation, and test sets that look like one another and the original complete data set \citep{scikit-learn_sklearnmodel_selectionstratifiedshufflesplit_2021}. The FDS, WDS, WDS4, and WDS8 data sets were each partitioned into 70\% training, 15\% validation, 15\% testing using this method. Table \ref{tab:stratified_split_counts} lists raw counts of observations associated with each class bucket and describes how class proportions compare across the different data sets.
+
+\begin{table}[ht]
+\resizebox{\textwidth}{!}{
+    \begin{tabular}{l|c|c|c|c|c|c|c|c|c|c|}
+    \cline{2-11}
+    \multicolumn{1}{c|}{} &
+      \% &
+      \begin{tabular}[c]{@{}c@{}}WDS\\ train\end{tabular} &
+      \begin{tabular}[c]{@{}c@{}}WDS\\ validate\end{tabular} &
+      \begin{tabular}[c]{@{}c@{}}WDS\\ test\end{tabular} &
+      \begin{tabular}[c]{@{}c@{}}WDS4\\ train\end{tabular} &
+      \begin{tabular}[c]{@{}c@{}}WDS4\\ validate\end{tabular} &
+      \begin{tabular}[c]{@{}c@{}}WDS4\\ test\end{tabular} &
+      \begin{tabular}[c]{@{}c@{}}WDS8\\ train\end{tabular} &
+      \begin{tabular}[c]{@{}c@{}}WDS8\\ validate\end{tabular} &
+      \begin{tabular}[c]{@{}c@{}}WDS8\\ test\end{tabular} \\ \hline
+    \multicolumn{1}{|l|}{Class 0} & 3 & 14 & 3 & 3 & 71 & 15 & 15 & 129 & 27 & 28  \\ \hline
+    \multicolumn{1}{|l|}{Class 1} & 17 & 69 & 15 & 15 & 349 & 75 & 75 & 633 & 136 & 136 \\ \hline
+    \multicolumn{1}{|l|}{Class 2} & 38 & 162 & 35 & 35 & 801 & 171 & 172 & 1420 & 305 & 304 \\ \hline
+    \multicolumn{1}{|l|}{Class 3} & 42 & 172 & 36 & 37 & 860 & 185 & 184 & 1558 & 334 & 334 \\ \hline
+    \multicolumn{1}{|l|}{Total}   & 100 & 417 & 89 & 90 & 2,081 & 446 & 446 & 3,740 & 802 & 802 \\ \hline
+    \end{tabular}}
+\caption[Class count for test-train-validate split]{Raw observation counts for each geothermal gradient class across the different data sets after splitting each into training, validation, and testing subsets.}
+\label{tab:stratified_split_counts}
+\end{table}
