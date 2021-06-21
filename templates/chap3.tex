@@ -32,7 +32,7 @@ The data sets imported into ArcGIS or Python scripts for feature preparation req
 
 \subsubsection{Subsampling}\label{ssn:fishnet}
 
-Machine learning models generally treat data as a matrix of observations. The concept of a geospatial dataframe follows this paradigm, where each row represents a discrete location specified in latitude and longitude columns, and all other columns contain feature values for that location. Since the area outlined by the study AOI covers 97,469 km$^2$, and each location is described by 25 features and 2 map coordinates, the matrix of the study area at 1 km$^2$ resolution would be of size 2,631,663 values. However, exploration typically does not require this level of granularity. Also, the time complexity of many machine learning methods grows at a non-linear rate with data size, e.g., the decision tree model discussed in Section \ref{ch5:decision_trees} has O(m\,n\,log$_{2}$n) complexity, where n is the number of observations and m is the number of features \citep{sani_computational_2018}. As such, a coarser resolution of $0.025^\circ$ (\texttt{\char`\~}2.5 km on average across the AOI) was selected as a manageable subsampling interval for this study. The ArcGIS \textit{Create Fishnet} tool generated a $0.025^\circ$ x $0.025^\circ$ mesh that, when constrained to the AOI polygon, consists of 15,137 point locations (Figure \ref{fig:fishnet}). Data preparation steps use this fishnet point set where noted in Section \ref{ch3:layers}, and final model predictions are made on these points to allow for direct comparison between different model results. 
+Machine learning models generally treat data as a matrix of observations. The concept of a geospatial dataframe follows this paradigm, where each row represents a discrete location specified in latitude and longitude columns, and all other columns contain feature values for that location. Since the area outlined by the study AOI covers 97,469 km$^2$, and each location is described by 25 features and 2 map coordinates, the matrix of the study area at 1 km$^2$ resolution would be of size 2,631,663 values. However, exploration typically does not require this level of granularity. Also, the time complexity of many machine learning methods grows at a non-linear rate with data size, e.g., the decision tree model discussed in Section \ref{ch5:decision_trees} has O(m\,n\,log$_{2}$n) complexity, where n is the number of observations and m is the number of features \citep{sani_computational_2018}. As such, a coarser resolution of $0.025^\circ$ ($\sim$2.5 km on average across the AOI) was selected as a manageable subsampling interval for this study. The ArcGIS \textit{Create Fishnet} tool generated a $0.025^\circ$ x $0.025^\circ$ mesh that, when constrained to the AOI polygon, consists of 15,137 point locations (Figure \ref{fig:fishnet}). Data preparation steps use this fishnet point set where noted in Section \ref{ch3:layers}, and final model predictions are made on these points to allow for direct comparison between different model results. 
 
 \begin{figure}[htp]
 \centering
@@ -442,7 +442,7 @@ Scatter plots between variables can highlight collinear behavior where a close r
 \label{fig:unscaled_scatter}
 \end{figure}
 
-\subsubsection{Feature Scaling}
+\subsubsection{Feature Scaling}\label{ch3:scaling}
 Large differences in the ranges and average values of the predictor variables are also evident in the scatter plots in Figure \ref{fig:unscaled_scatter}. For some machine learning algorithms, variables with larger value ranges can have an out-sized effect on the model, so scaling variables to comparable ranges and removing variable bias is an important step in data conditioning. Scaling also makes a predictor more standard Normal in appearance, i.e., $N(\mu=0, \sigma=1)$, as implicitly required by some statistical methods. The scikit-learn \textit{StandardScalar} function transforms data using the Z-score formulation \citep{scikit-learn_sklearnpreprocessingstandardscaler_2021}:
 
 \begin{equation}
@@ -524,14 +524,14 @@ Preparation of well data sets WDS, WDS4, and WDS8 first involved removing record
 
 \begin{table}[htp]
 \centering
-\begin{tabular}{|l|l|l|l|l|}
-\hline
-\textbf{}        & \textbf{FDS} & \textbf{WDS} & \textbf{WDS4} & \textbf{WDS8} \\ \hline
-\textbf{Class 0} & 2,394 & 20 & 101 & 184 \\ \hline
-\textbf{Class 1} & 4,432 & 99 & 499 & 905 \\ \hline
-\textbf{Class 2} & 6,243 & 232 & 1,144 & 2029 \\ \hline
-\textbf{Class 3} & 1,938 & 245 & 1,229 & 2226 \\ \hline
-\textbf{Total}   & 15,007 & 596 & 2,973 & 5,344 \\ \hline
+\begin{tabular}{c|c|c|c|c|}
+\cline{2-5}
+                              & FDS    & WDS & WDS4  & WDS8  \\ \hline
+\multicolumn{1}{|c|}{Class 0} & 2,394  & 20  & 101   & 184   \\ \hline
+\multicolumn{1}{|c|}{Class 1} & 4,432  & 99  & 499   & 905   \\ \hline
+\multicolumn{1}{|c|}{Class 2} & 6,243  & 232 & 1,144 & 2029  \\ \hline
+\multicolumn{1}{|c|}{Class 3} & 1,938  & 245 & 1,229 & 2226  \\ \hline
+\multicolumn{1}{|c|}{Total}   & 15,007 & 596 & 2,973 & 5,344 \\ \hline
 \end{tabular}
 \caption[Data set class distribution]{Distribution of geothermal gradient classes for each data set.}
 \label{tab:data_set_class_count}
@@ -544,6 +544,8 @@ Supervised machine learning models determine the attributes of a predictive mode
 One method of reining in the high variance overfitting problem involves splitting the input data set into training and testing subsets. Model fitting uses the training set, while model evaluation relies on the test set. An additional split of the testing subset into separate validation and testing sets allows a modeler to validate model parameter choices with validation data not seen during model training, but then conduct a final model evaluation using completely unseen test data \citep[~p. 222]{hastie_elements_2009}. Creating such firm boundaries between seen and unseen data helps prevent the issue of data leakage.  Fundamentally, if a model trains or is tuned on data used to evaluate its performance, that evaluation no long reflects real world predictive ability because information from the evaluation data has already “leaked” into the model \citep{kaufman_leakage_2012}. When data leakage occurs, model performance after deployment will likely not match that seen during testing. In other words, it won’t be as good a model as the modeler thinks it is.
 
 For classification problems, randomly splitting input data set into 3 subsets will violate the balance between class proportions in the original input data. Fortunately, sampling techniques exist that preserve the relative fractions of each class in the derivative subsets. Scikit-learn provides the \textit{StratifiedShuffleSplit} method for randomly sampling from each class subgroup to generate training, validation, and test sets that look like one another and the original complete data set \citep{scikit-learn_sklearnmodel_selectionstratifiedshufflesplit_2021}. The FDS, WDS, WDS4, and WDS8 data sets were each partitioned into 70\% training, 15\% validation, 15\% testing using this method. Table \ref{tab:stratified_split_counts} lists raw counts of observations associated with each class bucket and describes how class proportions compare across the different data sets.
+
+Data leakage can be a concern when scaling or transforming split data sets. For example, the mean and standard deviation used for z-score normalization should be derived from the training subset before being applied to the validation and testing subsets. This maintains separability between seen and unseen data. For this reason, the train-validate-test splits of the four different data sets listed in Table \ref{tab:stratified_split_counts} were performed using the unscaled, untransformed versions of those data sets, and the feature scaling and Yeo-Johnson transformation discussed in Section \ref{ch3:scaling} are applied immediately before predictive modeling in a multi-step pipeline approach as discussed in Chapter \ref{ch5:expl_applied}.
 
 \begin{table}[!htp]
 \resizebox{\textwidth}{!}{
