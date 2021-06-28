@@ -1,4 +1,4 @@
-\chapter{Analytics Application}\label{ch5:expl_applied}
+\chapter{Machine Learning Models}\label{ch5:expl_applied}
 
 \section{Data Modeling}
 
@@ -54,33 +54,33 @@ For imbalanced data sets, micro will indicate better performance than macro due 
 
 \subsubsection{Binary Formulation} 
 
-The classic \acrlong{lr} (\acrshort{lr}) model is a binary classifier that predicts one of two labels based on the input data. LR frames the problem as a linear combination of the input observations \citep[~p 369]{bertsimas_analytics_2016}:
+The classic \acrlong{lr} (\acrshort{lr}) model is a binary classifier that predicts one of two labels based on the input data. LR frames the problem as a linear combination of the input observations \citep[p 369]{bertsimas_analytics_2016}:
 
 \begin{equation}
 \label{eq:logreg_form}
     y = W^TX = w_0 + w_1 * x_1 + w_2 * x_2 \ldots + w_n * x_n 
 \end{equation}
 
-Where $x_i$ are the feature observations, $w_i$ are coefficients or weights for those features, and $y_i$ is a weighted sum. Solving for the weights in this equation ($w_i$) requires an iterative optimization procedure like gradient descent. This procedure is framed as a minimization problem by defining a cost function ($J(x)$) based on the negative log likelihood \citep{ng_logistic_2011}:
+Where $x_i$ are the feature observations, $w_i$ are coefficients or weights for those features, and $y_i$ is a weighted sum. Solving for the weights in this equation ($w_i$) requires an iterative optimization procedure like gradient descent. This procedure is framed as a minimization problem by defining a cost function ($J(\Theta)$) based on the negative log likelihood \citep{ng_logistic_2011}:
 
 \begin{equation}
 \label{eq:logreg_cost}
 \begin{aligned}
-        J(W) &= -\frac{1}{m} \sum_{i=1}^{m}{\text{Cost}(h_{W}(x_i),y_i)} \\ &= -\frac{1}{m}\sum_{i=1}^{m}{(y_i*\text{log}({h_{W}(x_i)})+(1-y_i)*\text{log}(1-h_{W}(x_i)))}
+        J(\Theta) &= -\frac{1}{m} \sum_{i=1}^{m}{\text{Cost}(h_{\theta}(x_i),y_i)} \\ &= -\frac{1}{m}\sum_{i=1}^{m}{(y_i*\text{log}({h_{\theta}(x_i)})+(1-y_i)*\text{log}(1-h_{\theta}(x_i)))}
 \end{aligned}
 \end{equation}
 
-Here, $h_W(x)$ is the sigmoid function, which converts the weighted sum from equation \ref{eq:logreg_form} to something close to a binary 0 or 1 value \citep[~p 369]{bertsimas_analytics_2016}:
+Here, $h_{\theta}(x)$ is the sigmoid function, which converts the weighted sum from equation \ref{eq:logreg_form} to something close to a binary 0 or 1 value \citep[p. 369]{bertsimas_analytics_2016}:
 
 \begin{equation}
 \label{eq:sigmoid}
-h_W(x) = \frac{1}{(1+e^{-y})} = \frac{1}{(1+e^{-W^TX})}
+h_{\theta}(x) = \frac{1}{(1+e^{-y})} = \frac{1}{(1+e^{-W^TX})}
 \end{equation}
 
 Regularization is added to logistic regression to avoid overfitting, specifically by penalizing the sum of the squared weights (L2-regularization). A constant ($\lambda$) determines the trade-off of influence between the magnitude of the weights and negative log likelihood in the minimization \citep{ng_regularization_2011}.
 
 \begin{equation}
-    regularized\,J(W) = -\frac{1}{m}\sum_{i=1}^{m}{\text{Cost}(h_{W}(x_i),y_i) + \frac{\lambda}{2m}\sum_{j=1}^{n}{w_j^2}}
+    regularized\,J(\Theta) = -\frac{1}{m}\sum_{i=1}^{m}{\text{Cost}(h_{\theta}(x_i),y_i) + \frac{\lambda}{2m}\sum_{j=1}^{n}{w_j^2}}
 \end{equation}
 
 The scikit-learn \textit{LogisticRegression} function uses a constant C applied to the negative log likelihood term, which acts like the inverse of $\lambda$. Larger values of C result in less regularization. Scikit defaults to using a value of C=1.0 \citep{scikit-learn_1111_2021}.
@@ -91,7 +91,7 @@ This formulation of logistic regression defines a strictly binary classification
 
 \subsubsection{Stratified k-Fold Cross-Validation} \label{ch5:strat_kfold_cv}
 
-Brute force tuning of a hyperparameter can be accomplished by training a series of classifiers with different hyperparameter values and evaluating each classifier's predictive ability against the validation data subset. A more statistically stable approach involves k-Fold \acrlong{cv} (\acrshort{cv}). K-fold CV splits the input data into a number of subsets, or folds. It trains the model on the aggregate of all but one fold, then scores the classifier based on that remaining fold \citep[~p. 181]{james_introduction_2013}. This leave-one-fold-out strategy cycles through all k permutations, and the scores are averaged to produce a summary statistic --- in this case, the AUC. For imbalanced class data, folds can be stratified sampled such that class proportions are preserved within each fold \citep{brownlee_how_2020}. For parameter tuning, the k-Fold CV will define a set of average scores for the range of hyperparameter values under consideration, and the optimal parameter value can be determined from a plot of those scores.
+Brute force tuning of a hyperparameter can be accomplished by training a series of classifiers with different hyperparameter values and evaluating each classifier's predictive ability against the validation data subset. A more statistically stable approach involves k-Fold \acrlong{cv} (\acrshort{cv}). K-fold CV splits the input data into a number of subsets, or folds. It trains the model on the aggregate of all but one fold, then scores the classifier based on that remaining fold \citep[p. 181]{james_introduction_2013}. This leave-one-fold-out strategy cycles through all k permutations, and the scores are averaged to produce a summary statistic --- in this case, the AUC. For imbalanced class data, folds can be stratified sampled such that class proportions are preserved within each fold \citep{brownlee_how_2020}. For parameter tuning, the k-Fold CV will define a set of average scores for the range of hyperparameter values under consideration, and the optimal parameter value can be determined from a plot of those scores.
 
 \subsubsection{Hyperparameter Tuning} \label{ch5:hyper_tuning}
 \begin{wraptable}{R}{0.5\linewidth}
@@ -128,7 +128,7 @@ AUC values calculated on test subsets indicate WDS4 has the best out-of-sample p
 \label{fig:logreg_coefs}
 \end{figure}
 
-\subsubsection{Recursive Feature Elimination}
+\subsubsection{Recursive Feature Elimination} \label{ch5:logreg_rfe}
 Logistic regression models assume a linear relationship between predictors and the response variable, but adding more predictors will not necessarily improve the model. Feature selection can lead to simpler models with the same predictive power but reduced risk of collinearity, which is important when managing data from naturally integrated earth systems. 
 
 One method for selecting the number of features to keep involves an iterative process called \acrlong{rfe} (\acrshort{rfe}) (Brownlee, 2020c; scikit-learn, 2021d). The concept is relatively simple: RFE recursively selects and removes the feature with the smallest coefficient in the logistic regression model, then refits the data and repeats until a user-defined number of features is reached.  A plot of AUC vs. number of features can be constructed by looping over different feature limits, where the logistic regression model is fit on the training subset and evaluated on the validation subset (Figure \ref{fig:logreg_rfe}). Based on the plot, a local peak in AUC occurs when 18 features are used. Adding the remaining features results in small gains in AUC, but with diminishing returns for six additional features of complexity. Using this threshold, the data layers removed from the model include: DEM Gradient, Gravity Gradient, Magnetic Anomaly, Magnetic Anomaly Gradient, Water Table Depth, and Average Precipitation. Note that Average Precipitation appears higher on the coefficients plot (Figure \ref{fig:logreg_coefs}) than other features that were not removed. Since RFE iteratively removes predictors and refits the model, relative coefficients can change, particularly if there was collinearity with a removed variable.
@@ -172,38 +172,42 @@ Model predictions for the study area are generated by passing the FDS through th
 
 \subsection{Decision Trees}\label{ch5:decision_trees}
  
-A decision tree, sometimes known as a Classification and Regression Tree (CART), classifies observations using a cascading set of evaluations, each on individual predictor variables. There is no assumption of a linear response in the system. In fact, decision trees are uniquely suited to representing non-linear behavior in a highly-explainable way; once constructed, the decision tree describes a flowchart-like roadmap for each label assignment \citep[~p. 373-375]{bertsimas_analytics_2016}. Not every predictor will necessarily appear in the decision tree --- only those found to be significant during tree construction. And the most significant variables tend to be associated with early decision splits, placing them higher in the tree \citep[~p. 376]{bertsimas_analytics_2016}. Because of this, decision trees naturally provide insights into feature importance. 
+A decision tree, sometimes known as a Classification and Regression Tree (CART), classifies observations using a cascading set of evaluations, each on individual predictor variables. There is no assumption of a linear response in the system. In fact, decision trees are uniquely suited to representing non-linear behavior in a highly-explainable way; once constructed, the decision tree describes a flowchart-like roadmap for each label assignment \citep[p. 373-375]{bertsimas_analytics_2016}. Not every predictor will necessarily appear in the decision tree --- only those found to be significant during tree construction. And the most significant variables tend to be associated with early decision splits, placing them higher in the tree \citep[p. 376]{bertsimas_analytics_2016}. Because of this, decision trees naturally provide insights into feature importance. 
 
 \subsubsection{Tree Construction}
-Decision trees are constructed by recursively performing binary splits on the training data set. Each split defines two new nodes in the tree, which correspondingly separates a group within the training data into subgroups. These subgroups represent child paths from the split node that terminate in two new terminal leaf nodes on the tree. The classification decision for each leaf will be the most commonly occurring class from the training data observations that are assigned to that leaf \citep[~p. 311]{james_introduction_2013}.
+Decision trees are constructed by recursively performing binary splits on the training data set. Each split defines two new nodes in the tree, which correspondingly separates a group within the training data into subgroups. These subgroups represent child paths from the split node that terminate in two new terminal leaf nodes on the tree. The classification decision for each leaf will be the most commonly occurring class from the training data observations that are assigned to that leaf \citep[p. 311]{james_introduction_2013}.
 
 There are three metrics that can play a role in evaluating the discriminating quality of a particular decision node on the tree:
 
 \begin{itemize}
-    \item \textbf{Classification error rate}: the proportion of training samples that do not match the dominant class associated with a leaf node \citep[~p. 312]{james_introduction_2013}.
+    \item \textbf{Classification error rate}: the proportion of training samples that do not match the dominant class associated with a leaf node \citep[p. 312]{james_introduction_2013}.
     \begin{equation} \label{eq:error_rate}
         E = 1 - \max_k(\hat{p}_{mk})
     \end{equation}
     where $m$ is the segment of the data associated with a node, $k$ is the class, and $\hat{p}_{mk}$ is the fraction of all training observations in $m$ that are of class $k$. 
-    \item \textbf{Gini index}: measures variance across all k classes. Gini is sometimes known as a purity measurement because low values correspond with a strongly dominant class \citep[~p. 312]{james_introduction_2013}.
+    \item \textbf{Gini index}: measures variance across all k classes. Gini is sometimes known as a purity measurement because low values correspond with a strongly dominant class \citep[p. 312]{james_introduction_2013}.
     \begin{equation}
         G = \sum_{k=1}^{K}{\hat{p}_{mk}(1-\hat{p}_{mk})}
     \end{equation}
-    \item \textbf{Entropy}: An alternative form of purity measure, which also shows low values when the proportion of one class dominates the others within a node \citep[~p. 312]{james_introduction_2013}.
+    \item \textbf{Entropy}: An alternative form of purity measure, which also shows low values when the proportion of one class dominates the others within a node \citep[p. 312]{james_introduction_2013}.
     \begin{equation}
         D = -\sum_{k=1}^{K}{\hat{p}_{mk}* \text{log}(\hat{p}_{mk})}
     \end{equation}
 \end{itemize}
 
-The purity aspect of both Gini index and entropy make them good choices for tree construction. In the forward pass, the tree will iteratively grow by selecting nodes in the tree, a predictor to split on, and a threshold value defining the split. These choices are optimized by the chosen quality metric. The tree will grow until a stopping condition is met, like reaching a maximum tree depth or minimum number of observations allowed per node. Tree clean-up then takes place in a backward pass, where the following decision tree objective governs whether a tree branch is kept or removed \citep[~p. 309]{james_introduction_2013}:
+The purity aspect of both Gini index and entropy make them good choices for tree construction. In the forward pass, the tree will iteratively grow by selecting nodes in the tree, a predictor to split on, and a threshold value defining the split. These choices are optimized by the chosen quality metric. The tree will grow until a stopping condition is met, like reaching a maximum tree depth or minimum number of observations allowed per node. Tree clean-up then takes place in a backward pass, where the following decision tree objective governs whether a tree branch is kept or removed \citep[p. 309]{james_introduction_2013}:
 
 \begin{equation}
-\min{\{SSE + \alpha\left|T\right|\}} = \min\Bigg\{ \sum_{m=1}^{\left|T\right|}{\sum_{i|x_i\epsilon R_m}}{(y_i-\hat{y}_m)^2+ \alpha\left|T\right|\Bigg\}}
+\label{dtree_objective}
+\begin{aligned}
+    J(\Theta) &= SSE + \alpha\left|T\right| \\
+    &= \sum_{m=1}^{\left|T\right|}{\sum_{i|x_i\epsilon R_m}}{(y_i-\hat{y}_m)^2+\alpha\left|T\right|}
+\end{aligned}
 \end{equation}
 
 Here, $\left|T\right|$ refers to the number of terminal nodes in tree $T$, $R_m$ is the subgroup of the training data associated with terminal node $m$, and $\hat{y}_m$ is the classification predicted by node $m$. If the sum of squared errors ($SSE$) in classification increases by less than $\alpha$ when a branch is removed, that branch will remain removed from the decision tree. $\alpha$ acts as a regularization parameter balancing prediction accuracy with model complexity; greater values of $\alpha$ result in simpler decision trees.
 
-\subsubsection{Hyperparameter Tuning}
+\subsubsection{Hyperparameter Tuning} \label{ch5:dtree_tuning}
 Multiple hyperparameters determine the performance of a decision tree classifier. Here we consider six parameters, each of which are tuned using the Stratified k-Fold CV method described in Section \ref{ch5:strat_kfold_cv}, with 10 folds and the multi-class one-vs-rest ROC AUC as the scoring metric. The figure examples illustrate the tuning procedure for WDS4.
 
 First, \verb|max_depth| and \verb|criterion| were tuned together. \verb|max_depth| limits tree expansion by capping the number of parameter evaluations (tree nodes) considered before a classification label assignment. \verb|criterion| refers to the quality metrics defined above. Figure \ref{fig:dtree_maxdepth} illustrates the relative insensitivity the classifier has to \verb|criterion|, while tree depth plays a stronger role in performance. A maximum AUC score is observed with a \verb|max_depth| of 8 and \verb|criterion| choice of Entropy.
@@ -262,6 +266,8 @@ Final hyperparameter values and performance results for WDS, WDS4, and WDS8 are 
 \label{tab:dtree_tuning}
 \end{table}
 
+\subsubsection{Feature Importances} \label{ch5:dtree_feat_importance}
+
 Figure \ref{fig:dtree_feat_import} shows the feature importances determined by the decision trees for WDS, WDS4, and WDS8.  Features are sorted on the sum importance value across all 3 data sets. Although differences exist, Si Geothermometer Temperature appears as the most important predictor in all cases. And the bottom six features are also remarkably consistent across the data sets: Water Table Depth, Water Table Gradient, Gravity Anomaly Gradient, Magnetic Anomaly, Magnetic Anomaly Gradient, and DEM Gradient. Dropping these features reduces the overall decision tree data set to 18 features total.
 
 \begin{figure}[!htp]
@@ -303,12 +309,89 @@ Interesting high-gradient patches appear to the southwest and northeast, one of 
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[height=0.9\textheight,keepaspectratio]{templates/images/Figure-DT_viz_portrait.pdf}
+\includegraphics[height=0.85\textheight,keepaspectratio]{templates/images/Figure-DT_viz_portrait.pdf}
 \caption[Decision tree visualization]{Decision tree visualization for the final decision tree model.Nodes are noted by predictor labels with their decision threshold. Bubbles illustrate the final distribution of classes in a leaf node, sized by number of observations. The majority class determines the classification label.}
 \label{fig:dtree_viz}
 \end{figure}
 
-\subsection{Tree Ensembles}
+\subsection{Tree Ensembles (XGBoost)}
+
+As simple and effective as decision tree classifiers may be, they only demonstrate a single model solution. And since random selection can play a role in their construction, completely different tree structures may arise if a tree is rebuilt on the same data set. The random forest algorithm embraces these random variations and generates a large number of decision trees. To increase randomness, only a subset of the predictors are used when building each tree, and the trees are trained on a different data subset selected at random and with replacement from the full training set \citep[p. 376--377]{bertsimas_analytics_2016}. Much like the classic “wisdom of crowds” paradigm, the collection of trees acts as a single, more performant ensemble model. However, greater possible accuracy in predictions from the ensemble trades off with less interpretability; as the forest grows larger, the number of constituent decision trees quickly exceeds the limits of human comprehension. As such, ensemble tree methods like random forests are considered black box algorithms.
+
+A variation in ensemble algorithms uses “gradient boosting,” where the trees in the ensemble are chained in succession and train on the residual error of the preceding tree. The trees are weak learners that underfit the data, giving them low variance, but high bias. Yet when the predictions of the models are summed together, the compound prediction can out-perform more conventional random forests \citep[p. 323]{james_introduction_2013}:
+
+\begin{equation}
+\label{eq:xgb_form}
+    \hat{f}(x) = \sum_{b=1}^{B}{\alpha \hat{f}^{b}(x)}
+\end{equation}
+
+Where $\hat{f}(x)$ is the boosted model, $\hat{f}^b$ are the weak learners totaling $B$ in number. $\alpha$ is the shrinkage parameter or learning rate. 
+
+XGBoost is a variant of gradient-boosting tree algorithms, gaining a significant amount of notoriety from machine learning competition wins \citep{chen_dmlcxgboost_2021}. The objective function governing model construction balances two influences \citep{chen_xgboost_2016}:
+
+\begin{equation}
+\label{eq:xgb_objective}
+\begin{aligned}
+    J(\Theta) &= L + \Omega \\
+    &= \sum_{i}{l(\hat{y}_i,y_i)}+\sum_{k}{\Omega(f_k)} \\
+    &= \sum_{i}{l(\hat{y}_i,y_i)}+\sum_{k}{\left({\gamma T}+\frac{1}{2} \lambda \sum_{j=1}^T{w_j^2}\right)}
+\end{aligned}
+\end{equation}
+
+Where the first part expresses how well the model fits the data (i.e., the loss), while the second term regulates the complexity of the model. Complexity is defined by the number of leaves in a tree ($T$) and the size of leaf weights ($w$) unique to XGBoost decision trees. After some additional derivations, the objective can be restated as: 
+
+\begin{equation}
+\label{eq:xgb_obj_simple}
+    J(\Theta) = -\frac{1}{2}\sum_{j\;leaves}{\frac{G_j^2}{H_j + \lambda} + \gamma T}
+\end{equation}
+
+Where $G$ is the sum of the first-order gradient statistics for the instance set of leaf $j$, and $H$ is the sum of the second-order gradient statistics \citep{chen_xgboost_2016}. Tree construction follows that of decision trees --- split each node greedily to maximize tree depth, then prune back in a backward pass. The left term of equation \ref{eq:xgb_obj_simple} provides a means to calculate loss reduction for a candidate split, thus governing the evaluation of tree splits during the pruning process. 
+
+XGBoost is a complex algorithm, but with a lot of optimizations that make it extremely efficient, scalable, and popular among machine learning practitioners.
+
+\subsubsection{Hyperparameter Tuning}
+XGBoost comes with many of the same hyperparameters as decision trees, plus additional parameters related to boosting and optimization. With so many hyperparameters, tuning the model becomes a time-consuming and complex process. The method followed here was adapted from an online tutorial covering the topic \citep{jain_xgboost_2016}.
+
+The following hyperparameters were tuned for the final model:
+\begin{itemize}[itemsep=2pt]
+    \item \textbf{Maximum depth}: similar to \verb|max_depth| for decision trees, this puts a ceiling on how deep each tree can grow during construction.
+    \item \textbf{Minimum child weight}: sets a minimum weight requirement for a leaf nodes during the backward pass pruning process. Similar to \verb|min_samples_leaf| in decision trees, except this uses the XGB-specific weights noted in equation \ref{eq:xgb_objective}.
+    \item \textbf{Gamma}: defines a minimum reduction in the loss function necessary for a split to be preserved during tree pruning. \item \textbf{Learning rate}: scales the impact of each tree on the boosted model prediction, i.e., the $\alpha$ in equation \ref{eq:xgb_form}.
+    \item \textbf{Lambda}: L2 regularization term on the leaf scores, i.e., the $\lambda$ in equations \ref{eq:xgb_objective} and \ref{eq:xgb_obj_simple}.
+    \item \textbf{Subsample}: sets the fraction of observations in the full training set that are randomly selected as a limited training set for each tree.
+    \item \textbf{Column sample by tree}: sets the fraction of predictors in the full training set that are randomly selected as a limited feature set for constructing each tree.
+    \item \textbf{Number of estimators}: controls the number of sequential trees in the model, i.e., B in equation \ref{eq:xgb_form}.
+    \item \textbf{Scale positive weight}: controls the balance between positive and negative weights, which can help with class imbalances.
+\end{itemize}
+
+The preferred method of tuning for XGBoost is the cross-validation strategy described in Section \ref{ch5:strat_kfold_cv}. Since this method uses the input to both train and validate, the pre-generated training and validation subsets (Table \ref{tab:stratified_split_counts}) were combined for a larger collection of input observations. An initial trial-and-error testing of different parameter combinations found the best starting values for \verb|learning_rate| and \verb|n_estimators| were 0.01 and 200, respectively. Higher learning rates like those suggested by \citet{jain_xgboost_2016} led to a nearly perfect-fitting model before parameters could be tuned, and more estimators created undesirably long training times. In the figures and discussion that follow, results are described for WDS4. Full results for all three data sets are provided in Table \ref{tab:xgb_tuning}.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-XGB_Hyperparameters.png}
+\caption[XGBoost hyperparameter tuning]{Hyperparameter tuning results for XGBoost modeling. A. max\_depth, B. min\_child\_weight, C. gamma, D. subsample, E. colsample\_bytree, F. lambda. Red dashed lines indicate values selected for the final model.}
+\label{fig:xgb_hyperparam}
+\end{figure}
+
+XGBoost hyperparameters were tuned in succession using 10-fold stratified CV and a grid search across a range of potential parameter values. Figure \ref{fig:xgb_hyperparam}A shows the results for \verb|max_depth|. As noted when tuning the decision tree model (Section \ref{ch5:dtree_tuning}), \verb|max_depth| does not exhibit a clear maximum in the AUC vs. parameter value plot. A preferred value of 6 was selected from the corner roll-over point in the plot to constrain tree complexity in the XGB model.
+
+Next, tuning was performed on the \verb|min_child_weight| hyperparameter. Results of the 10-fold stratified CV method revealed a clear maximum AUC when \verb|min_child_weight| is 2 (Figure \ref{fig:xgb_hyperparam}B).
+
+XGBoost uses a default value of 0 for the \verb|gamma| hyperparameter, which controls when tree partitioning should be rejected based on loss reduction. Cross-validation shows nearly level AUC values out to \verb|gamma| = $3.8 \text{x} 10^-3$, after which the AUC score quickly drops. This threshold value was selected for the model (Figure \ref{fig:xgb_hyperparam}C).
+
+Trees in the XGB model can be trained on random subsets of training data observations and individual feature columns. Tuning of \verb|subsample| identified a broad maximum in AUC when using 70\% of the training observations (Figure \ref{fig:xgb_hyperparam}D). The best result when tuning \verb|colsample_bytree| occurs when 60\% of the features are included in the training  (Figure \ref{fig:xgb_hyperparam}E). A value below 100\% for \verb|colsample_bytree| suggests dimensionality reduction could be beneficial, as was discussed for both logistic regression (Section \ref{ch5:logreg_rfe}) and decision trees (Section \ref{ch5:dtree_feat_importance}) based on measures of feature importance. A more robust method for approaching this topic is discussed in Section \ref{ch5:xgb_shapley} on Shapley values.
+
+\begin{table}[!htp]
+    \centering
+    \begin{tabular}{c|c}
+         &  \\
+         & 
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:xgb_tuning}
+\end{table}
+
+\subsubsection{Shapley Values}\label{ch5:xgb_shapley}
 
 \subsection{Neural Networks}
 

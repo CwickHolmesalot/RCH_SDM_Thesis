@@ -1,4 +1,4 @@
-\chapter{Analytics Preparation}\label{ch3:expl_prep}
+\chapter{Machine Learning Preparation}\label{ch3:expl_prep}
 
 \section{Data Sources}\label{ch3:expl_data_src}
 
@@ -17,7 +17,7 @@ Regarding the remaining two risk elements: measurements of permeability (i.e., f
 
 \section{Data Preparation}
 
-In order to experiment with a variety of machine learning methods, all input data sets first need to be transformed into fully-complete \acrlong{gis} (\acrshort{gis}) layers such that any point on the map of the study area has a corresponding set of 25 predictor values. Steps taken to condition, process, and otherwise prepare each layer are outlined later in this chapter. As a preface, the following section reviews several fundamental concepts and algorithms utilized in the preparation of the data layers.
+In order to experiment with a variety of machine learning methods, all input data sets must be transformed into fully-complete \acrlong{gis} (\acrshort{gis}) layers such that any location within the study area has a corresponding set of 25 predictor values. Steps taken to condition and process each layer are outlined later in this chapter. As a preface, the following section reviews several fundamental concepts and algorithms utilized in the preparation of the data layers.
 
 \subsection{Fundamentals}
 
@@ -299,11 +299,11 @@ Digitized state geologic map fault outlines are available for download from the 
 
 \subsubsection{Surface Topography (DEM)}
 
-The southwest NM PFA data archive \citep{kelley_geothermal_2015} includes a \acrlong{dem} (\acrshort{dem}) layer with surface elevations at a 1 arc-sec resolution. This layer was downloaded and imported into ArcGIS, however a data gap along the easternmost section of the AOI required the addition of two $1^\circ$x$1^\circ$ DEM tiles at the same resolution to fully complete the layer. These tiles were downloaded from the USGS The National Map website \citep{usgs_tnm_2021} and merged with the original DEM. The final layer (Figure \ref{fig:feat_dem}) required no further processing.
+The southwest NM PFA data archive \citep{kelley_geothermal_2015} includes a Digital Elevation Model (DEM) layer with surface elevations at a 1 arc-sec resolution. This layer was downloaded and imported into ArcGIS, however a data gap along the easternmost section of the AOI required the addition of two $1^\circ$x$1^\circ$ DEM tiles at the same resolution to fully complete the layer. These tiles were downloaded from the USGS The National Map website \citep{usgs_tnm_2021} and merged with the original DEM. The final layer (Figure \ref{fig:feat_dem}) required no further processing.
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[scale=.50]{templates/images/Figure-DEM.pdf}
+\includegraphics[width=\textwidth]{templates/images/Figure-DEM.pdf}
 \caption[Surface topography (DEM) data layer]{Surface topography (DEM) data layer. Units are in meters. Layer combines the DEM raster from \citep{bielicki_hydrogeolgic_2015} with data from The National Map online \citep{usgs_tnm_2021}.}
 \label{fig:feat_dem}
 \end{figure}
