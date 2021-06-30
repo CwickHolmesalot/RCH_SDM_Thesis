@@ -107,7 +107,7 @@ Brute force tuning of a hyperparameter can be accomplished by training a series 
 \multicolumn{1}{|c|}{AUC$_{test}$}  & 0.785 & 0.891 & 0.875 \\ \hline
 \end{tabular}
 \singlespacing
-\caption[Logistic regression tuning results]{Logistic regression hyperparameter tuning results for each data set. Accuracy and AUC model statistics are split into train (in-sample) and test (out-of-sample) values.}
+\caption[Logistic regression hyperparameter tuning results]{Logistic regression hyperparameter tuning results for each data set. Accuracy and AUC model statistics are split into train (in-sample) and test (out-of-sample) values.}
 \label{tab:logreg_tuning}
 \end{wraptable}
 
@@ -474,14 +474,16 @@ In neural networks, cells are represented by logistic units (Figure \ref{fig:nn_
 Each logistic unit performs the following operation 
 
 \begin{equation}
+\label{eq:nn_activation}
     {\bf{a}} = g({\bf{z}}) = g({\bf{W^TX}})
 \end{equation}
 
 where $g$ is the activation function and $\bf{W}$ are the weights. For the first hidden layer, $\bf{X}$ will be the predictor values from the input layer as shown in Figure \ref{fig:nn_schematic}. For any additional hidden layers, $\bf{X}$ consists of the outputs of units from the preceding layer. Here, $\bf{z}$ is described in matrix notation but has the same form as Equation \ref{eq:logreg_form}. 
 
-The cost function for a neural network takes on the form of a loss term and a complexity term (Ng, 2011b):
+The cost function for a neural network takes on the form of a loss term and a complexity term \citep{ng_neural_2011}:
 
 \begin{equation}
+\label{eq:nn_cost_function}
     \begin{aligned}
         J(\Theta) &= 
         -\frac{1}{m}\sum_{i=1}^{m}{
@@ -504,6 +506,95 @@ The cost function for a neural network takes on the form of a loss term and a co
 Which looks very similar to the regularized negative log likelihood cost function for logistic regression (Equation \ref{eq:logreg_cost_reg}). Here, $m$ is the number of predictor values in the input layer, $K$ is the number of outputs, $L$ is the number of layers, and $i$ and $j$ track the weights for layer $j$, unit $i$. $\lambda$ is a regularization term controlling the balance between the loss term and complexity term in the cost function. 
 
 As usual, minimizing this loss function is the goal of the NN learning process. This is generally accomplished using the backpropagation algorithm to compute the gradients needed for a gradient descent optimization \citep[p.\ 396]{hastie_elements_2009}.
+
+\subsubsection{Hyperparameter Tuning}
+\begin{figure}[!htp]
+\centering
+\begin{minipage}{.36\linewidth}
+    \includegraphics[width=\linewidth]{templates/images/Figure-TF_NN_Structure.png}
+    \caption[Neural network structural flow]{Flow chart for the neural network, constructed using TensorFlow \protect\citep{abadi_tensorflow_2016}.}
+    \label{fig:ann_text_structure}
+\end{minipage}
+\hfill
+\begin{minipage}{.60\linewidth}
+    \includegraphics[width=\linewidth]{templates/images/Figure-ANN.pdf}
+    \caption[Neural network structural schematic]{Schematic diagram of the neural network. Not shown are the dropout operations after each hidden layer.}
+    \label{fig:ann_dot_structure}
+\end{minipage}
+\end{figure}
+This analysis uses a neural network constructed with TensorFlow \citep{abadi_tensorflow_2016}. The network architecture includes hidden layers of the same size as the input layer. This results in a 4-layer structure comprising an input layer of size (1x24), two hidden layers also (1x24), and an output layer of (1x4), assuming all data set features are used (Figures \ref{fig:ann_text_structure}, \ref{fig:ann_dot_structure}). In addition, dropout is included after each of the hidden layers. Dropout helps prevent overfitting by randomly assigning inputs to zero, temporarily severing a defined percentage of node connections during each step of the training process.
+
+Since the number of weights being learned scales with the layer count and size of each layer, the choice of network architecture is a tunable parameter. The simplicity of this \acrlong{fcn} (\acrshort{fcn}) design keeps the architecture easily explainable while still enabling the network to learn complex non-linear relationships for geothermal gradient prediction.
+
+Likewise, the choice of activation functions for each layer may also impact the performance of the network. ReLU functions overcome several limitations observed with other activation choices like the sigmoid function, e.g., limited sensitivity and vanishing gradients, making ReLU the current preferred default choice \citep{brownlee_gentle_2019}. Both hidden layers in the network described here apply ReLU activation functions.
+
+The Adam optimization method was chosen for training the network due to its computational efficiency and present-day status as the recommended general-purpose optimizer \citep{brownlee_gentle_2017}. A description of Adam is beyond the scope of this thesis, but more information is available in the literature \citep{kingma_adam_2017}.
+
+The training process updates the network weights using gradients calculated from the training data in each training epoch \citep[p.\ 397]{hastie_elements_2009}. Successive epochs train the NN to match the training data even more, so evaluating loss, AUC, or other metrics on both the training and validation sets is important for tuning the number of epochs to avoid overfitting. Training can also proceed with mini-batches, that is, small subsets of the training set, rather than the whole set at once. This method makes the training results noisier, but generally speeds up learning while adding a regularization effect to changes in the weights \citep{brownlee_how_2019}.  
+
+Parameter tuning therefore focuses on five hyperparameters:
+\begin{itemize}[itemsep=2pt]
+    \item \textbf{Learning rate}: scales the size of the updates to weights during each step of the training process. The Adam optimizer adjusts this rate during training, so the value here defines an initial learning rate. Initially set to 0.001.
+    \item \textbf{Lambda}: the L2 weight regularization term, i.e., the $\lambda$ in equation \ref{eq:nn_cost_function}. Initially set to $1\times10^{-4}$.
+    \item \textbf{Batch size}: the number of training samples included in each mini-batch when calculating training gradients for updating the network weights. Initially set to number of samples/10.
+    \item \textbf{Dropout rate}: the fraction of network connections zeroed-out during each step of the training process. Initially set to 0.2.
+    \item \textbf{Number of epochs}: the number of training repetitions when fitting the model to the data. Initially set to 100.
+\end{itemize}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-NN_Hyperparameters.png}
+\caption[Neural network hyperparameter tuning]{Neural network hyperparameter tuning results for A. learning rate, B. lambda ($\lambda$), C. batch size, D. drop rate, using WDS4. The orange lines track the AUC after 100 training epochs, averaged over 10-folds of stratified cross-validation for each parameter value. The blue lines show average loss. Red dashed lines indicate values selected for the final model.}
+\label{fig:nn_tuning_plots}
+\end{figure}
+
+The stratified k-fold cross-validation strategy described in Section \ref{ch5:strat_kfold_cv} was used for tuning the neural network hyperparameters. Training continued for 100 epochs, and since TensorFlow tracks metric values for both the training and validation sets at each epoch, the two sets were kept separate during the 10-fold CV process. In the figures and discussion that follow, results are described for WDS4. Full results for all three data sets are provided in Table \ref{tab:nn_tuning}. 
+
+\begin{wraptable}{R}{0.5\linewidth}
+\centering
+\begin{tabular}{l|c|c|c|}
+\cline{2-4}
+                                      & WDS   & WDS4  & WDS8  \\ \hline
+\multicolumn{1}{|l|}{learning rate}   & 0.005 & 0.010 & 0.010 \\ \hline
+\multicolumn{1}{|l|}{lambda ($\lambda$)}          & 1E-04 & 2E-04 & 1E-04 \\ \hline
+\multicolumn{1}{|l|}{batch size}      & 50    & 100   & 150   \\ \hline
+\multicolumn{1}{|l|}{dropout rate}    & 0.3   & 0.1   & 0.1   \\ \hline
+\multicolumn{1}{|l|}{epochs}          & 25    & 100   & 200   \\ \hline
+\multicolumn{1}{|l|}{Accuracy$_{train}$} & 0.777 & 0.959 & 0.965 \\ \hline
+\multicolumn{1}{|l|}{Accuracy$_{test}$}  & 0.742 & 0.949 & 0.957 \\ \hline
+\multicolumn{1}{|l|}{AUC$_{train}$}      & 0.952 & 0.998 & 0.999 \\ \hline
+\multicolumn{1}{|l|}{AUC$_{test}$}       & 0.863 & 0.992 & 0.992 \\ \hline
+\end{tabular}
+\singlespacing
+\caption[Neural network hyperparameter tuning results]{Neural network hyperparameter tuning results for each data set. Accuracy and AUC metrics are split into train (in-sample) and test (out-of-sample) values.}
+\label{tab:nn_tuning}
+\end{wraptable}
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-NN-Training-Loss.png}
+\caption[Neural network training loss]{Neural network training results as a function of epoch count for WDS4. Calculated loss (Left) and AUC (Right) for the training (blue) and validation (green) data subsets match and begin to separate near the 100-epoch mark (red arrow). Mini-batch related noise obscures the exact cross-over location.}
+\label{fig:nn_loss_plot}
+\end{figure}
+
+Tuning was conducted in the order shown in Figure \ref{fig:nn_tuning_plots}. There are distinct maxima for the CV-averaged WDS4 AUC values in each hyperparameter case. The final selected values include: learning rate of 0.01, $\lambda$ value of $2\times10^{-4}$, batch size of 100, and drop rate of 0.1. Minima in the average loss calculation align with these values for all except $\lambda$, the regularization parameter on model weights. This matches the expected behavior described in equation \ref{eq:nn_cost_function}, where $\lambda$ controls the balance between loss and sum of squared weights in the cost function. As Figure \ref{fig:nn_tuning_plots}B shows, the loss term is minimized as $\lambda$ approaches zero.
+
+Figure \ref{fig:nn_loss_plot} illustrates the WDS4 training progress as a time series of loss and AUC. The variance in both plots reflects the noise introduced by mini-batch training, but convergence takes place quickly. Increasing deviation of the validation loss and, to a lesser extent, AUC values at greater epoch counts indicates the model is overfitting the training data. The cross-over of the training and validation lines, which corresponds with the tuned number of epochs for the final model, occurs somewhere close to 100 epochs for WDS4.
+
+\subsubsection{Optimized Model Results}
+
+The NN model was re-trained for each of the three data sets using the hyperparameter values listed in Table \ref{tab:nn_tuning}. Data sparsity is particularly problematic for the WDS model; even after careful tuning, the out-of-sample accuracy does not exceed 75\%, and test set AUC is $\approx 86\%$. Data augmentation in WDS4 and WDS8 has a strong pay-off in the results. Models trained on both data sets exhibit $\approx95\%$ accuracy and AUC values $>99\%$ (Table \ref{tab:nn_tuning}).
+
+Figure XX shows the confusion matrix for WDS4.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=.6\textwidth]{templates/images/Figure-NN-ConfusionMatrix.png}
+\caption[Neural network confusion matrix]{}
+\label{fig:nn_confusion_matrix}
+\end{figure}
+
+ 
 
 \subsection{Uncertainty Analysis}
 
