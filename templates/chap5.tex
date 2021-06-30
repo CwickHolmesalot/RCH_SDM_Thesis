@@ -24,7 +24,7 @@ Building an intuition for the differences in predictive ability of different mod
 
 Several statistical measures can be defined using combinations of elements in the confusion matrix. Of significance to this study are the \acrlong{tpr} (\acrshort{tpr}) and \acrlong{fpr} (\acrshort{fpr}) \citep{tharwat_classification_2020}:
 
-\begin{itemize}
+\begin{itemize}[itemsep=2pt]
 \item \textbf{True Positive Rate}: the count of correctly-predicted positives scaled by the actual positives: TP/(TP$+$FN).
 \item \textbf{False Positive Rate}: the count of incorrectly-predicted positives scaled by the actual negatives: FP/(FP$+$TN).
 \end{itemize}
@@ -42,7 +42,7 @@ Area Under the ROC Curve (AUC) defines a summary statistic for the ROC function 
 
 With multi-class classification, defining single class performance using the definitions of TP, FP, TN, and FN as shown in Figure \ref{fig:confusion_matrix}B is relatively straight-forward. Overall classifier performance across all classes can also be characterized with a single ROC curve using macro, weighted, or micro averaging \citep{scikit-learn_sklearnmetricsroc_auc_score_2021}.
 
-\begin{itemize}
+\begin{itemize}[itemsep=2pt]
     \item \textbf{Macro}: averaging matches the unweighted arithmetic mean of metric values.
     \item \textbf{Weighted}: averaging follows the procedure of macro-averaging but adds a weight for each class contribution based on the fraction of total observations that fall within that class. 
     \item \textbf{Micro}: averaging considers class results in aggregate, so statistics are calculated across the entire confusion matrix. TPR becomes the accuracy and FPR becomes the error rate.
@@ -54,11 +54,11 @@ For imbalanced data sets, micro will indicate better performance than macro due 
 
 \subsubsection{Binary Formulation} 
 
-The classic \acrlong{lr} (\acrshort{lr}) model is a binary classifier that predicts one of two labels based on the input data. LR frames the problem as a linear combination of the input observations \citep[p 369]{bertsimas_analytics_2016}:
+The classic \acrlong{lr} (\acrshort{lr}) model is a binary classifier that predicts one of two labels based on the input data. LR frames the problem as a linear combination of the input observations \citep[p.\ 369]{bertsimas_analytics_2016}:
 
 \begin{equation}
 \label{eq:logreg_form}
-    y = W^TX = w_0 + w_1 * x_1 + w_2 * x_2 \ldots + w_n * x_n 
+    \hat{y} = {\bf{w^Tx}} = w_0 + w_1 * x_1 + w_2 * x_2 \ldots + w_n * x_n 
 \end{equation}
 
 Where $x_i$ are the feature observations, $w_i$ are coefficients or weights for those features, and $y_i$ is a weighted sum. Solving for the weights in this equation ($w_i$) requires an iterative optimization procedure like gradient descent. This procedure is framed as a minimization problem by defining a cost function ($J(\Theta)$) based on the negative log likelihood \citep{ng_logistic_2011}:
@@ -70,16 +70,17 @@ Where $x_i$ are the feature observations, $w_i$ are coefficients or weights for 
 \end{aligned}
 \end{equation}
 
-Here, $h_{\theta}(x)$ is the sigmoid function, which converts the weighted sum from equation \ref{eq:logreg_form} to something close to a binary 0 or 1 value \citep[p. 369]{bertsimas_analytics_2016}:
+Here, $h_{\theta}(x)$ is the sigmoid function, which converts the weighted sum from equation \ref{eq:logreg_form} to something close to a binary 0 or 1 value \citep[p.\ 369]{bertsimas_analytics_2016}:
 
 \begin{equation}
 \label{eq:sigmoid}
-h_{\theta}(x) = \frac{1}{(1+e^{-y})} = \frac{1}{(1+e^{-W^TX})}
+h_{\theta}(x) = \frac{1}{(1+e^{-\hat{y}})} = \frac{1}{(1+e^{-W^TX})}
 \end{equation}
 
 Regularization is added to logistic regression to avoid overfitting, specifically by penalizing the sum of the squared weights (L2-regularization). A constant ($\lambda$) determines the trade-off of influence between the magnitude of the weights and negative log likelihood in the minimization \citep{ng_regularization_2011}.
 
 \begin{equation}
+\label{eq:logreg_cost_reg}
     regularized\,J(\Theta) = -\frac{1}{m}\sum_{i=1}^{m}{\text{Cost}(h_{\theta}(x_i),y_i) + \frac{\lambda}{2m}\sum_{j=1}^{n}{w_j^2}}
 \end{equation}
 
@@ -100,11 +101,13 @@ Brute force tuning of a hyperparameter can be accomplished by training a series 
 \cline{2-4}
                                  & WDS   & WDS4  & WDS8  \\ \hline
 \multicolumn{1}{|c|}{C}          & 0.170 & 0.085 & 0.085 \\ \hline
-\multicolumn{1}{|c|}{AUCtrain} & 0.896 & 0.882 & 0.886 \\ \hline
-\multicolumn{1}{|c|}{AUCtest}  & 0.799 & 0.890 & 0.879 \\ \hline
+\multicolumn{1}{|c|}{Accuracy$_{train}$} & 0.703 & 0.701 & 0.709 \\ \hline
+\multicolumn{1}{|c|}{Accuracy$_{test}$}  & 0.611 & 0.709 & 0.701 \\ \hline
+\multicolumn{1}{|c|}{AUC$_{train}$} & 0.892 & 0.877 & 0.882 \\ \hline
+\multicolumn{1}{|c|}{AUC$_{test}$}  & 0.785 & 0.891 & 0.875 \\ \hline
 \end{tabular}
 \singlespacing
-\caption[Logistic regression tuning results]{Tuning results for logistic regression C hyperparameter based on input data set. AUC$_{train}$ and AUC$_{test}$ define in-sample and out-of-sample AUC values.}
+\caption[Logistic regression tuning results]{Logistic regression hyperparameter tuning results for each data set. Accuracy and AUC model statistics are split into train (in-sample) and test (out-of-sample) values.}
 \label{tab:logreg_tuning}
 \end{wraptable}
 
@@ -128,7 +131,7 @@ AUC values calculated on test subsets indicate WDS4 has the best out-of-sample p
 \label{fig:logreg_coefs}
 \end{figure}
 
-\subsubsection{Recursive Feature Elimination} \label{ch5:logreg_rfe}
+\subsubsection{Feature Selection} \label{ch5:logreg_rfe}
 Logistic regression models assume a linear relationship between predictors and the response variable, but adding more predictors will not necessarily improve the model. Feature selection can lead to simpler models with the same predictive power but reduced risk of collinearity, which is important when managing data from naturally integrated earth systems. 
 
 One method for selecting the number of features to keep involves an iterative process called \acrlong{rfe} (\acrshort{rfe}) (Brownlee, 2020c; scikit-learn, 2021d). The concept is relatively simple: RFE recursively selects and removes the feature with the smallest coefficient in the logistic regression model, then refits the data and repeats until a user-defined number of features is reached.  A plot of AUC vs. number of features can be constructed by looping over different feature limits, where the logistic regression model is fit on the training subset and evaluated on the validation subset (Figure \ref{fig:logreg_rfe}). Based on the plot, a local peak in AUC occurs when 18 features are used. Adding the remaining features results in small gains in AUC, but with diminishing returns for six additional features of complexity. Using this threshold, the data layers removed from the model include: DEM Gradient, Gravity Gradient, Magnetic Anomaly, Magnetic Anomaly Gradient, Water Table Depth, and Average Precipitation. Note that Average Precipitation appears higher on the coefficients plot (Figure \ref{fig:logreg_coefs}) than other features that were not removed. Since RFE iteratively removes predictors and refits the model, relative coefficients can change, particularly if there was collinearity with a removed variable.
@@ -172,14 +175,14 @@ Model predictions for the study area are generated by passing the FDS through th
 
 \subsection{Decision Trees}\label{ch5:decision_trees}
  
-A decision tree, sometimes known as a Classification and Regression Tree (CART), classifies observations using a cascading set of evaluations, each on individual predictor variables. There is no assumption of a linear response in the system. In fact, decision trees are uniquely suited to representing non-linear behavior in a highly-explainable way; once constructed, the decision tree describes a flowchart-like roadmap for each label assignment \citep[p. 373-375]{bertsimas_analytics_2016}. Not every predictor will necessarily appear in the decision tree --- only those found to be significant during tree construction. And the most significant variables tend to be associated with early decision splits, placing them higher in the tree \citep[p. 376]{bertsimas_analytics_2016}. Because of this, decision trees naturally provide insights into feature importance. 
+A decision tree, sometimes known as a Classification and Regression Tree (CART), classifies observations using a cascading set of evaluations, each on individual predictor variables. There is no assumption of a linear response in the system. In fact, decision trees are uniquely suited to representing non-linear behavior in a highly-explainable way; once constructed, the decision tree describes a flowchart-like roadmap for each label assignment \citep[p. 373--375]{bertsimas_analytics_2016}. Not every predictor will necessarily appear in the decision tree --- only those found to be significant during tree construction. And the most significant variables tend to be associated with early decision splits, placing them higher in the tree \citep[p. 376]{bertsimas_analytics_2016}. Because of this, decision trees naturally provide insights into feature importance. 
 
 \subsubsection{Tree Construction}
 Decision trees are constructed by recursively performing binary splits on the training data set. Each split defines two new nodes in the tree, which correspondingly separates a group within the training data into subgroups. These subgroups represent child paths from the split node that terminate in two new terminal leaf nodes on the tree. The classification decision for each leaf will be the most commonly occurring class from the training data observations that are assigned to that leaf \citep[p. 311]{james_introduction_2013}.
 
 There are three metrics that can play a role in evaluating the discriminating quality of a particular decision node on the tree:
 
-\begin{itemize}
+\begin{itemize}[itemsep=2pt]
     \item \textbf{Classification error rate}: the proportion of training samples that do not match the dominant class associated with a leaf node \citep[p. 312]{james_introduction_2013}.
     \begin{equation} \label{eq:error_rate}
         E = 1 - \max_k(\hat{p}_{mk})
@@ -250,23 +253,25 @@ Final hyperparameter values and performance results for WDS, WDS4, and WDS8 are 
 
 \begin{table}[!htp]
 \centering
-\begin{tabular}{c|c|c|c|}
+\begin{tabular}{l|c|c|c|}
 \cline{2-4}
                                           & WDS & WDS4 & WDS8 \\ \hline
-\multicolumn{1}{|c|}{criterion}           & Gini & Entropy & Entropy \\ \hline
-\multicolumn{1}{|c|}{max\_depth}          & 5 & 8 & 10 \\ \hline
-\multicolumn{1}{|c|}{min\_samples\_leaf}  & 7 & 8 & 10 \\ \hline
-\multicolumn{1}{|c|}{min\_samples\_split} & 21 & 17 & 24 \\ \hline
-\multicolumn{1}{|c|}{max\_features}       & 5 & 8 & 6 \\ \hline
-\multicolumn{1}{|c|}{ccp\_alpha}          & 0  & 0 & 0 \\ \hline
-\multicolumn{1}{|c|}{AUC$_{train}$}       & 0.89 & 0.97 & 0.99 \\ \hline
-\multicolumn{1}{|c|}{AUC$_{test}$} & 0.82 & 0.95 & 0.96 \\ \hline
+\multicolumn{1}{|l|}{criterion}           & Gini & Entropy & Entropy \\ \hline
+\multicolumn{1}{|l|}{max\_depth}          & 5    & 8    & 10   \\ \hline
+\multicolumn{1}{|l|}{min\_samples\_leaf}  & 7    & 8    & 10   \\ \hline
+\multicolumn{1}{|l|}{min\_samples\_split} & 21   & 17   & 24   \\ \hline
+\multicolumn{1}{|l|}{max\_features}       & 5    & 8    & 6    \\ \hline
+\multicolumn{1}{|l|}{ccp\_alpha}          & 0    & 0    & 0    \\ \hline
+\multicolumn{1}{|l|}{Accuracy$_{train}$}  & 0.767 & 0.881 & 0.880 \\ \hline
+\multicolumn{1}{|l|}{Accuracy$_{test}$}   & 0.600 & 0.818 & 0.838 \\ \hline
+\multicolumn{1}{|l|}{AUC$_{train}$}       & 0.909 & 0.982 & 0.985 \\ \hline
+\multicolumn{1}{|l|}{AUC$_{test}$}        & 0.814 & 0.944 & 0.961 \\ \hline
 \end{tabular}
-\caption[Decision tree hyperparameter values]{Tuned hyperparameter selections and resulting model AUC for training and test subsets of WDS, WDS4, and WDS8.}
+\caption[Decision tree hyperparameter values]{Tuned hyperparameter selections and resulting decision tree model Accuracy and AUC for training and test subsets of WDS, WDS4, and WDS8.}
 \label{tab:dtree_tuning}
 \end{table}
 
-\subsubsection{Feature Importances} \label{ch5:dtree_feat_importance}
+\subsubsection{Feature Selection} \label{ch5:dtree_feat_importance}
 
 Figure \ref{fig:dtree_feat_import} shows the feature importances determined by the decision trees for WDS, WDS4, and WDS8.  Features are sorted on the sum importance value across all 3 data sets. Although differences exist, Si Geothermometer Temperature appears as the most important predictor in all cases. And the bottom six features are also remarkably consistent across the data sets: Water Table Depth, Water Table Gradient, Gravity Anomaly Gradient, Magnetic Anomaly, Magnetic Anomaly Gradient, and DEM Gradient. Dropping these features reduces the overall decision tree data set to 18 features total.
 
@@ -296,7 +301,7 @@ Figure \ref{fig:dtree_auc} shows the macro average, micro average, and individua
 \label{fig:dtree_auc}
 \end{figure}
 
-Model predictions for the study area are generated by passing the FDS through the DT model. Class predictions based on the OvR methodology are plotted in Figure \ref{fig:dtree_final_map}. The high-grade geothermal gradient patches to the southeast and central regions of the AOI are smaller in areal extent and more disconnected than for the LR model (Figure \ref{fig:logreg_final_map}). Predictions for low or no-gradient are concentrated to the NW in the CP province, central-east where RGR transitions into the Great Plains, and south in the southern BR province. The overall distribution of geothermal gradient classes matches the \citet{bielicki_hydrogeolgic_2015} PFA layer (Figure \ref{fig:dtree_final_map}) with a greater distribution of high-gradient locations and fewer low/no-gradient ones.
+Model predictions for the study area are generated by passing the FDS through the DT model. Class predictions based on the OvR methodology are plotted in Figure \ref{fig:dtree_final_map}. The high-grade geothermal gradient patches to the southeast and central regions of the AOI are not as continuous and broad as in the LR model (Figure \ref{fig:logreg_final_map}). Predictions for low or no-gradient are concentrated to the NW in the CP province, central-east where RGR transitions into the Great Plains, and south in the southern BR province. The overall distribution of geothermal gradient classes is similar to the \citet{bielicki_hydrogeolgic_2015} PFA layer (Figure \ref{fig:dtree_final_map}), with a greater distribution of high-gradient locations and fewer low/no-gradient ones in the DT model.
 
 \begin{figure}[!htp]
 \centering
@@ -305,7 +310,7 @@ Model predictions for the study area are generated by passing the FDS through th
 \label{fig:dtree_final_map}
 \end{figure}
 
-Interesting high-gradient patches appear to the southwest and northeast, one of which is surrounded by an unusually cohesive ring of class 0 non-thermal predictions. Note that when the random seed changes and a new decision tree is constructed, this ring typically goes away. In fact, one downside of the decision tree model is its unstable nature; decision trees can change each time the algorithm is run, even on the same training data, due to randomness in the node splitting process. Nevertheless, tree performance remains relatively stable overall. And the ability to plot and trace through the model makes it one of the most accessible and interpretable methods to use (See Figure \ref{fig:dtree_viz}).
+Note that if the random seed (currently fixed at 43 for solution repeatability) changes and a new decision tree is constructed, some of the smaller features in this DT prediction will resize or disappear altogether. In fact, one downside of the decision tree model is this randomness; decision trees will structurally rearrange each time the algorithm is run, even on the same training data, due to randomness in the node splitting process. Nevertheless, tree performance remains relatively stable overall. And the ability to plot and visually step through the model makes it one of the most accessible and interpretable methods to use (See Figure \ref{fig:dtree_viz}).
 
 \begin{figure}[!htp]
 \centering
@@ -379,21 +384,126 @@ Next, tuning was performed on the \verb|min_child_weight| hyperparameter. Result
 
 XGBoost uses a default value of 0 for the \verb|gamma| hyperparameter, which controls when tree partitioning should be rejected based on loss reduction. Cross-validation shows nearly level AUC values out to \verb|gamma| = $3.8 \text{x} 10^-3$, after which the AUC score quickly drops. This threshold value was selected for the model (Figure \ref{fig:xgb_hyperparam}C).
 
-Trees in the XGB model can be trained on random subsets of training data observations and individual feature columns. Tuning of \verb|subsample| identified a broad maximum in AUC when using 70\% of the training observations (Figure \ref{fig:xgb_hyperparam}D). The best result when tuning \verb|colsample_bytree| occurs when 60\% of the features are included in the training  (Figure \ref{fig:xgb_hyperparam}E). A value below 100\% for \verb|colsample_bytree| suggests dimensionality reduction could be beneficial, as was discussed for both logistic regression (Section \ref{ch5:logreg_rfe}) and decision trees (Section \ref{ch5:dtree_feat_importance}) based on measures of feature importance. A more robust method for approaching this topic is discussed in Section \ref{ch5:xgb_shapley} on Shapley values.
+Trees in the XGB model can be trained on random subsets of training data observations and individual feature columns. Tuning of \verb|subsample| identified a broad maximum in AUC when using 70\% of the training observations when building decision trees (Figure \ref{fig:xgb_hyperparam}D). The best result when tuning \verb|colsample_bytree| occurs when 60\% of the features are included in the training (Figure \ref{fig:xgb_hyperparam}E). A value below 100\% for \verb|colsample_bytree| suggests dimensionality reduction could be beneficial, as was discussed for both logistic regression (Section \ref{ch5:logreg_rfe}) and decision trees (Section \ref{ch5:dtree_feat_importance}) based on measures of feature importance. A more robust method for feature selection is discussed in Section \ref{ch5:xgb_shapley} on Shapley values.
+
+Tuning results show model AUC remains flat, then quickly drops for increasing values of the \verb|lambda| hyperparameter (Figure \ref{fig:xgb_hyperparam}E). This behavior shows how higher levels of regularization can cause data underfitting. The largest \verb|lambda| value just short of this drop-off was selected for the final model.
+
+\verb|scale_pos_weight| was similarly tuned, but AUC results remained unchanged for all hyperparameter values tested. The XGB model appears to be insensitive to this hyperparameter.
+
+As a final step in model tuning, \verb|learning_rate| was decreased to 0.005 and \verb|n_estimators| increased to 1000.  Using the slower learning rate reduces the chance of overfitting the training data, while the increased number of sequential trees in the model ensures a good fit can be learned. 
+Final hyperparameter values and performance results for WDS, WDS4, and WDS8 are listed in Table \ref{tab:xgb_tuning}. Once again, WDS4 and WDS8 out-perform the original WDS based on AUC values for the test set.
 
 \begin{table}[!htp]
     \centering
-    \begin{tabular}{c|c}
-         &  \\
-         & 
+    \begin{tabular}{l|c|c|c|}
+    \cline{2-4}
+                                             & WDS   & WDS4    & WDS8  \\ \hline
+    \multicolumn{1}{|l|}{max\_depth}         & 6     & 6       & 6     \\ \hline
+    \multicolumn{1}{|l|}{min\_child\_weight} & 2     & 2       & 5     \\ \hline
+    \multicolumn{1}{|l|}{gamma}              & 0.5   & 0.3     & 0.5   \\ \hline
+    \multicolumn{1}{|l|}{subsample}          & 0.8   & 0.7     & 0.7   \\ \hline
+    \multicolumn{1}{|l|}{colsample\_bytree}  & 0.4   & 0.6     & 0.6   \\ \hline
+    \multicolumn{1}{|l|}{reg\_lambda}        & 0.30  & 3.8E-03 & 1.3   \\ \hline
+    \multicolumn{1}{|l|}{scale\_pos\_weight} & 0.0   & 0.0     & 0.0   \\ \hline
+    \multicolumn{1}{|l|}{learning\_rate}     & 0.005 & 0.005   & 0.005 \\ \hline
+    \multicolumn{1}{|l|}{n\_estimators}      & 1000  & 1000    & 1500  \\ \hline
+    \multicolumn{1}{|l|}{Accuracy$_{train}$} & 0.995 & 0.991   & 0.988 \\ \hline
+    \multicolumn{1}{|l|}{Accuracy$_{test}$}  & 0.767 & 0.944   & 0.955 \\ \hline
+    \multicolumn{1}{|l|}{AUC$_{train}$}      & 1.000 & 1.000   & 1.000 \\ \hline
+    \multicolumn{1}{|l|}{AUC$_{test}$}       & 0.938 & 0.995   & 0.995 \\ \hline
     \end{tabular}
-    \caption{Caption}
+    \caption[XGBoost hyperparameter values]{Tuned hyperparameter selections and resulting XGBoost model AUC for training and test subsets of WDS, WDS4, and WDS8.}
     \label{tab:xgb_tuning}
 \end{table}
 
-\subsubsection{Shapley Values}\label{ch5:xgb_shapley}
+\subsubsection{Feature Selection}\label{ch5:xgb_shapley}
+
+As a tree-based machine learning method, XGBoost naturally provides feature importances as a product of model-fitting. The XGBoost package offers five kinds of global feature importance calculations \citep{xgboost_developers_xgboost_2020}, but each may give a slightly different ordering and suggested relative impact of the predictors in the feature set. At issue here are two concepts in importance definition methods: consistency, or the independence of a feature importance value and the reliance of a model on that feature, and local accuracy, or the idea that the sum of the importances is equivalent with the overall model importance \citep{lundberg_interpretable_2020}. A study of six different approaches to interpreting models through feature attribution showed most do not meet both desirable properties, with the exception of \acrlong{shap} (\acrshort{shap}) values \citep{lundberg_consistent_2019}.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-Shapley.png}
+\caption[XGBoost SHAP values]{SHAP values for the XGBoost classifier derived using the test subset of WBS4. Step-like tiers in cumulative variable importances separate out the top five predictors, the middle eleven, and four features with low predictive value.}
+\label{fig:xgb_shap_global}
+\end{figure}
+
+Shapley values derive from cooperative gain theory \citep{shapley_value_1997}, but have gained traction in the machine learning community partly because they predict importances without assuming complete feature independence \citep{lundberg_unified_2017}. In addition to managing collinearity, Shapley values have several desirable features. For example, if two features impact a model prediction equally, they will also have equivalent Shapley values. And a Shapley value of zero means the feature has no predictive impact. The SHAP method produces values that have global significance for general feature importance but also local significance for an individual prediction; the sum of SHAP values is equivalent to the deviation of the model prediction from the average value (baseline), meaning SHAP values describe the individual contributions of each feature to a prediction value \citep{lundberg_unified_2017}.
+
+Figure \ref{fig:xgb_shap_global} shows the SHAP values calculated from the XGBoost classifier. The plotted values are the average absolute value of SHAP based on the test data set for WDS4, and colors show the individualized value distributions for the four geothermal gradient classes. The top five most important features include Si Geothermometer Temperature, Heat Flow, Crustal Thickness, Volcanic Dike Density, and Spring Density.  Features not shown in the plot were deemed to have zero value (i.e., DEM Gradient, Gravity Gradient, Magnetic Anomaly Gradient, and Water Table Depth). The lowermost four features on the plot --- Absorbed Dose Rate, Magnetic Anomaly, Average Precipitation, and Water Table Gradient --- were also selected for elimination, reducing the final feature set for the XGBoost model to sixteen predictors.
+
+\subsubsection{Optimized Model Results}\label{ch5:xgb_final_model}
+\begin{wrapfigure}{R}{0.50\linewidth}
+\centering
+\includegraphics[width=0.45\textwidth]{templates/images/Figure-XGB16-ConfusionMatrix.png}
+\singlespacing
+\caption[XGBoost confusion matrix]{Confusion matrix for the tuned XGB model trained on WDS4.}
+\label{fig:xgb_conf_matrix}
+\end{wrapfigure}
+A final XGB model parameterized with the tuned values was trained on the sixteen-feature version of WDS4. The resulting confusion matrix (Figure \ref{fig:xgb_conf_matrix}) demonstrates why XGBoost receives best-in-class praise as a predictive method. Test set accuracy for WDS4 exceeds 94\%. The largest number of mis-classifications (12) occur between high-grade (class 3) and medium-grade (class 2) geothermal gradient. And ten additional inaccurate labels involve low-grade (class 1) mistaken as medium-grade or vice-versa. Only two records were off by more than one consecutive class. 
+
+Figure \ref{fig:xgb_auc} shows the macro average, micro average, and individual class XGB ROC curves. All individual class AUC values are at or above 0.99. This is close to an ideal ROC plot for a classifier.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=.5\textwidth]{templates/images/Figure-XGB16-AUC.png}
+\caption[XGBoost AUC curves]{ROC AUC curves for tuned XGB model trained on WDS4.}
+\label{fig:xgb_auc}
+\end{figure}
+
+Model predictions for the study area are generated by passing the FDS through the XGB model, as shown in Figure \ref{fig:xgb_final_map}. High-grade geothermal gradient areas to the southeast and central regions of the AOI align with the class 3 locations in the \citet{bielicki_hydrogeolgic_2015} PFA layer. The XGBoost model predicts more spatially continuous and connected high-grade regions, with a limited number of isolated patches to the southwest and on the northern section of the Rio Grande River. Both maps have a similar non-geothermal class 0 region to the north, but they differ midway along the Rio Grande, to the south, and in the eastern panhandle where the PFA map predicts no-/low-grade classifications.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-XGB-FinalMap_Joint.png}
+\caption[XGBoost prediction map]{Left: Map predictions of geothermal gradient from the tuned XGB model trained on WDS4. Right: geothermal gradient data layer from southwestern NM PFA study \protect\citep{bielicki_hydrogeolgic_2015}.}
+\label{fig:xgb_final_map}
+\end{figure}
 
 \subsection{Neural Networks}
+The concept of \acrlong{ann}s (\acrshort{ann}s or just \acrshort{nn}s) comes from a simplified representation of neuron activity in the brain \citep[p.\ 394]{hastie_elements_2009}. Multiple inputs are fed into a neuron cell from many branches on one end, and given the right combination of those inputs, the cell will fire and propagate a signal to the next connected neuron.
+
+In neural networks, cells are represented by logistic units (Figure \ref{fig:nn_schematic}). Each unit acts like a logistic regression operation, where inputs are scaled by weights, and the linear sum of the weighted inputs are passed through an “activation function” to determine if the output is a 0 or a 1. As in logistic regression, the sigmoid function (Equation \ref{eq:sigmoid}) is a common choice, but many other activation functions like the \acrlong{relu} (\acrshort{relu}) are used as well \citep{brownlee_gentle_2019}.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-ANN.png}
+\caption[Neural network schematic]{Schematic of a simplified logistic unit (Left) and a fully-connected artificial neural network (Right) with a single hidden layer made up of logistic units $a_1$ through $a_m$. Bias units (subscript 0) traditionally have a value of 1, but are weighted in linear combinations like other units. Four units in the output layer make this a four-class classifier.}
+\label{fig:nn_schematic}
+\end{figure}
+
+Each logistic unit performs the following operation 
+
+\begin{equation}
+    {\bf{a}} = g({\bf{z}}) = g({\bf{W^TX}})
+\end{equation}
+
+where $g$ is the activation function and $\bf{W}$ are the weights. For the first hidden layer, $\bf{X}$ will be the predictor values from the input layer as shown in Figure \ref{fig:nn_schematic}. For any additional hidden layers, $\bf{X}$ consists of the outputs of units from the preceding layer. Here, $\bf{z}$ is described in matrix notation but has the same form as Equation \ref{eq:logreg_form}. 
+
+The cost function for a neural network takes on the form of a loss term and a complexity term (Ng, 2011b):
+
+\begin{equation}
+    \begin{aligned}
+        J(\Theta) &= 
+        -\frac{1}{m}\sum_{i=1}^{m}{
+        L(\hat{y}_i, y_i)} + \frac{\lambda}{2m}
+        \sum_{l=1}^{L-1}{
+        \sum_{i=1}^{s_l}{
+        \sum_{j=1}^{s_{l+1}}{(w_{ij}^{l})^2}}} \\
+        &= -\frac{1}{m}
+        \sum_{i=1}^{m}{
+        \sum_{k=1}^{K}{
+        y_k^{(i)}\log{h_{\theta}(x^{(i)})_k}+
+        (1-y_k^{(i)})\log{(1-h_{\theta}(x^{(i)})_k)}}}\ + \\
+        &\qquad \frac{\lambda}{2m}
+        \sum_{l=1}^{L-1}{
+        \sum_{i=1}^{s_l}{
+        \sum_{j=1}^{s_{l+1}}{(w_{ij}^{l})^2}}}
+    \end{aligned}
+\end{equation}
+
+Which looks very similar to the regularized negative log likelihood cost function for logistic regression (Equation \ref{eq:logreg_cost_reg}). Here, $m$ is the number of predictor values in the input layer, $K$ is the number of outputs, $L$ is the number of layers, and $i$ and $j$ track the weights for layer $j$, unit $i$. $\lambda$ is a regularization term controlling the balance between the loss term and complexity term in the cost function. 
+
+As usual, minimizing this loss function is the goal of the NN learning process. This is generally accomplished using the backpropagation algorithm to compute the gradients needed for a gradient descent optimization \citep[p.\ 396]{hastie_elements_2009}.
 
 \subsection{Uncertainty Analysis}
 
