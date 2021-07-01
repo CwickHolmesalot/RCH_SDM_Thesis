@@ -13,7 +13,7 @@
 Supervised learning methods for classification come in a wide variety of shapes and sizes. Rather than settle on one for predicting geothermal gradient, four different methods are applied to the southwestern NM data set. Figure \ref{fig:model_flow} illustrates the high-level modeling flow, where model complexity increases with successive steps. The method descriptions below only briefly delve into important model mechanics and key hyperparameters (i.e., parameters not learned from data) that impact model performance. Other sources can provide a deeper review of machine learning algorithms and their mathematical underpinnings. This investigation should instead be considered an applied case study that uses these algorithms as tools for generating insights on geothermal potential. 
 
 \subsection{Assessing Performance}
-Building an intuition for the differences in predictive ability of different models first requires a clear definition of the scoring metric(s) used to compare those models. The characterization of classifier performance typically begins with a confusion matrix. In its simplest form, the confusion matrix evaluates class predictions as \acrlong{tp} (\acrshort{tp}; predicted 1, actually 1), \acrlong{tn} (\acrshort{tn}; predicted 0, actually 0), \acrlong{fp} (\acrshort{fp}; predicted 1, actually 0), and \acrlong{fn} (\acrshort{fn}; predicted 0, actually 1). For the multi-class problem, the confusion matrix expands to include all correct classification and mis-classification options. Figure \ref{fig:confusion_matrix} illustrates the elements of a 4-class matrix.
+Building an intuition for the differences in predictive ability of different models first requires a clear definition of the scoring metric(s) used to compare those models. The characterization of classifier performance typically begins with a confusion matrix. In its simplest form, the confusion matrix evaluates class predictions as \acrlong{tp} (\acrshort{tp}; predicted 1, actually 1), \acrlong{tn} (\acrshort{tn}; predicted 0, actually 0), \acrlong{fp} (\acrshort{fp}; predicted 1, actually 0), and \acrlong{fn} (\acrshort{fn}; predicted 0, actually 1). For the multi-class problem, the confusion matrix expands to include all correct classification and misclassification options. Figure \ref{fig:confusion_matrix} illustrates the elements of a 4-class matrix.
 
 \begin{figure}[!htp]
 \centering
@@ -152,7 +152,7 @@ One method for selecting the number of features to keep involves an iterative pr
 \caption[Logistic regression confusion matrix]{Confusion matrix for the tuned LR model trained on WDS4.}
 \label{fig:logreg_conf_matrix}
 \end{wrapfigure}
-A final LR model trained on WDS4 was constructed using the tuned C hyperparameter and reduced feature set from RFE. The confusion matrix suggests the model performs well overall (Figure \ref{fig:logreg_conf_matrix}). Correct predictions for all four classes of geothermal gradient (TP) outnumber the mis-classifications for those classes (FP). The model appears to struggle most with differentiating between class 2 and class 3 locations, which separate mid-grade (40-60 $^\circ$C/km) from high-grade gradients (>60 $^\circ$C/km), although there are a large number of mis-classifications (26) of low-grade gradient as high-grade as well.
+A final LR model trained on WDS4 was constructed using the tuned C hyperparameter and reduced feature set from RFE. The confusion matrix suggests shows moderately good model performance (Figure \ref{fig:logreg_conf_matrix}). Correct predictions for all four classes of geothermal gradient (TP) outnumber the misclassifications for those classes (FP). The model appears to struggle most with differentiating between class 2 and class 3 locations, which separate mid-grade (40-60 $^\circ$C/km) from high-grade gradients (>60 $^\circ$C/km), although there are a large number of misclassifications (26) of low-grade gradient as high-grade as well.
 
 Figure \ref{fig:logreg_auc} plots the macro average, micro average, and individual class ROC curves. Class 0 (non-thermal) predictive ability is quite high, pulling the micro-average AUC up to 0.88.  The macro AUC value of 0.85 is more aligned with the performance for other classes, which range from an AUC of 0.79-0.83. The trade-off between Class 2 and Class 3 is apparent in how the curve shapes mirror each other.
 
@@ -160,7 +160,7 @@ Figure \ref{fig:logreg_auc} plots the macro average, micro average, and individu
 \centering
 \includegraphics[width=0.6\textwidth]{templates/images/Figure-LR-AUC.png}
 \singlespacing
-\caption[Logistic regression AUC curves]{ROC AUC curves for the tuned LR model trained on WDS4.}
+\caption[Logistic regression ROC curves]{ROC curves for the tuned LR model trained on WDS4.}
 \label{fig:logreg_auc}
 \end{figure}
 
@@ -283,21 +283,23 @@ Figure \ref{fig:dtree_feat_import} shows the feature importances determined by t
 \end{figure}
 
 \subsubsection{Optimized Model Results}
+
 \begin{figure}[!htp]
 \centering
-\includegraphics[width=0.45\textwidth]{templates/images/Figure-DT-ConfusionMatrix.png}
+\includegraphics[width=0.5\textwidth]{templates/images/Figure-DT-ConfusionMatrix.png}
 \singlespacing
 \caption[Decision tree confusion matrix]{Confusion matrix for tuned DT model trained on WDS4.}
 \label{fig:dtree_conf_matrix}
 \end{figure}
-A final DT model trained on WDS4 was constructed using the tuned parameters and 18-predictor reduced feature set. The confusion matrix (Figure \ref{fig:dtree_conf_matrix}) demonstrates an improvement in model results over the logistic regression method. Low-grade geothermal locations are correctly predicted for almost double the number of sites, and half as many mis-classifications are observed between class 2 (mid-grade) and class 3 (high-grade) geothermal as with the LR model.
+
+A final DT model trained on WDS4 was constructed using the tuned parameters and 18-predictor reduced feature set. The confusion matrix (Figure \ref{fig:dtree_conf_matrix}) demonstrates an improvement in model results over the logistic regression method. Low-grade geothermal locations are correctly predicted for almost double the number of sites, and half as many misclassifications are observed between class 2 (mid-grade) and class 3 (high-grade) geothermal as with the LR model.
 
 Figure \ref{fig:dtree_auc} shows the macro average, micro average, and individual class DT ROC curves. All individual class AUC values exceed 0.90. Class 0 (non-geothermal) continues to demonstrate the highest predictive ability (AUC=0.97), but the performance of class 3 (high-grade) is most responsible for boosting micro-average AUC at higher decision thresholds where the class 0 ROC curve steeply drops in TPR for FPR < 0.1. Class 2 (medium-grade) classification performance lags behind the other classes for the DT classifier.
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=0.6\textwidth]{templates/images/Figure-DT_AUC.png}
-\caption[Decision tree AUC curves]{ROC AUC curves for the tuned DT model trained on WDS4.}
+\caption[Decision tree ROC curves]{ROC curves for the tuned DT model trained on WDS4.}
 \label{fig:dtree_auc}
 \end{figure}
 
@@ -439,14 +441,14 @@ Figure \ref{fig:xgb_shap_global} shows the SHAP values calculated from the XGBoo
 \caption[XGBoost confusion matrix]{Confusion matrix for the tuned XGB model trained on WDS4.}
 \label{fig:xgb_conf_matrix}
 \end{wrapfigure}
-A final XGB model parameterized with the tuned values was trained on the sixteen-feature version of WDS4. The resulting confusion matrix (Figure \ref{fig:xgb_conf_matrix}) demonstrates why XGBoost receives best-in-class praise as a predictive method. Test set accuracy for WDS4 exceeds 94\%. The largest number of mis-classifications (12) occur between high-grade (class 3) and medium-grade (class 2) geothermal gradient. And ten additional inaccurate labels involve low-grade (class 1) mistaken as medium-grade or vice-versa. Only two records were off by more than one consecutive class. 
+A final XGB model parameterized with the tuned values was trained on the sixteen-feature version of WDS4. The resulting confusion matrix (Figure \ref{fig:xgb_conf_matrix}) demonstrates why XGBoost receives best-in-class praise as a predictive method. Test set accuracy for WDS4 exceeds 94\%. The largest number of misclassifications (12) occur between high-grade (class 3) and medium-grade (class 2) geothermal gradient. And ten additional inaccurate labels involve low-grade (class 1) mistaken as medium-grade or vice-versa. Only two records were off by more than one consecutive class. 
 
 Figure \ref{fig:xgb_auc} shows the macro average, micro average, and individual class XGB ROC curves. All individual class AUC values are at or above 0.99. This is close to an ideal ROC plot for a classifier.
 
 \begin{figure}[htp]
 \centering
 \includegraphics[width=.5\textwidth]{templates/images/Figure-XGB16-AUC.png}
-\caption[XGBoost AUC curves]{ROC AUC curves for tuned XGB model trained on WDS4.}
+\caption[XGBoost ROC curves]{ROC curves for tuned XGB model trained on WDS4.}
 \label{fig:xgb_auc}
 \end{figure}
 
@@ -460,18 +462,18 @@ Model predictions for the study area are generated by passing the FDS through th
 \end{figure}
 
 \subsection{Neural Networks}
-The concept of \acrlong{ann}s (\acrshort{ann}s or just \acrshort{nn}s) comes from a simplified representation of neuron activity in the brain \citep[p.\ 394]{hastie_elements_2009}. Multiple inputs are fed into a neuron cell from many branches on one end, and given the right combination of those inputs, the cell will fire and propagate a signal to the next connected neuron.
+The original concepts behind \acrlong{ann}s (\acrshort{ann}s or just \acrshort{nn}s) come from simplified models of neuron activity in the brain \citep[p.\ 394]{hastie_elements_2009}. At a high level, multiple inputs are fed into neuron cells from many branches on one end, and given the right combination of those inputs, these cells will fire and propagate a signal to the next group of connected neurons.
 
-In neural networks, cells are represented by logistic units (Figure \ref{fig:nn_schematic}). Each unit acts like a logistic regression operation, where inputs are scaled by weights, and the linear sum of the weighted inputs are passed through an “activation function” to determine if the output is a 0 or a 1. As in logistic regression, the sigmoid function (Equation \ref{eq:sigmoid}) is a common choice, but many other activation functions like the \acrlong{relu} (\acrshort{relu}) are used as well \citep{brownlee_gentle_2019}.
+In neural networks, cells are represented by logistic units (Figure \ref{fig:nn_schematic}). Each unit acts like a logistic regression operation, where inputs are scaled by weights, and the linear sum of the weighted inputs are passed through an “activation function” to determine if the output is a 0 or a 1. As in logistic regression, the sigmoid function (Equation \ref{eq:sigmoid}) commonly appears in network architectures, but many additional activation functions like the \acrlong{relu} (\acrshort{relu}) are frequently used as well \citep{brownlee_gentle_2019}.
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-ANN.png}
-\caption[Neural network schematic]{Schematic of a simplified logistic unit (Left) and a fully-connected artificial neural network (Right) with a single hidden layer made up of logistic units $a_1$ through $a_m$. Bias units (subscript 0) traditionally have a value of 1, but are weighted in linear combinations like other units. Four units in the output layer make this a four-class classifier.}
+\caption[Neural network schematic]{Schematic of a logistic unit (Left) and a fully-connected neural network (Right) with a single hidden layer made up of logistic units $a_1$ through $a_m$. Bias units (subscript 0) traditionally have a value of 1, but are weighted in linear combinations like other units. Four units in the output layer make this a four-class classifier.}
 \label{fig:nn_schematic}
 \end{figure}
 
-Each logistic unit performs the following operation 
+Each logistic unit performs the following operation:
 
 \begin{equation}
 \label{eq:nn_activation}
@@ -510,32 +512,33 @@ As usual, minimizing this loss function is the goal of the NN learning process. 
 \subsubsection{Hyperparameter Tuning}
 \begin{figure}[!htp]
 \centering
-\begin{minipage}{.36\linewidth}
+\begin{minipage}[b][][b]{.35\linewidth}
     \includegraphics[width=\linewidth]{templates/images/Figure-TF_NN_Structure.png}
-    \caption[Neural network structural flow]{Flow chart for the neural network, constructed using TensorFlow \protect\citep{abadi_tensorflow_2016}.}
-    \label{fig:ann_text_structure}
+    \caption[Neural network structural flow]{Structural flow chart for the TensorFlow-based neural network.}
+    \label{fig:nn_text_structure}
 \end{minipage}
 \hfill
-\begin{minipage}{.60\linewidth}
+\begin{minipage}[b][][b]{.61\linewidth}
     \includegraphics[width=\linewidth]{templates/images/Figure-ANN.pdf}
     \caption[Neural network structural schematic]{Schematic diagram of the neural network. Not shown are the dropout operations after each hidden layer.}
-    \label{fig:ann_dot_structure}
+    \label{fig:nn_dot_structure}
 \end{minipage}
 \end{figure}
-This analysis uses a neural network constructed with TensorFlow \citep{abadi_tensorflow_2016}. The network architecture includes hidden layers of the same size as the input layer. This results in a 4-layer structure comprising an input layer of size (1x24), two hidden layers also (1x24), and an output layer of (1x4), assuming all data set features are used (Figures \ref{fig:ann_text_structure}, \ref{fig:ann_dot_structure}). In addition, dropout is included after each of the hidden layers. Dropout helps prevent overfitting by randomly assigning inputs to zero, temporarily severing a defined percentage of node connections during each step of the training process.
+
+This thesis uses a TensorFlow-constructed neural network to test geothermal gradient classification performance for the southwestern NM study area \citep{abadi_tensorflow_2016}. The network design is a 4-layer structure starting with an input layer of size (1x24), followed by two hidden layers sized (1x24), and ending in a four-class output layer (1x4) (Figures \ref{fig:nn_text_structure}, \ref{fig:nn_dot_structure}). Layer sizes assume all 24 features are included in the training. In addition, the network applies dropout after each of the hidden layers. Dropout helps prevent overfitting by randomly assigning inputs to zero, temporarily severing a defined percentage of node connections during each step of the training process.
 
 Since the number of weights being learned scales with the layer count and size of each layer, the choice of network architecture is a tunable parameter. The simplicity of this \acrlong{fcn} (\acrshort{fcn}) design keeps the architecture easily explainable while still enabling the network to learn complex non-linear relationships for geothermal gradient prediction.
 
-Likewise, the choice of activation functions for each layer may also impact the performance of the network. ReLU functions overcome several limitations observed with other activation choices like the sigmoid function, e.g., limited sensitivity and vanishing gradients, making ReLU the current preferred default choice \citep{brownlee_gentle_2019}. Both hidden layers in the network described here apply ReLU activation functions.
+Likewise, the choice of activation functions for each layer may also impact the performance of the network. ReLU functions overcome several limitations seen with more traditional activation choices like the sigmoid function, e.g., limited sensitivity and vanishing gradients, making ReLU the present-day default standard for neural networks \citep{brownlee_gentle_2019}. Both hidden layers in the network described here apply ReLU activation functions.
 
-The Adam optimization method was chosen for training the network due to its computational efficiency and present-day status as the recommended general-purpose optimizer \citep{brownlee_gentle_2017}. A description of Adam is beyond the scope of this thesis, but more information is available in the literature \citep{kingma_adam_2017}.
+The Adam optimization method was chosen for training the network due to its computational efficiency and current status as the recommended general-purpose optimizer \citep{brownlee_gentle_2017}. A description of Adam is beyond the scope of this thesis, but more information is widely available elsewhere \citep[e.g.,\ ][]{kingma_adam_2017}.
 
-The training process updates the network weights using gradients calculated from the training data in each training epoch \citep[p.\ 397]{hastie_elements_2009}. Successive epochs train the NN to match the training data even more, so evaluating loss, AUC, or other metrics on both the training and validation sets is important for tuning the number of epochs to avoid overfitting. Training can also proceed with mini-batches, that is, small subsets of the training set, rather than the whole set at once. This method makes the training results noisier, but generally speeds up learning while adding a regularization effect to changes in the weights \citep{brownlee_how_2019}.  
+The training process updates network weights using gradients calculated from the entire training data in each training epoch \citep[p.\ 397]{hastie_elements_2009}. Successive epochs adjust the NN to match the training data even more, so evaluating loss, AUC, or other metrics on both the training and validation sets is important for identifying the best number of epochs to avoid overfitting. Training can also proceed with mini-batches, that is, small subsets of the training set, rather than the whole set at once. This method makes the training results noisier, but generally speeds up learning while adding a regularization effect to changes in the weights \citep{brownlee_how_2019}.  
 
 Parameter tuning therefore focuses on five hyperparameters:
 \begin{itemize}[itemsep=2pt]
-    \item \textbf{Learning rate}: scales the size of the updates to weights during each step of the training process. The Adam optimizer adjusts this rate during training, so the value here defines an initial learning rate. Initially set to 0.001.
-    \item \textbf{Lambda}: the L2 weight regularization term, i.e., the $\lambda$ in equation \ref{eq:nn_cost_function}. Initially set to $1\times10^{-4}$.
+    \item \textbf{Learning rate}: scales the size of the updates to weights during each step of the training process. The Adam optimizer adjusts this rate during training, so the value here defines a starting learning rate. Initially set to 0.001.
+    \item \textbf{Lambda ($\lambda$)}: the L2 weight regularization term, i.e., the $\lambda$ in equation \ref{eq:nn_cost_function}. Initially set to $1\times10^{-4}$.
     \item \textbf{Batch size}: the number of training samples included in each mini-batch when calculating training gradients for updating the network weights. Initially set to number of samples/10.
     \item \textbf{Dropout rate}: the fraction of network connections zeroed-out during each step of the training process. Initially set to 0.2.
     \item \textbf{Number of epochs}: the number of training repetitions when fitting the model to the data. Initially set to 100.
@@ -544,13 +547,14 @@ Parameter tuning therefore focuses on five hyperparameters:
 \begin{figure}[htp]
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-NN_Hyperparameters.png}
-\caption[Neural network hyperparameter tuning]{Neural network hyperparameter tuning results for A. learning rate, B. lambda ($\lambda$), C. batch size, D. drop rate, using WDS4. The orange lines track the AUC after 100 training epochs, averaged over 10-folds of stratified cross-validation for each parameter value. The blue lines show average loss. Red dashed lines indicate values selected for the final model.}
+\caption[Neural network hyperparameter tuning]{NN hyperparameter tuning results for A. learning rate, B. lambda ($\lambda$), C. batch size, D. and drop rate, using WDS4. The orange lines track AUC after 100 training epochs, averaged over 10-folds of stratified cross-validation for each parameter value. The blue lines show average loss after 100 epochs. Red dashed lines mark the selected values for the final model.}
 \label{fig:nn_tuning_plots}
 \end{figure}
 
-The stratified k-fold cross-validation strategy described in Section \ref{ch5:strat_kfold_cv} was used for tuning the neural network hyperparameters. Training continued for 100 epochs, and since TensorFlow tracks metric values for both the training and validation sets at each epoch, the two sets were kept separate during the 10-fold CV process. In the figures and discussion that follow, results are described for WDS4. Full results for all three data sets are provided in Table \ref{tab:nn_tuning}. 
+The stratified k-fold cross-validation strategy described in Section \ref{ch5:strat_kfold_cv} was used for tuning NN hyperparameters. Training continued for 100 epochs, and since TensorFlow models easily track metric values for both the training and validation sets at each epoch, the two sets were kept separate during the 10-fold CV process. In the figures and discussion that follow, results are described for WDS4. Full results for all three data sets are provided in Table \ref{tab:nn_tuning}. 
 
-\begin{wraptable}{R}{0.5\linewidth}
+%\begin{wraptable}{R}{0.50\linewidth}
+\begin{table}[htp]
 \centering
 \begin{tabular}{l|c|c|c|}
 \cline{2-4}
@@ -566,37 +570,60 @@ The stratified k-fold cross-validation strategy described in Section \ref{ch5:st
 \multicolumn{1}{|l|}{AUC$_{test}$}       & 0.863 & 0.992 & 0.992 \\ \hline
 \end{tabular}
 \singlespacing
-\caption[Neural network hyperparameter tuning results]{Neural network hyperparameter tuning results for each data set. Accuracy and AUC metrics are split into train (in-sample) and test (out-of-sample) values.}
+\caption[Neural network hyperparameter tuning results]{NN hyperparameter tuning results for each data set. Accuracy and AUC metrics are split into train (in-sample) and test (out-of-sample) values.}
 \label{tab:nn_tuning}
-\end{wraptable}
+\end{table}
 
-\begin{figure}[!htp]
+\begin{figure}[htp]
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-NN-Training-Loss.png}
-\caption[Neural network training loss]{Neural network training results as a function of epoch count for WDS4. Calculated loss (Left) and AUC (Right) for the training (blue) and validation (green) data subsets match and begin to separate near the 100-epoch mark (red arrow). Mini-batch related noise obscures the exact cross-over location.}
+\caption[Neural network training loss]{NN training results as a function of epoch count for WDS4. Calculated loss (Left) and AUC (Right) for the training (blue) and validation (green) subsets converge and start to separate near the 100-epoch mark (red arrow). Mini-batch related noise obscures the exact cross-over location.}
 \label{fig:nn_loss_plot}
 \end{figure}
 
-Tuning was conducted in the order shown in Figure \ref{fig:nn_tuning_plots}. There are distinct maxima for the CV-averaged WDS4 AUC values in each hyperparameter case. The final selected values include: learning rate of 0.01, $\lambda$ value of $2\times10^{-4}$, batch size of 100, and drop rate of 0.1. Minima in the average loss calculation align with these values for all except $\lambda$, the regularization parameter on model weights. This matches the expected behavior described in equation \ref{eq:nn_cost_function}, where $\lambda$ controls the balance between loss and sum of squared weights in the cost function. As Figure \ref{fig:nn_tuning_plots}B shows, the loss term is minimized as $\lambda$ approaches zero.
+Tuning was conducted in the same order as listed in Figure \ref{fig:nn_tuning_plots}. Distinct maxima in CV-averaged AUC are observed for each hyperparameter. The selected values for the final WDS4 model include: learning rate of 0.01, $\lambda$ value of $2\times10^{-4}$, batch size of 100, and drop rate of 0.1. Minima in the average loss curves align with the selected hyperparameter values for all except $\lambda$, the regularization parameter on model weights. This matches the expected behavior described in Equation \ref{eq:nn_cost_function}, where $\lambda$ controls the balance between loss and sum of squared weights in the cost function. As Figure \ref{fig:nn_tuning_plots}B shows, the loss term decreases as $\lambda$ approaches zero.
 
-Figure \ref{fig:nn_loss_plot} illustrates the WDS4 training progress as a time series of loss and AUC. The variance in both plots reflects the noise introduced by mini-batch training, but convergence takes place quickly. Increasing deviation of the validation loss and, to a lesser extent, AUC values at greater epoch counts indicates the model is overfitting the training data. The cross-over of the training and validation lines, which corresponds with the tuned number of epochs for the final model, occurs somewhere close to 100 epochs for WDS4.
+Figure \ref{fig:nn_loss_plot} illustrates the WDS4 training progress as a time series of loss and AUC. The variance in both plots reflects noise introduced by mini-batch training, but convergence takes place quickly. The growing separation between the training and validation loss at greater epoch counts indicates the model is overfitting the training data. The cross-over of the training and validation lines, which corresponds with the tuned value for the epoch hyperparameter, occurs somewhere close to 100 epochs for WDS4.
 
 \subsubsection{Optimized Model Results}
 
-The NN model was re-trained for each of the three data sets using the hyperparameter values listed in Table \ref{tab:nn_tuning}. Data sparsity is particularly problematic for the WDS model; even after careful tuning, the out-of-sample accuracy does not exceed 75\%, and test set AUC is $\approx 86\%$. Data augmentation in WDS4 and WDS8 has a strong pay-off in the results. Models trained on both data sets exhibit $\approx95\%$ accuracy and AUC values $>99\%$ (Table \ref{tab:nn_tuning}).
+The NN model was re-trained for each of the three data sets using the hyperparameter values listed in Table \ref{tab:nn_tuning}. Data sparsity is problematic for the WDS model; even after careful tuning, the out-of-sample accuracy doesn't exceed 75\%, and test set AUC is just $\approx 86\%$. Data augmentation in WDS4 and WDS8 proves quite beneficial by comparison. Models trained on both expanded data sets exhibit $\approx95\%$ accuracy and AUC values $>99\%$ (Table \ref{tab:nn_tuning}).
+ 
+%\begin{wrapfigure}{R}{0.50\linewidth}
+\begin{figure}[htp]
+\centering
+\includegraphics[width=.5\textwidth]{templates/images/Figure-NN-ConfusionMatrix_WDS4.png}
+\singlespacing
+\caption[Neural network confusion matrix]{Confusion matrix for the tuned NN model trained on WDS4.}
+\label{fig:nn_confusion_matrix}
+%\end{wrapfigure}
+\end{figure}
 
-Figure XX shows the confusion matrix for WDS4.
+Figure \ref{fig:nn_confusion_matrix} depicts the confusion matrix constructed from WDS4 model results. Similar to XGB model performance, nearly all of the noted misclassifications are off by only a single class assignment, the largest (19 total) being between medium-grade (class 2) and high-grade (class 3) geothermal gradient. Overall, these are very strong results for a predictive classifier.
+
+Figure \ref{fig:nn_auc} shows the macro average, micro average, and individual class NN ROC curves. All individual class AUC values are at or above 0.99, as was the case for the XGB model. This is close to an ideal ROC plot for a classifier.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.7\textwidth]{templates/images/Figure-NN-AUC.png}
+\caption[Neural network ROC curves]{ROC curves for tuned NN model trained on WDS4.}
+\label{fig:nn_auc}
+\end{figure}
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[width=.6\textwidth]{templates/images/Figure-NN-ConfusionMatrix.png}
-\caption[Neural network confusion matrix]{}
-\label{fig:nn_confusion_matrix}
+\includegraphics[width=\textwidth]{templates/images/Figure-NN-FinalMap_Joint.png}
+\caption[Neural network final map]{Left: Map predictions of geothermal gradient from the tuned NN model trained on WDS4. Right: geothermal gradient data layer from southwestern NM PFA study \protect\citep{bielicki_hydrogeolgic_2015}.}
+\label{fig:nn_final_map}
 \end{figure}
 
- 
+The FDS was passed through the NN model to generate predictions for the southwestern NM study area as shown in Figure \ref{fig:nn_final_map}. Class 3 high-grade geothermal gradient regions to the southeast in the \citet{bielicki_hydrogeolgic_2015} PFA layer are well-captured by the NN model. The class 3 swath though the center of the AOI describes a broader, more continuous region of geothermal potential than suggested by the PFA map. Additional high-gradient patches unique to the NN map appear along the study area edges – in the southwest corner, eastern AOI extension, and to the northeast paralleling the Rio Grande river. The low-gradient zone to the north matches between the two maps, but most other class 0 areas in the \citeauthor{bielicki_hydrogeolgic_2015} map are not observed in the NN map. Interestingly, there appears to be greater overall similarity between the NN map in Figure \ref{fig:nn_final_map} and the XGB map in Figure \ref{fig:xgb_final_map} than with the PFA map.
 
 \subsection{Uncertainty Analysis}
+
+The results obtained from the four supervised machine learning methods discussed so far all match the well data sets with at least an accuracy of 70\%, and in some cases in excess of 95\%. From a statistical perspective, each model accomplishes the task of learning from existing data reasonably well. And they all use those learnings to predict geothermal gradient classifications across the entire AOI. But presenting these results to an explorationist will invariably elicit two important questions: 1) Which of these maps is right? and 2) How can I integrate all four to better understand the region? 
+
+George Box's famous statement, “Essentially, all models are wrong, but some are useful” \citep{box_empirical_1987} effectively answers the first question. But knowing that none of the predicted maps is individually correct only strengthens the case for answering the second question. Reframing that query slightly, the following analysis serves to define: how wrong can the model results be? And also, where are predictions most or least certain for individual models and across all models?
 
 \subsubsection{Bootstrap Estimation}
 
