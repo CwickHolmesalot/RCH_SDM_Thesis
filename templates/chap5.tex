@@ -688,13 +688,6 @@ Figure \ref{fig:structural_entropy_map}B illustrates an alternative way of prese
 \label{fig:avg_gradient_masked_map}
 \end{figure}
 
-%\begin{figure}[!htp]
-%\centering
-%\includegraphics[width=\textwidth]{templates/images/Figure-Structural_Entropy_Combined_Maps.png}
-%\caption[Structural uncertainty map]{Structural uncertainty measured using Shannon entropy. A. Normalized entropy values calculated from the four predictive models shown in Figure \ref{fig:combined_maps}. B. Probability-averaged prediction map with uncertainty masking. Normalized entropy values (>0.7) are blacked out, all others set alphas on a gray layer mask.}
-%\label{fig:structural_entropy_map}
-%\end{figure}
-
 \subsubsection{Parameter Uncertainty}
 
 The fitting procedure for machine learning models like logistic regression and neural networks involves minimizing a cost function as updates are iteratively made to model parameters, e.g., feature weights. However, the final model solutions typically present these parameters as deterministic values with no uncertainty. The complexity of neural networks, and the potential for different parameterizations as randomness in techniques like dropout and mini-batching influence the training process, suggest such representations under-characterize the model space. By defining the range of uncertainty on model parameters, it is possible to generate many solutions from the same model that define an ensemble of valid predictions. Uncertainty estimates derived from this ensemble can introduce a measure of confidence in a model’s output, allowing the model to directly explain what it knows and, more importantly, what it doesn’t know in the solutions it produces.
@@ -726,15 +719,15 @@ Dropping constant terms and treating this as an objective to minimize \citep{blu
     J(\Theta) = D_{KL}\left(q({\bf w} \vert \theta)\ \vert\vert\ P({\bf w})\right) - \mathbf{E}_{q({\bf w} \vert \theta)}\left[\log P(D \vert {\bf w})\right]
 \end{equation}
 
-This two-term objective describes a trade-off between the complexity as controlled by deviation from the prior ($P({\bf w})$) and the negative log likelihood term measuring the fit to the data.
+This two-term objective describes a trade-off between the complexity as controlled by deviation from the prior ($P({\bf w})$) and the negative log-likelihood term measuring the fit to the data.
 
-The TensorFlow Probability package was used to transform the NN from Section \ref{ch5:ann} into a BNN for uncertainty estimation \citep{dillon_tensorflow_2017}.  Given the sparsity of training data available and the multiplier effect that probabilistic layers have on the number of trainable parameters in a BNN, only the second hidden layer was converted to use the TensorFlow \textit{DenseVariational} layer (Figures \ref{fig:bnn_text_structure} and \ref{fig:bnn_dot_structure}). Standard normal ($N(0,1)$) distributions are used as priors for the layer nodes. The same hyperparameter values determined while tuning the deterministic neural network for each data set (Table \ref{tab:bnn_metrics}) were used with the BNNs with one exception: the number of epochs was increased by a factor of 3-4. Figure \ref{fig:bnn_loss} shows the training loss and AUC curves for WDS4, which justify this larger number of epochs required for training. Table \ref{tab:bnn_metrics} notes the final accuracy and AUC scores for the BNNs calculated from a single predictive run on the respective test data subsets.
+The TensorFlow Probability package was used to transform the NN from Section \ref{ch5:ann} into a BNN for uncertainty estimation \citep{dillon_tensorflow_2017}.  Given the sparsity of training data available and the multiplier effect that probabilistic layers have on the number of trainable parameters in a BNN, only the second hidden layer was converted to a TensorFlow \textit{DenseVariational} layer (Figures \ref{fig:bnn_text_structure} and \ref{fig:bnn_dot_structure}). Standard normal ($N(0,1)$) distributions were used as priors for the layer nodes. All hyperparameter values tuned for the dataset-specific neural networks (Table \ref{tab:bnn_metrics}) were also applied to the BNNs with one exception: the number of epochs was increased by a factor of 3-4. Figure \ref{fig:bnn_loss} shows the training loss and AUC curves for WDS4, which justify this larger number of epochs for training. Table \ref{tab:bnn_metrics} notes the accuracy and AUC scores for the BNNs calculated from a single predictive run on the respective test data subsets.
 
 \begin{figure}[!htp]
 \centering
 \begin{minipage}[b][][b]{.35\linewidth}
     \includegraphics[width=\linewidth]{templates/images/Figure-TF_BNN_Structure.png}
-    \caption[Bayesian neural network structural flow]{Structural flow chart for the TensorFlow-based Bayesian network.}
+    \caption[Bayesian neural network structural flow]{Structural flow chart for the Bayesian neural network.}
     \label{fig:bnn_text_structure}
 \end{minipage}
 \hfill
@@ -761,58 +754,41 @@ The TensorFlow Probability package was used to transform the NN from Section \re
 \multicolumn{1}{|l|}{AUC$_{test}$}       & 0.762 & 0.961 & 0.980 \\ \hline
 \end{tabular}
 \singlespacing
-\caption[Bayesian neural network single-run metrics]{BNN hyperparameters used for training and test results for each data set. Accuracy and AUC metrics are split into train (in-sample) and test (out-of-sample) values. Results reflect a single prediction from the BNNs and will vary due to the probabilistic aspect of the model architecture.}
+\caption[Bayesian neural network single-run metrics]{BNN hyperparameters used for training and test results for each data set. Accuracy and AUC metrics are split into train (in-sample) and test (out-of-sample) values. Results reflect a single prediction from the BNNs and will vary due to the stochastic nature of the feed-forward BNN operation.}
 \label{tab:bnn_metrics}
 \end{table}
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-BNN_Loss_AUC_WDS4.png}
-\caption[Bayesian neural network training loss]{BNN training results as a function of epoch count for WDS4. Calculated loss (Left) and AUC (Right) for the training (blue) and validation (green) subsets show training convergence by $\approx 300$ epochs. The probabilistic character of the BNN causes the AUC curve to appear noisier than for the deterministic NN.}
+\caption[Bayesian neural network training loss]{BNN training results as a function of epoch count for WDS4. Calculated loss (Left) and AUC (Right) for the training (blue) and validation (green) subsets show training convergence by $\approx 300$ epochs. The stochastic nature of the BNN makes the AUC/epoch curve noisier than for the deterministic NN (Figure \ref{fig:nn_loss_plot})}
 \label{fig:bnn_loss}
 \end{figure}
 
-Single BNN passes can be evaluated the same way as the deterministic NN using a confusion matrix and ROC curves (Figures \ref{fig:bnn_confusion_matrix}, \ref{fig:bnn_auc}).
-
-\begin{figure}[!htp]
-\centering
-\begin{minipage}[b][][b]{.45\textwidth}
-    \includegraphics[width=\linewidth]{templates/images/Figure-BNN-ConfusionMatrix_WDS4.png}
-    \caption[Bayesian neural network confusion matrix]{Confusion matrix for the tuned BNN model trained on WDS4.}
-    \label{fig:bnn_confusion_matrix}
-\end{minipage}
-\hfill
-\begin{minipage}[b][][b]{.51\textwidth}
-    \includegraphics[width=\linewidth]{templates/images/Figure-BNN-AUC_WDS4.png}
-    \caption[Bayesian neural network ROC curves]{ROC curves for tuned BNN model trained on WDS4.}
-    \label{fig:bnn_auc}
-\end{minipage}
-\end{figure}
-
-Running the BNN multiple times will produce a collection of different results. Figure XX shows the range of class label probabilities after predicting the classification of 3 different well locations 100 times using a BNN trained on the WDS4 training subset. Here, the relationship between entropy values and the overlap in class label probabilities is apparent; a low entropy scenario (Figure \ref{fig:bnn_class_pdfs}A) has strong stand-out between the predicted class label and others, while high entropy situations (Figure \ref{fig:bnn_class_pdfs}C) have less certainty on the class label assignment.
+Running the BNN multiple times will produce a collection of different results. Figure \ref{fig:bnn_class_pdfs} shows the range of class label probabilities after predicting the classification of 3 well records 100 times using a BNN trained on the WDS4 training subset. Here, the relationship between entropy values and the overlap in class label probabilities is apparent. A low entropy scenario (Figure \ref{fig:bnn_class_pdfs}A) has strong stand-out between the maximum-probability class label and others, while high entropy situations (Figure \ref{fig:bnn_class_pdfs}C) have less certainty on the class label assignment.
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-BNN_100trials_WDS4.png}
-\caption[Bayesian neural network class pdfs]{Example class label probability density functions for A. well record 34, B. well record 20, and C well record 35 from WDS4. Distributions are constructed from 100 passes through the WDS4 BNN. Entropy values scale with label distribution entanglement. The predicted label is the one with the highest mean probability: A. High Gradient, B. Low Gradient, C Medium Gradient.}
+\caption[Bayesian neural network class pdfs]{Example class label probability density functions for A. well record 34, B. well record 20, and C. well record 35 from WDS4. Distributions are constructed from 100 passes through the WDS4 BNN. Entropy values scale with label distribution entanglement. The predicted label is the one with the highest mean probability: A. High gradient, B. Low gradient, C Medium gradient.}
 \label{fig:bnn_class_pdfs}
 \end{figure}
 
-After re-training the BNN on the full WDS4 data set, predictions for the entire AOI were generated 1000 times. The class probabilities from these 1000 realizations were averaged by class for each point location, and the maximum probability class was selected as the predicted label (Figure \ref{fig:bnn_pred_entropy_maps}A). Likewise, entropy values for each map location are shown in Figure \ref{fig:bnn_pred_entropy_maps}B. 
+After re-training the BNN on the full WDS4 data set, predictions for the entire AOI were generated 1000 times. Geothermal gradient class probabilities from these realizations were averaged by class for each point location, and the maximum probability class was selected as the predicted label. Entropy values calculated from the ensemble-averaged probabilities are shown in Figure \ref{fig:bnn_entropy_map}. Figure \ref{fig:bnn_masked_pred_map} combines the 1000-run average prediction map with parameter uncertainties using a layer mask and transparency. Concentrated areas of high entropy/uncertainty appear to the southeast in the Rio Grande Rift province, and to the north within the Colorado Plateau and at the RGR-Great Plains province boundary (Figure \ref{fig:bnn_masked_pred_map}). Overall, there appear to be fewer point locations with high entropy in the parameter uncertainty assessment compared to the structural uncertainty analysis for the four model architectures (Figure \ref{fig:avg_gradient_masked_map}).
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[width=\textwidth]{templates/images/Figure-BNN_MeanGrad_Entropy_PairMap.png}
-\caption[BNN prediction and entropy maps]{BNN results after 1000 runs of the predictive model for WDS4. A. Geothermal gradient classification map. B. Parameter uncertainty measured using Shannon entropy, normalized to range from 0 for low entropy, low uncertainty (blue) to 1 for high entropy, high uncertainty (red).}
-\label{fig:bnn_pred_entropy_maps}
+\includegraphics[width=.8\textwidth]{templates/images/Figure-BNN_Entropy_Map.png}
+\caption[BNN parameter uncertainty map]
+{BNN parameter uncertainty determined from class probability averages after 1000 runs of the WDS4 predictive model. Uncertainty is measured with normalized Shannon entropy values ranging from 0 for low entropy, low uncertainty (blue) to 1 for high entropy, high uncertainty (red).}
+\label{fig:bnn_entropy_map}
 \end{figure}
 
-Figure \ref{fig:bnn_masked_pred_map} illustrates the geothermal gradient prediction map with parameter uncertainty as a layer mask and control on transparency. Concentrated areas of high uncertainty appear to the southeast in the RGR province, and to the north within the CP and at the RGR-GP province boundary (Figure \ref{fig:bnn_masked_pred_map}). Overall there appears to be less uncertainty in the results for the BNN than observed in the structural uncertainty analysis across the four model architectures (Figure \ref{fig:avg_gradient_masked_map}).  
-
 \begin{figure}[!htp]
 \centering
-\includegraphics[width=\textwidth]{templates/images/Figure-BNN_Entropy_Province_PairMap.png}
-\caption[Parameter uncertainty mask on BNN prediction map]{Caption}
+\includegraphics[width=.8\textwidth]{templates/images/Figure-BNN_All_Gradient_Map_Masked_whitebackground.png}
+\caption[Parameter uncertainty mask on BNN prediction map]
+{Probability-averaged WDS4 BNN prediction map with uncertainty masking. Normalized entropy values (>0.7) are grayed out, all others determine transparency of the colored scatter plot. Transparency increases from none at entropy values close to 0 to full for entropy values close to 1. The background topographic raster has been removed to better visualize the transparency effect.}
 \label{fig:bnn_masked_pred_map}
 \end{figure}
 
