@@ -793,3 +793,59 @@ After re-training the BNN on the full WDS4 data set, predictions for the entire 
 \end{figure}
 
 \subsubsection{Measurement Uncertainty}
+Data modeling and analytics generally begin with the collection, engineering, and conditioning of features of interest. Building the perfect dataframe for machine learning may be the first priority, but capturing standard error estimates for its constituent features is fundamental to understanding how much uncertainty they bring to the prediction problem.
+
+In this analysis, the sources of data, types of data, and options for error estimation vary greatly. Several features were acquired as pre-gridded raster files without error assessments or access to the original source data (Table \ref{tab:features}), e.g., air temperature, precipitation, strain rate, and layers from the \citeauthor{bielicki_hydrogeolgic_2015} OpenEI submission \citep{kelley_geothermal_2015}. Table \ref{tab:feature_std_error} shows the top ten features identified by Shapley analysis for the XGBoost model in Section \ref{ch5:xgb_shapley}. Among those variables, \acrlong{sigt} (\acrshort{sigt}), Heat Flow, and Boron Concentration have readily-available standard error estimates either from the original source or data preparation process. Crustal Thickness standard error is both unknown and difficult to ascertain; the feature grid comes from contours fit to 2D seismic models \citep{keller_comparative_1991}, which are unavailable for further analysis and review. The remaining top ten features consist of point or line data converted to density layers using KDE. Standard errors could be estimated for these features by performing bootstrap or jackknife resampling, applying KDE on the derivative data sets, and calculating standard errors from that sample population \multicitep{james_introduction_2013, p.\ 187-190;mcintosh_jackknife_2016}.
+
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|c|p{7cm}|}
+\hline
+\textbf{Name}                     & \textbf{Type}         & \textbf{Std Err Estimation} & \multicolumn{1}{c|}{\textbf{Comments}}             \\ \hline
+Si-Geotherm. Temperature & Overlapping points & Kriging & Standard error estimates directly from kriging. \\ \hline
+Heat Flow & Non-overlapping points & Directly provided & Standard error estimates provided for each grid point. \\ \hline
+Crustal Thickness & Lines & Unknown & Contours based on 2D seismic lines. Uncertainty in interpretation   (e.g., velocity model) unavailable. \\ \hline
+Volcanic Dike Density & Lines & Resampling & Jackknife/bootstrap resample and generate density estimates. \\ \hline
+Spring Density & Non-overlapping points & Resampling & Jackknife/bootstrap resample and generate density estimates. \\ \hline
+Earthquake Density & Overlapping Points & Resampling & Jackknife/bootstrap resample and generate density estimates. \\ \hline
+Volcanic Vent Density & Non-overlapping points & Resampling & Jackknife/bootstrap resample and generate density estimates. \\ \hline
+Boron Concentration & Overlapping points & Kriging & Standard error estimates directly from kriging. \\ \hline
+Quaternary Fault Density & Lines & Resampling & Jackknife/bootstrap resample and generate density estimates. \\ \hline
+Drainage Density & Lines & Resampling & If extracted from DEM, relates to DEM slope error. However, can probably use jackknife/bootstrap method. \\ \hline
+\end{tabular}}
+\caption{Means of determining standard error estimates for the top ten most important features, identified from Shapley analysis of the WDS4 XGBoost classifier (see Figure \ref{fig:xgb_shap_global}).}
+\label{tab:feature_std_error}
+\end{table}
+
+Shapley results show SiGT values influence the XGBoost model predictions more than any other feature (Figure \ref{fig:xgb_shap_global}). Uncertainty in the values for this feature should similarly impact uncertainty in the classification results. To examine this relationship further, the SiGT values assigned to well locations in WDS4 were perturbed to create a range of statistically-similar derivative data sets. Variability in the classifications from these data sets highlights model sensitivity to uncertainties in the feature measurements.
+
+A SiGT standard error estimate map (Figure \ref{fig:mu_stderr_entropy}A) was derived using the ArcGIS \textit{Empirical Bayes Kriging} method as described in Section \ref{ch3:ebk}. All SiGT observations were included in the algorithm, so variability in coincident points due to repeated field measurements influences the estimate. Standard errors were sampled from this map at WDS4 well locations and used to construct a normal distribution ($N(0,\sigma)$) for each location. A total of 100 variants of WDS4 were created by applying perturbations to the WDS4 SiGT values sampled from these distributions. 
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=.8\textwidth]{templates/images/Figure-MU_Entropy_Map.png}
+\caption[SiGT measurement uncertainty map]
+{SiGT measurement uncertainty based on normalized Shannon entropy. Calculations were made on class probability averages after modeling 100 randomly-perturbed realizations with the WDS4 XGB classifier. Values range from 0 for low entropy, low uncertainty (blue) to 1 for high entropy, high uncertainty (red).}
+\label{fig:mu_entropy_map}
+\end{figure}
+
+XGBoost models, parameterized as described for WDS4 in Table \ref{tab:xgb_tuning}, were trained on the perturbed data sets and used to predict geothermal classifications for the FDS covering the full AOI. After ensemble-averaging the class probabilities at each point, the maximum probability class was selected as the class assignment for the average geothermal gradient classification map. Shannon entropy values calculated from the average class probabilities are shown in Figure \ref{fig:mu_entropy_map}. Figure \ref{fig:mu_masked_pred_map} combines both maps using entropy values >0.7 as a layer mask and assigning increasing transparency with greater entropy for the remaining points.
+
+Interestingly, variations in SiGT values result in high classification uncertainty in many locations across the AOI (Figure \ref{fig:mu_masked_pred_map}). Concentrated areas of uncertainty are observed in the southwest -- an area where silica samples were collected but not many WDS4 well observations are located (Figure \ref{fig:mu_stderr_entropy}). Similarly, large patches of higher entropy appear in the north and just west of the AOI center. Once again, these are under-sampled regions in WDS4 (Figure \ref{fig:mu_stderr_entropy}). It appears that as training data values for SiGT change due to perturbations, thresholds for XGBoost decision trees shift enough to significantly impact the stability of model predictions away from wells. SiGT-related splits will appear near the root node of decision trees based on its dominance over other features for classification importance. Changes to the decision thresholds will thus have a strong cascading effect on the final classification choices for XGBoost models. The problem lies in both the magnitude of SiGT standard errors as well as the sparse sampling of the study area by WDS4 well locations. The degree of uncertainty seen here would likely be reduced if WDS4 included more comprehensive coverage of the study area.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=.8\textwidth]{templates/images/Figure-MU_Masked_Average_Gradient_Map.png}
+\caption[SiGT measurement uncertainty mask on prediction map]
+{Probability-averaged WDS4 XGB prediction map with SiGT measurement uncertainty masking. Normalized entropy values (>0.7) are grayed out, all others determine transparency of the colored scatter plot. Transparency increases from none at entropy values close to 0, to full for entropy values close to 1. The background topographic raster has been removed to better visualize the transparency effect.}
+\label{fig:mu_masked_pred_map}
+\end{figure}
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-MU_StdErr_vs_Uncert.png}
+\caption[SiGT standard error and model entropy]
+{A. SiGT standard error map derived from kriging operation in ArcGIS. Block dots show the locations of silica concentration samples that are the feature source data. B. WGS4 XGB measurement uncertainty entropy map. Black circles indicate well locations in WDS4 used for training the final XGB classifier. }
+\label{fig:mu_stderr_entropy}
+\end{figure}
