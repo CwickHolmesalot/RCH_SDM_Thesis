@@ -1,4 +1,4 @@
-\chapter{Machine Learning Models}\label{ch5:expl_applied}
+\chapter{Exploration Models}\label{ch5:expl_ml}
 
 \section{Data Modeling}
 
@@ -184,7 +184,7 @@ Decision trees are constructed by recursively performing binary splits on the tr
 
 There are three metrics that can play a role in evaluating the discriminating quality of a particular decision node on the tree:
 
-\begin{itemize}[itemsep=2pt]
+\begin{itemize}[itemsep=2pt]\label{ch5:impurity}
     \item \textbf{Classification error rate}: the proportion of training samples that do not match the dominant class associated with a leaf node \citep[p. 312]{james_introduction_2013}.
     \begin{equation}
     \label{eq:error_rate}
@@ -797,7 +797,7 @@ Data modeling and analytics generally begin with the collection, engineering, an
 
 In this analysis, the sources of data, types of data, and options for error estimation vary greatly. Several features were acquired as pre-gridded raster files without error assessments or access to the original source data (Table \ref{tab:features}), e.g., air temperature, precipitation, strain rate, and layers from the \citeauthor{bielicki_hydrogeolgic_2015} OpenEI submission \citep{kelley_geothermal_2015}. Table \ref{tab:feature_std_error} shows the top ten features identified by Shapley analysis for the XGBoost model in Section \ref{ch5:xgb_shapley}. Among those variables, \acrlong{sigt} (\acrshort{sigt}), Heat Flow, and Boron Concentration have readily-available standard error estimates either from the original source or data preparation process. Crustal Thickness standard error is both unknown and difficult to ascertain; the feature grid comes from contours fit to 2D seismic models \citep{keller_comparative_1991}, which are unavailable for further analysis and review. The remaining top ten features consist of point or line data converted to density layers using KDE. Standard errors could be estimated for these features by performing bootstrap or jackknife resampling, applying KDE on the derivative data sets, and calculating standard errors from that sample population \multicitep{james_introduction_2013, p.\ 187-190;mcintosh_jackknife_2016}.
 
-\begin{table}[]
+\begin{table}[htp]
 \centering
 \resizebox{\textwidth}{!}{
 \begin{tabular}{|c|c|c|p{7cm}|}
