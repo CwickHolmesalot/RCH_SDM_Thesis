@@ -340,11 +340,44 @@ Contract rate above wholesale & 50\% & \citep{pnm_public_2014} \\ \hline
 
 \subsubsection{Electricity Price}
 
-Electricity prices are referenced from the industrial electricity price forecast for the Mountain region (includes New Mexico) provided by the EIA in their \acrlong{steo} (\acrshort{steo}) projections out to 2023 \citep{eia_short-term_2021}. While industrial pricing differs slightly from wholesale, it more closely mimics wholesale prices than residential or commercial rates and was therefore selected as a wholesale proxy for the cost model. The Forecast Tool in Excel projected prices out to 2050 (Figure \ref{fig:electricity_pricing}). This tool uses the Exponential Triple Smoothing algorithm with seasonality patterns to forecast time series data \citep{microsoft_forecastets_2021}. For the deterministic cost model, electricity prices are directly sampled from the forecast and multiplied by the PPA \textit{Contract rate above wholesale} value listed in Table \ref{tab:cm_econ_params} for any year when capacity increases. This simulates amending the PPA with a local utility whenever new capacity is available for power sales. Electricity pricing is held flat compared to the previous year when no capacity change occurs.
+Electricity prices are referenced from the industrial electricity price forecast for the Mountain region (including New Mexico) provided by the EIA in their \acrlong{steo} (\acrshort{steo}) projections out to 2023 \citep{eia_short-term_2021}. While industrial pricing differs slightly from wholesale, it more closely mimics wholesale prices than residential or commercial rates and was therefore selected as a wholesale proxy for the cost model. The Forecast Tool in Excel projected prices out to 2050 with 95\% confidence bounds (Figure \ref{fig:electricity_pricing}) using the Exponential Triple Smoothing algorithm for time series data \citep{microsoft_forecastets_2021}. For the deterministic cost model, electricity prices are directly sampled from the forecast for any year when capacity increases and multiplied by the PPA \textit{Contract rate above wholesale} value listed in Table \ref{tab:cm_econ_params}. This simulates amending the PPA with a local utility whenever new capacity is available for power sales. Electricity pricing is held flat compared to the previous year when no capacity change occurs.
 
 \begin{figure}[!htp]
 \centering
-\includegraphics[width=\textwidth]{templates/images/Figure-EIA_Electricity_Forecast.png}
-\caption[Electricity price forecast]{Price of electricity forecast based on EIA Short-Term Energy Outlook \protect\citep{eia_short-term_2021}. A seasonal signal is visible due to the quarterly sampling of the data.}
+\includegraphics[width=.8\textwidth]{templates/images/Figure-EIA_Electricity_Forecast.png}
+\caption[Electricity price forecast]{Price of electricity from the EIA Short-Term Energy Outlook \protect\citep{eia_short-term_2021}, forecast out to 2050.}
 \label{fig:electricity_pricing}
 \end{figure}
+
+\subsection{Uncertainties}
+
+The model described thus far takes a deterministic approach; parameter values are fixed to their most-likely values when performing the NPV calculation. A probabilistic approach replaces these static values with distributions and repeatedly samples from those distributions to capture an ensemble of results. This Monte Carlo-style simulation can provide a more realistic assessment of system performance.
+
+However, all variables in the model have some underlying uncertainty, and defining distributions for every variable would add significant complexity to the model with diminishing returns. Variable selection can be performed using sensitivity testing to target the most impactful variables for uncertainty characterization. This helps balance model complexity with representativeness of the physical system. 
+
+Recognizing the full probable range of possible variable values and the scenarios that trigger them requires a deep understanding of the scientific, engineering, and socio-technical elements influencing a system. For geothermal, subsurface characterization uncertainties play an important role, but so do uncertainties tied to public policy and market dynamics. The limited focus on the issues listed below should be considered fit-for-purpose for this thesis. Further analysis and discussion with subject matter experts on the local, state, and national levels is advised for similar analysis performed for an active geothermal project.
+
+\subsubsection{Carbon Taxation}
+\begin{wrapfigure}{R}{0.5\linewidth}
+\centering
+\includegraphics[scale=0.6]{templates/images/Figure-Carbon_Tax_Price_Impact.png}
+\singlespacing
+\caption[Carbon tax price impact]{National average retail electricity price changes with benchmark levels of carbon taxation, after \protect\citep[Fig.\ 30]{larson_energy_2018}.}
+\label{fig:carbon_tax_pricing}
+\end{wrapfigure}
+
+One proposal for advancing the energy transition to more renewable and sustainable energy solutions involves a carbon tax levied on fossil fuels. The SIPA Center on Global Energy Policy at Columbia University recently studied three analytical scenarios based on federal agency benchmark taxation rates of \$14/ton, \$50/ton, and \$73/ton CO$_2$ equivalent with annual percentage rate increases of 3, 2, and 1.5\%, respectively \citep{larson_energy_2018} (Figure \ref{fig:carbon_tax_pricing}). Their analysis forecasts the impact on electricity pricing out to 2030, with relatively steady-state implications that depend on the specified carbon tax rate. In all taxation cases, electricity prices increase over the present-day, no-tax scenario, likewise boosting the value of a zero-emissions geothermal power relative to fossil fuel-based options. The selected value range for sensitivity testing was a 0-28\% increase in wholesale price, which matches Figure \ref{fig:carbon_tax_pricing}.
+
+\subsubsection{Future Electrification}
+NREL published a report earlier this year outlining the potential impact of heightened public trends away from non-electric sources of consumed energy, otherwise known as widespread electrification \citep{murphy_electrification_2021}. Some key findings include: (i) end-use natural gas consumption decreases, but so do natural gas prices, which can lead to an increase in natural gas-fueled power plants -- assuming no curtailments due to fossil fuel policies, (ii) deployment of renewables will intensify overall, and (iii) local resources, potentially including new renewable electricity generation facilities, will be relied on to mitigate the need for long-distance electricity transmission \citep{murphy_electrification_2021}.
+
+\begin{wrapfigure}{R}{0.6\linewidth}
+\centering
+\includegraphics[scale=0.65]{templates/images/Figure-EFS_SIPA_Results.png}
+\singlespacing
+\caption[Electrification price impact]{Wholesale electricity price forecasts for high future electrification scenarios: base case (blue), constant renewable technology cost (orange), and low renewable technology cost (green). Cases are from the NREL Electrification Futures Study \protect\citep{murphy_electrification_2021}. Figure is adapted from interactive plots at https://cambium.nrel.gov/? project=fc00a185-f280-47d5-a610-2f892c296e51.}
+\label{fig:EFS_electricification}
+\end{wrapfigure}
+The issue of national electrification is quite complex, particularly in the interplay between the natural gas market and renewables. Additional dependencies include infrastructure upgrades and development to handle growing capacity, as well as local effects (e.g., permitting, water or electrical transmission, community support) that act as enablers or hurdles to building a new renewable-fueled power plant or expanding on existing power facilities. One way to simplify a model representation of widespread electrification is to incorporate swings in electricity prices similar to the scenarios shown in Figure \ref{fig:EFS_electricification} with the caveat that other related factors (e.g., federal and state-level incentive programs or infrastructure improvements) can also influence the bottom line for a geothermal project. Based on NREL projections, wholesale electricity pricing in 2050 could vary from 0.65 to 1.25 times the prices recorded in 2018. Using the High Future Electrification (HFE) Base Case as a reference, prices are 25\% greater by 2050 for the HFE Constant Renewable Technology Costs case and prices drop by 35\% for the HFE Low Renewable Technology Costs case (Figure \ref{fig:EFS_electricification}). Therefore, +25\% and -35\% define the range of price factors used for sensitivity testing.
+
+\subsubsection{Future Electrification}
