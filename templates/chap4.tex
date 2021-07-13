@@ -53,35 +53,61 @@ In the cost model outlined below, the economic analysis incorporates uncertainty
 \section{Cost Model Structure}
 \label{ch4:cm_structure}
 
-Geothermal cost models typically report Levelized Cost of Electricity (LCOE) for simple comparison with other renewable energy sources. However, LCOE is standardized to represent the total lifetime costs incurred by a power plant normalized by the total lifetime power generation from start-up to plant decommissioning. LCOE is therefore not well-suited for communicating projected gains or losses under different designs or scenarios, which are the focus of this analysis. Instead, the model described here relies on \acrlong{npv} (\acrshort{npv}), a simple measure of project lifetime worth that accounts for the time value of money by applying a single interest rate, the discount rate, for both borrowing and deposits \citep[p.\ 195-215]{de_neufville_flexibility_2011}. Here, "present value" refers to a 2020 cost basis. For power generation over a 30-year lifespan -- the default for geothermal models like GETEM \citep{entingh_volume_2006} -- this basis takes the model out to 2050, a common benchmark year for future projections. 
+Geothermal cost models typically report Levelized Cost of Electricity (LCOE) for simple comparison with other renewable energy sources. However, LCOE is standardized to represent the total lifetime costs incurred by a power plant normalized by the total power generation from start-up to plant decommissioning. LCOE is thus not well-suited for communicating projected gains or losses under different plant designs or scenarios, which are the focus of this analysis. Instead, the model described here relies on \acrlong{npv} (\acrshort{npv}), a simple measure of project lifetime worth that accounts for the time value of money by applying a single interest rate, the discount rate, for both borrowing and deposits \citep[p.\ 195-215]{de_neufville_flexibility_2011}. Here, "present value" refers to a 2020 cost basis. For power generation over a 30-year lifespan -- the default for geothermal models like GETEM \citep{entingh_volume_2006} -- this basis takes the model out to 2050, a common benchmark year for future projections. 
 
 \subsection{NPV Model}
 \label{ch4:cm_npv}
-Following the general outline for geothermal cost modeling from previous work \citep[e.g.,][]{augustine_hydrothermal_2009, beckers_introducing_2013,tester_future_2006}, this thesis considers revenue (R), operating \& maintenance costs (OPEX or OM), and capital expenditures (CAPEX or C) as the primary cash flows with a time dependency related to the constant discount rate (r). Capital expenses can be further decomposed into five sub-components associated with exploration, drilling \& completions, reservoir stimulation, fluid distribution, and power plant costs. Likewise, operating expenses subdivide into subsidiary costs for the power plant, wells, and water management (Equation \ref{eq:cm_components}).
+Following the general outline for geothermal cost modeling from previous work \citep[e.g.,][]{augustine_hydrothermal_2009, beckers_introducing_2013,tester_future_2006}, this thesis considers revenue (R), operating \& maintenance costs (OpEx or OM), and capital expenditures (CapEx or C) as the primary components defining annual cash flow (see Equation \ref{eq:cm_components}). Capital expenses can be further decomposed into five  sub-components associated with exploration, drilling \& completions, reservoir stimulation, fluid distribution, and power plant costs. Likewise, operating expenses subdivide into subsidiary costs for the power plant, wells, and water management.
 
 \begin{equation}
     \label{eq:cm_components}
     \begin{aligned}
-    NPV &= \sum_{t=1}^{T}\frac{R_t - C_t - OM_t}{(1+r)^t}\\
+    NPV &= \sum_{t=1}^{T}D_t \cdot \left( R_t - C_t - OM_t \right)\\
     \text{where:}\\
     C_t &= \left[C_{expl} + C_{dc} + C_{stim} + C_{dist} + C_{pp}\right]_t\\
     OM_t &= \left[OM_{pp} + OM_{well} + OM_{water}\right]_t
     \end{aligned}
 \end{equation}
 \\
-Revenue and expenses are treated on an annual basis, meaning shorter-term fluctuations like price and production seasonality are not explicitly modeled.
+Revenue and expenses are treated on an annual basis, meaning shorter-term fluctuations like price and production seasonality are not explicitly modeled. $D_t$ in Equation \ref{eq:cm_components} defines the time-based conversion factor between cash flow for a specific year and discounted cash flow for the basis year (see Equation \ref{eq:discount_rate}).
 
-\subsubsection{CAPEX: Exploration} \label{ch4:cm_capex_expl}
+\subsubsection{Revenue} \label{ch4:cm_rev}
+
+Calculations of undiscounted revenue require an estimate of the electricity produced within a year ($W$) and the price set by a power purchase agreement ($p_{PPA}$) for that electricity \citep{entingh_volume_2006}. 
+
+\begin{equation}
+    \label{eq:cm_rev}
+    R = W \cdot p_{PPA} = (b_e \cdot \dot{m}) \cdot p_{PPA}
+\end{equation}
+\\
+Brine effectiveness ($b_e$) describes the electricity output per unit flow of produced brine ($\dot{m}$) and depends on the production temperature of the brine. The GETEM model uses an empirical correlation between the brine temperature ($^\circ$C) and effectiveness (w-hr/kg) \citep[p.\ 62]{entingh_volume_2006}:
+
+\begin{equation}
+\begin{aligned}
+    \label{eq:brine_eff}
+    b_e &= C_0 + C_1 \cdot T_{prod} + C_2 \cdot T_{prod}^2 + C_3 \cdot T_{prod}^3 + C_4 \cdot T_{prod}^4 \\
+    &\quad C_0 = 9.41376 \\
+    &\quad C_1 = -0.182542 \\
+    &\quad C_2 = 0.0001765735 \\
+    &\quad C_3 = 0.000012204486 \\
+    &\quad C_4 = -0.0000000335559
+\end{aligned}
+\end{equation}
+
+In the GETEM interface, a user selects to determine the electricity output for a specified input temperature and flow rate, or alternatively, derive the required flow rate to meet a pre-determined power sales capacity at the same input fluid temperature \citep{entingh_volume_2006}. Since the Climeon analog has a known net capacity of 150 kW per unit or 1.05 MW for each PowerBlock, and standard flow rates are provided in models like GETEM, both options are explored in this thesis.
+
+\subsubsection{Exploration Capital Expenses} 
+\label{ch4:cm_capex_expl}
 Costs for exploration activities are estimated by the same method defined for the 2012 GETEM model (Equation \ref{eq:cm_capex_expl}) \citep{eere_getem_2012}. 
 
 \begin{equation}
 \label{eq:cm_capex_expl}
     C_{expl} = PPI \cdot \left[ 1.12 \cdot (\$1\text{M} + 0.6\cdot C_{dc}) \right]
 \end{equation}
-\\
+
 This relationship assumes slim hole (3-6" diameter) drilling for exploration at a 60\% discounted cost compared to standard-sized ($\geq$ 8.5" diameter) geothermal wells. The constant \$1M term accounts for pre-drilling costs, including field work, geophysical surveys of field structure, and interpretation of results. Technical and office support is covered by an additional 12\% applied to the estimate \citep{eere_getem_2012}. Total exploration costs are converted to a 2020 cost basis using the Producer Price Index (PPI) for electric power generation from the U.S. Bureau of Labor and Statistics \citep{us_bls_ppi_2021}.
 
-\subsubsection{CAPEX: Drilling \& Completions} 
+\subsubsection{Drilling \& Completions Capital Expenses} 
 \label{ch4:cm_capex_dc}
 
 Geothermal drilling and completions costs differ from traditional oil \& gas wells due to differences in hole diameter, thermal and geochemical conditions, and the strength and abrasiveness of the target formations \citep{lowry_geovision_2017}. Here, drilling capital expenditures rely on a cost curve described by \citet[Equation 4,\ ][]{beckers_introducing_2013}.
@@ -95,7 +121,7 @@ where $C_{dc}$ is measured in \$M and MD refers to well measured depth in meters
 
 Note that Equation \ref{eq:cm_cdc} was derived for well depths of 1600-9000 m. Assuming an average geothermal gradient of 100 K/km (Table \ref{tab:cm_resource_params}), the wells considered for this study could extend slightly shallower than this range, so this should be viewed as a minimum drilling \& completions estimate. The stochastic model considered later in this study includes variability in both geothermal gradient and drilling costs for a more comprehensive treatment of both variables.
 
-\subsubsection{CAPEX: Simulation}
+\subsubsection{Simulation Capital Expenses}
 \label{ch4:cm_stim}
 
 EGS at Lightning Dock requires stimulation of the Horquilla reservoir to create fluid pathways for thermal extraction. The stimulation cost estimate used in this study comes from the recent GeoVision analysis \citep{lowry_geovision_2017}:
@@ -104,36 +130,55 @@ EGS at Lightning Dock requires stimulation of the Horquilla reservoir to create 
 \label{eq:cm_capex_stim}
     C_{stim} = \$1,250,000
 \end{equation}
-\\
+
 Since this represents a recent ballpark estimate, no cost basis conversion was applied in the model. In fact, the value in Equation \ref{eq:cm_capex_stim} may be high since it includes the cost of water, which may not be a factor at Lightning Dock with the availability of hydrothermal brine from adjacent power plant operations. The model assumes stimulation is only performed for the injection well in each injector-producer pair, so this represents a \textit{per module} value.
 
-\subsubsection{CAPEX: Distribution}
+\subsubsection{Distribution Capital Expenses}
 \label{ch4:cm_capex_dist}
 
 Fluid distribution costs include the entire surface piping system between the wells and power plant modules. This study uses the same estimate included in the GEOPHIRES model \citep{beckers_introducing_2013}.
 
 \begin{equation}
 \label{eq:cm_dist}
-    C_{dist} = PPI \cdot \left[ \$50,000 \cdot q \right]
+    C_{dist} = PPI \cdot \left[ \$50,000 \cdot q_{in} \right]
 \end{equation}
 \\
-where $q$ is the thermal power of the produced geofluid in MW and $PPI$ converts this 2012 value to a 2020 cost basis. Under the scenario where modular power plant units are provided by a company like Climeon, fluid distribution may be included in the installation fees. Distribution capital expenditures would therefore be subsumed by power plant costs and $C_{dist}$ would reduce to zero. However, without confirmation of the fee break-down structure from Climeon, the model described here relies on Equation \ref{eq:cm_dist}. 
+where $q_{in}$ is the heat input from the produced brine and $PPI$ converts this 2012 value to a 2020 cost basis. 
 
-\subsubsection{CAPEX: Power Plant}
+The 2nd law or thermodynamic efficiency ($\eta$) governs how much heat from the input fluid can be converted to work. \citeauthor{beckers_low-temperature_2016} provides an estimate for subcritical ORC power plants as follows \citeyear[p.\ 39-41]{beckers_low-temperature_2016}:
+
+\begin{equation}
+\begin{aligned}
+    \label{eq:2ndlaw_eff}
+    \eta &= K_1 \cdot T_{prod} + K_0 \\
+         &= 0.002713 \cdot T_{prod} - 0.0918
+\end{aligned}
+\end{equation}
+
+Combining Equations \ref{eq:cm_dist} and \ref{eq:2ndlaw_eff} allows distribution costs to be calculated in terms of electricity production:
+
+\begin{equation}
+\label{eq:cm_dist_eta}
+    C_{dist} = PPI \cdot \left[ \$50,000 \cdot W \cdot (0.002713 \cdot T_{prod} - 0.0918) \right]
+\end{equation}
+\\
+where W is the electricity output. Under the scenario where modular power plant units are pre-fabricated and directly provided by a company like Climeon, fluid distribution may be included in the installation fees. Distribution capital expenditures would therefore be subsumed by power plant costs and $C_{dist}$ would reduce to zero. However, without confirmation of the fee break-down structure from Climeon, the model described here relies on Equation \ref{eq:cm_dist_eta}. 
+
+\subsubsection{Power Plant Capital Expenses}
 \label{ch4:cm_capex_pp}
 
-Power plant costs for a modular installation remain a source of significant uncertainty for this cost model. The GEOPHIRES model implements a temperature-variable cost estimate first described by \citet{tester_future_2006} for a binary cycle power plant \citep{beckers_introducing_2013}. \citet{schochet_development_2001} predicted produced fluid temperatures of 280-320$^\circ$F (137-160 $^\circ$C) for the Lightning Dock EGS reservoir, which equates to \$1565-\$1694 per kWh by the GEOPHIRES estimate. Converted to a 2020 cost basis \citep{us_bls_ppi_2021}, this amounts to \$2230-\$2415 per kWh.
+Power plant costs for a modular installation remain a source of significant uncertainty for this cost model. The GEOPHIRES model implements a temperature-variable cost estimate first described by \citet{tester_future_2006} for a binary cycle power plant \citep{beckers_introducing_2013}. \citet{schochet_development_2001} predicted produced fluid temperatures of 280-320$^\circ$F (137-160 $^\circ$C) for the Lightning Dock EGS reservoir, which equates to \$1565-\$1694 per kW by the GEOPHIRES estimate. Converted to a 2020 cost basis \citep{us_bls_ppi_2021}, this amounts to \$2230-\$2415 per kW.
 
 If power plant capacity is modularized with pre-fabricated units like the Climeon PowerBlock concept, economies of scale should reduce the cost of construction and installation. Unanswered company inquiries left this rationale unconfirmed. Nevertheless, the author chose to assume a round-number estimate accounting for a modularity discount (Equation \ref{eq:cm_pp}). This could be replaced by more accurate numbers when those values become available.
 
 \begin{equation}
 \label{eq:cm_pp}
-    C_{pp} = \$2,000 \cdot q
+    C_{pp} = \$2,000 \cdot W
 \end{equation}
 \\
-The value in Equation \ref{eq:cm_pp} represents a 2020 estimate. Pump costs are assumed to be included in this expense.
+where W is the electricity output of the plant in kW and $C_pp$ is measured against a 2020 cost basis. Pump costs are assumed to be included in this expense.
 
-\subsubsection{OPEX: Power Plant}
+\subsubsection{Power Plant Operating Expenses}
 \label{ch4:cm_opex_pp}
 
 Power plant operating expenses follow the relationship used by the GEOPHIRES model based on a previous GETEM formulation \citep[Equation 9,\ ][]{beckers_introducing_2013}.
@@ -142,7 +187,7 @@ Power plant operating expenses follow the relationship used by the GEOPHIRES mod
 \label{eq:cm_om_pp}
     OM_{pp} = 0.75 \cdot C_{labor} + 0.015 \cdot C_{pp}
 \end{equation}
-\\
+
 Here, $C_{labor}$ refers to labor costs scaled to power plant production. The values in Table \ref{tab:labor_costs} follow \citet[Equation 10,\ ][]{beckers_introducing_2013}, updated to a 2020 cost basis using the Employment Cost Index (ECI) for total compensation for private industry utilities workers \citep{us_bls_eci_2021}.
 
 \begin{table}[!htp]
@@ -160,7 +205,7 @@ Here, $C_{labor}$ refers to labor costs scaled to power plant production. The va
 \label{tab:labor_costs}
 \end{table}
 
-\subsubsection{OPEX: Wells}
+\subsubsection{Well Operating Expenses}
 \label{ch4:cm_opex_well}
 
 Operations and maintenance costs per geothermal well combines labor with a fraction of the drilling \& completions expenses \citep[Equation 12,\ ][]{beckers_introducing_2013}.
@@ -172,7 +217,7 @@ Operations and maintenance costs per geothermal well combines labor with a fract
 \\
 where $C_{labor}$ refers to labor costs in Table \ref{tab:labor_costs}. Equation \ref{eq:cm_om_well} covers expenses for a single well and must be doubled for injector-producer pairs associated with each power plant module.
 
-\subsubsection{OPEX: Water}
+\subsubsection{Water Operating Expenses}
 \label{ch4:cm_opex_water}
 
 Water expenses refer to make-up water that replaces subsurface losses to the reservoir. The value applied here comes directly from the GETEM model \citep{eere_getem_2012}.
@@ -181,21 +226,77 @@ Water expenses refer to make-up water that replaces subsurface losses to the res
 \label{eq:cm_om_water}
     OM_{water} = PI \cdot \left[\$300 \cdot V_{loss}\right]
 \end{equation}
+\\
 where $V_{loss}$ is water loss in units of acre-feet and $PI$ converts this estimate to a 2020 cost basis. This operating cost could be alleviated by directly using excess water from the Lightning Dock hydrothermal operations. The cost model includes it for a more conservative cost estimate, but there is an argument to remove this cost entirely.
 
+\subsection{Rate Calculations}
+\label{ch4:rate_calc}
+
+The cost model considers four rates when performing the NPV calculation.
+
+\subsubsection{Discount Rate}
+\label{ch4:discount_rate}
+
+Discount rate defines the time value of money and is held constant throughout the 30-year time period being modeled. Equation \ref{eq:discount_rate} describes how discount rate re-scales cash flow to a present "discounted" value for the basis year \citep[p.\ 199]{de_neufville_flexibility_2011}.
+
+\begin{equation}
+    \label{eq:discount_rate}
+    DCF = \frac{CF}{(1+r)^n}
+\end{equation}
+\\
+where $DCF$ is discounted cash flow, $CF$ is the cash flow for a specific year,  $r$ is the discount rate, and $n$ represents the number of years between the modeled year and the basis year. Combining this relationship with Equation \ref{eq:cm_components}, $(1+r)^{-t}$ replaces $D_t$ as the discount term needed to calculate $NPV$.
+
+\subsubsection{Learning Rate}
+\label{ch4:learn_rate}
+
+Learning rate defines the improvement in cost as a result of accumulated knowledge and experience from repeatedly performing an action. In this model, a learning rate only applies to the drilling \& completions costs for EGS wells in the expansion project area. Drilling costs progressively decrease based on the following relationship \citep[p.\ 213]{de_neufville_flexibility_2011}:
+
+\begin{equation}
+    \label{eq:learning_rate}
+    U_i = U_1 \cdot i^B
+\end{equation}
+\\
+where $U_1$ and $U_i$ are the costs to drill the first and $i^{th}$ wells, respectively, $i$ is the total well count, and $B$ is the slope of the empirically-derived learning rate curve.
+
+\subsubsection{Thermal Drawdown Rate}
+\label{ch4:drawdown_rate}
+
+The thermal drawdown rate defines the progressive cooling of the stimulated geothermal reservoir over time. In the model, the reservoir temperature, and hence the temperature of the produced geothermal brine, decreases with each year of continued production by the relationship defined for GETEM (Entingh et al., 2006).
+
+\begin{equation}
+    \label{eq:drawdown}
+    T_n = T_0 \cdot (1-d)^n
+\end{equation}
+\\
+where $T_0$ and $T_n$ are reservoir temperatures at time 0 and n, $d$ is thermal drawdown rate, $n$ is number of years since drilling and stimulation activities last took place.
+
+\subsubsection{Capacity Factor Degradation Rate}
+\label{ch4:degrade_rate}
+
+The NREL Cost of Renewable Energy Spreadsheet Tool (CREST) incorporated an additional capacity factor degradation rate separate from thermal degradation of the resource when modeling geothermal LCOE \citep{gifford_crest_2013}. This rate accounts for natural long-term production degradation of plant performance over the lifetime of the asset. In this cost model, capacity factor degradation is modeled by reducing the capacity factor as the plant ages by applying a relationship similar to Equation \ref{eq:drawdown} for thermal drawdown:
+
+\begin{equation}
+    \label{eq:degradation}
+    C_n = C_0 \cdot (1-a)^n
+\end{equation}
+\\
+where $C_0$ and $C_n$ are power plant capacity factors at years 0 and n, $a$ is the degradation factor, and $n$ is number of years since the power plant commenced operations.
+
 \subsection{Model Parameters}
-In order to estimate the values for the NPV model components, several parameters related to resource recovery, field and plant operations, and key economic factors were pre-defined. The chosen parameters are representative of the Lightning Dock area and limits on components of the system to the best of the author's knowledge. Resource recovery parameters are listed in Table \ref{tab:cm_resource_params}. Field and plant operations parameters appear in Table \ref{tab:cm_ppops_params}. Economic factors influencing model performance are covered in Table \ref{tab:cm_econ_params}.
+In order to estimate the values for the NPV model components, several parameters related to resource recovery, field and plant operations, and key economic factors were chosen for the cost model. The selected parameters are representative of the Lightning Dock area and limits on components of the system to the best of the author's knowledge.
+
+\subsubsection{Resource recovery parameters}
 
 \begin{table}[!htp]
 \centering
-\resizebox{\textwidth}{!}{
+\resizebox{.9\textwidth}{!}{
 \begin{tabular}{|l|c|l|}
 \hline
 \multicolumn{1}{|c|}{\textbf{Parameter}} & \textbf{Value} & \multicolumn{1}{c|}{\textbf{Source}} \\ \hline
 Ambient surface temperature & 15.8 $^\circ$C & \citep{dahal_evaluation_2012} \\ \hline
 Average geothermal gradient & 100 K/km & \citep{crowell_history_2014} \\ \hline
 Initial average reservoir temperature & 149 $^\circ$C & \citep{schochet_development_2001} \\ \hline
-Cooling in production well & 5\% & \citep{lowry_geovision_2017} \\ \hline
+Cooling in production well & 7.5\% & \citep{lowry_geovision_2017} \\ \hline
 Flow rate per producer & 40 kg/s & \citep{entingh_volume_2006} \\ \hline
 Thermal drawdown rate & 0.5\% & \citep{entingh_volume_2006} \\ \hline
 Water loss rate & 2\% & \citep{freeman_system_2018} \\ \hline
@@ -204,24 +305,28 @@ Water loss rate & 2\% & \citep{freeman_system_2018} \\ \hline
 \label{tab:cm_resource_params}
 \end{table}
 
+\subsubsection{Field and plant operations parameters}
+
 \begin{table}[!htp]
 \centering
-\resizebox{.9\textwidth}{!}{
+\resizebox{.75\textwidth}{!}{
 \begin{tabular}{|l|c|l|}
 \hline
 \multicolumn{1}{|c|}{\textbf{Parameter}} & \textbf{Value} & \multicolumn{1}{c|}{\textbf{Source}} \\ \hline
 Well redevelopment factor & 0.85 & \citep{prestidge_personal_2021} \\ \hline
 Plant capacity factor & 95\% & \citep[p.\ 309]{glassley_geothermal_2015} \\ \hline
 Plant degradation factor & 0.5\% & \citep{augustine_geovision_2019} \\ \hline
-2nd Law Efficiency & 30\% & \citep[Fig.\ 2]{beckers_geophires_2019} \\ \hline
+%2nd Law Efficiency & 28\% & \citep[p.\ 39-40]{beckers_low-temperature_2016} \\ \hline
 \end{tabular}}
 \caption[Cost model parameters for operations]{Parameters related to field and plant operations in the cost model}
 \label{tab:cm_ppops_params}
 \end{table}
 
+\subsubsection{Economic factors}
+
 \begin{table}[!htp]
 \centering
-\resizebox{.8\textwidth}{!}{
+\resizebox{.75\textwidth}{!}{
 \begin{tabular}{|l|c|l|}
 \hline
 \multicolumn{1}{|c|}{\textbf{Parameter}} & \textbf{Value} & \multicolumn{1}{c|}{\textbf{Source}} \\ \hline
@@ -233,6 +338,13 @@ Contract rate above wholesale & 50\% & \citep{pnm_public_2014} \\ \hline
 \label{tab:cm_econ_params}
 \end{table}
 
-\subsection{Power Plant Performance} 
-\label{ch4:plant_perform}
+\subsubsection{Electricity Price}
 
+Electricity prices are referenced from the industrial electricity price forecast for the Mountain region (includes New Mexico) provided by the EIA in their \acrlong{steo} (\acrshort{steo}) projections out to 2023 \citep{eia_short-term_2021}. While industrial pricing differs slightly from wholesale, it more closely mimics wholesale prices than residential or commercial rates and was therefore selected as a wholesale proxy for the cost model. The Forecast Tool in Excel projected prices out to 2050 (Figure \ref{fig:electricity_pricing}). This tool uses the Exponential Triple Smoothing algorithm with seasonality patterns to forecast time series data \citep{microsoft_forecastets_2021}. For the deterministic cost model, electricity prices are directly sampled from the forecast and multiplied by the PPA \textit{Contract rate above wholesale} value listed in Table \ref{tab:cm_econ_params} for any year when capacity increases. This simulates amending the PPA with a local utility whenever new capacity is available for power sales. Electricity pricing is held flat compared to the previous year when no capacity change occurs.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-EIA_Electricity_Forecast.png}
+\caption[Electricity price forecast]{Price of electricity forecast based on EIA Short-Term Energy Outlook \protect\citep{eia_short-term_2021}. A seasonal signal is visible due to the quarterly sampling of the data.}
+\label{fig:electricity_pricing}
+\end{figure}
