@@ -504,6 +504,7 @@ The tornado diagram in Figure \ref{fig:tornado} provides a simple visualization 
 \end{table}
 
 \subsection{Probability Density Functions}
+\label{ch4:pdfs}
 
 Having established which uncertainties impact the cost model the most, \acrlong{pdf}s (\acrshort{pdf}s) can be assigned to model variables for use as part of a stochastic NPV assessment. Running the model multiple times over generates a Monte Carlo ensemble of NPV solutions, each representing the model response to a different sampling of these variable values. The ensemble can be evaluated using a combination of metrics for individual model analysis or comparison with alternative models. Chapter \ref{ch6:cm_results} outlines the results of the Monte Carlo approach applied to the Lightning Dock expansion cost model using the variable PDFs in figure \ref{fig:cm_probdists} and described below.
 
@@ -545,6 +546,19 @@ Second, volatility can also influence the spot price used to update power purcha
 
 Local spatial variations in geothermal gradient are difficult to characterize with only a sparse sampling of the Lightning Dock geothermal area by predominantly shallow boreholes. Subsurface models like those shown in Figures 22-24 of \citep{cunniff_final_2005} generally predict a smoothly-varying thermal field in areas without direct observational data. But the complex temperature structure associated with the Lightning Dock hydrothermal plume suggests thermal heterogeneity can exist away from the Animas Valley fault. Uncertainty in geothermal gradient is therefore represented in the cost model by a uniform probability distribution with end points determined by measured gradients from wells TG12-7 and TG56-14 (Figure \ref{fig:cm_probdists}D).
 
+\subsubsection{Reservoir Temperature}
+\label{cm4:prob_temp}
+
+\begin{wrapfigure}{R}{0.55\linewidth} %[htp]
+\centering
+\includegraphics[scale=0.45]{templates/images/Figure-Reservoir_Temp_PDF.png}
+\singlespacing
+\caption[Reservoir temperature PDF]{Reservoir temperature probability density function. The value range is based on values originally proposed by \protect\citet{schochet_development_2001}.}
+\label{fig:cm_temp_pdf}
+\end{wrapfigure}
+
+Although not included in the sensitivity testing exercise in Section \ref{ch4:sensitivity}, the original proposal for EGS production at Lightning Dock by \citet{schochet_development_2001} noted a range of likely reservoir temperatures in the Horquilla limestone formation. Geothermal power production relies first and foremost on the subsurface temperatures being "mined" by circulating fluids. Uncertainty in initial reservoir temperature is therefore included in the cost model, represented by a uniform probability distribution with bounds determined from the temperatures proposed by \citet{schochet_development_2001} (Figure \ref{fig:cm_temp_pdf}).
+
 \section{Flexibility with Design Options}
 
 The addition of probability density functions to the cost model for Monte Carlo simulation provides a means of testing the model response to uncertainties in the system. But this probabilistic Base Case model still remains inflexible in the face of emergent conditions that would trigger actions in a real-life scenario. These actions are sometimes characterized as design options that, like financial options, can be exercised in the future if doing so might benefit system stakeholders \citep[p.\ 270-272]{de_neufville_flexibility_2011}.
@@ -580,7 +594,7 @@ Combining this equation with a harmonic decline curve assumption results in the 
 To counteract the negative impact of this decline, a full field re-drill campaign is triggered in cost models like GETEM. This may occur several times over the lifespan of a geothermal power plant depending on the drawdown rate, although GETEM freezes re-drills in the final 5 years to ensure no redevelopment cost is incurred just prior to end of life for the facility \citep{entingh_volume_2006}. This methodology is applied here using the following decision rule:
 \\
 \\
-\textbf{Redevelop Decision Rule}
+\textbf{Redevelopment Decision Rule}
 \label{ch4:dr_redevelop}
 \begin{enumerate}
 	\item Determine \textit{Thermal drawdown threshold} from \textit{Initial average reservoir temperature} using Equation \ref{eq:drawdown_threshold} for $\Delta T_{max}$.
@@ -594,12 +608,12 @@ To counteract the negative impact of this decline, a full field re-drill campaig
 	\end{enumerate}
 \end{enumerate}
 
-\subsection{Redevelop and Grow Case}
+\subsection{Redevelop \& Grow Case}
 
-Redevelopment of the geothermal field is primarily a mitigation against loss of accessible resource as thermal drawdown impacts the flow paths between wells. Capturing upside potential is equally important. The Redevelop and Grow case recognizes that up-swings in wholesale electricity prices may signal a comprehensive shift in long-term energy pricing due to influences like societal shifts toward electrification. To take advantage of the opportunity, this case considers a price change threshold as the trigger for installing additional geothermal power plant modules and renegotiating the PPA with the local utility company (\textit{Price trigger for flexibility}, see Table \ref{tab:cm_econ_params}). The scenario assumes a flat percentage increase in capacity (\textit{Expansion amount}, see Table \ref{tab:cm_econ_params}) and universal success in establishing new power agreements at a set mark-up percentage above wholesale (\textit{Contract rate over wholesale}, see Table \ref{tab:cm_econ_params}). The field redevelopment decision rule outlined for the Redevelop Only case remains intact, and another decision rule for design flexibility in modular growth is as follows:
+Redevelopment of the geothermal field is primarily a mitigation against loss of accessible resource as thermal drawdown impacts the flow paths between wells. Capturing upside potential is equally important. The Redevelop \& Grow case recognizes that up-swings in wholesale electricity prices may signal a comprehensive shift in long-term energy pricing due to influences like societal shifts toward electrification. To take advantage of the opportunity, this case considers a price change threshold as the trigger for installing additional geothermal power plant modules and renegotiating the PPA with the local utility company (\textit{Price trigger for flexibility}, see Table \ref{tab:cm_econ_params}). The scenario assumes a flat percentage increase in capacity (\textit{Expansion amount}, see Table \ref{tab:cm_econ_params}) and universal success in establishing new power agreements at a set mark-up percentage above wholesale (\textit{Contract rate over wholesale}, see Table \ref{tab:cm_econ_params}). The field redevelopment decision rule outlined for the Redevelop Only case remains intact, and another decision rule for design flexibility in modular growth is as follows:
 \\
 \\
-\textbf{Grow Capacity Decision Rule}
+\textbf{Capacity Growth Decision Rule}
 \label{ch4:dr_grow}
 \begin{enumerate}
     \item Set the \textit{Auto-renegotiated price} to the \textit{Price forecast} for the current year multiplied by the \textit{Contract rate above wholesale}.
@@ -621,7 +635,7 @@ Redevelopment of the geothermal field is primarily a mitigation against loss of 
 Price swings can go the opposite direction as well. The NREL Electrification Futures Study \citep{murphy_electrification_2021} identified scenarios where electricity prices fall between 2020 and 2050, so having a means of addressing a future with tighter margins would be a useful flexibility. In the Full Flexibility Case, field redevelopment with thermal degradation and capacity increases in response to price surges remain in effect. In addition, a sudden drop in electricity prices (\textit{Price trigger for flexibility}, see Table \ref{tab:cm_econ_params}) serves as a trigger for the power plant operator to remove or decommission a number of binary cycle modules (\textit{Reduction amount}, see Table \ref{tab:cm_econ_params}). Since modules operate independently with their own injector-producer couplet, they can be individually decommissioned with no impact on other installed modules in the aggregate facility. Additional cost savings might be realized if the modules were leased and the internal equipment returned to the vendor when no longer in use, although for the sake of simplicity, this option has not been included in the cost model. The decision rule for price-based decommissioning of active modules is as follows:
 \\
 \\
-\textbf{Reduce Capacity Decision Rule}
+\textbf{Capacity Reduction Decision Rule}
 \label{ch4:dr_reduce}
 \begin{enumerate}
     \item Calculate \textit{Price deviance} as in the Grow Capacity decision decision rule (\ref{ch4:dr_grow}).
