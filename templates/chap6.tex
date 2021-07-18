@@ -10,7 +10,7 @@ Chapter \ref{ch4:cm_prep} outlined the cost modeling strategy for a hypothetical
 
 Section \ref{ch4:cm_rev} described the use of brine effectiveness in the cost model for determining the power output of a binary cycle plant for a given production temperature and flow rate. This formulation provides a choice of how to manage the cost model mechanics due to a trade-off between plant capacity and flow rate for a given brine effectiveness (Equation \ref{eq:cm_rev}).
 
-In addition, installation of the Lightning Dock expansion can take place over a variety of different deployment schedules due to the modularity of the system. Rather than drill ten wells and install five binary cycle plants all at once, delaying aspects of the installation can be financially beneficial and less of an initial risk for the project.  
+In addition, installation of the Lightning Dock expansion can take place over a variety of different deployment schedules due to the modularity of the system. Rather than drill ten wells and install five binary cycle plants all at once, delaying aspects of the installation can be financially beneficial and less of an initial risk for the project.
 
 Figure \ref{fig:static_model_compare} shows the results for the pre-set capacity and pre-set flow rate static models for sixty (60) installation schedule permutations. The pre-set capacity model results in project losses of \$20 million or more for all tested installation options. On the other hand, the fixed flow-rate model only drops below \$0 NPV for a handful of project plans, achieving \$3.7 million NPV for the case marked with a red diamond where three (3) modules are installed up front and two (2) additional ones go live after a year of operation. Based on these results, all cost models used in the rest of this analysis apply a fixed flow rate per production well and derive the aggregate electricity generation numbers based on the temperature of the produced brine.
 
@@ -65,9 +65,9 @@ NPV & \$1.0 \\ \hline
 
 Monte Carlo simulation is applied to all of the probabilistic models to estimate the range of model behavior. For each model, results represent 2000 simulated runs where each realization defines a unique combination of variable values sampled from the PDFs reviewed in Section \ref{ch4:pdfs}. 
 
-Common methods for evaluating a Monte Carlo ensemble include building a NPV histogram, constructing a \acrlong{cdf} (\acrshort{cdf} or target curve), and averaging the results together for \acrlong{enpv} (\acrshort{enpv}). Other interesting metrics for model comparison include standard deviation, individual percentiles, and direct comparison with the static model NPV (NPV$_{s}$). Standard deviation is the measure of how tightly the results cluster around the central value. Distributions with low standard deviations are sometimes referred to as robust distributions. P$_{50}$ marks the the median, and P$_{05}$ and P$_{95}$ define marginal percentiles for 5\% Value At Risk (VAR) and Value At Gain (VAG), respectively. Each of these measures is reported for the probabilistic model cases described below.
+Common methods for evaluating a Monte Carlo ensemble include building a NPV histogram, constructing a \acrlong{cdf} (\acrshort{cdf} or target curve), and averaging the results together for \acrlong{enpv} (\acrshort{enpv}). Other interesting metrics for model comparison include standard deviation, individual percentiles, and direct comparison with the static model NPV (NPV$_{s}$). Standard deviation is the measure of how tightly the results cluster around the central value. Distributions with low standard deviations are sometimes referred to as robust distributions. P$_{50}$ marks the the median, and P$_{05}$ and P$_{95}$ define marginal percentiles for 5\% \acrlong{var} (\acrshort{var}) and \acrlong{vag} (\acrshort{vag}), respectively. Each of these measures is reported for the probabilistic model cases described below.
 
-\section{Base Case Probabilistic Model}
+\section{Base Case Model}
 \label{ch6:base_case}
 
 The Base Case model mimics the Static model in form, but incorporates uncertainties in drilling \& completions costs, electricity pricing, geothermal gradient, reservoir temperature, and thermal drawdown rate to provide a more realistic forecast. No decision rules are included in this scenario. 
@@ -82,14 +82,14 @@ The Base Case ensemble shows a symmetric, pseudo-Gaussian distribution of NPV re
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-Base_Case_Histogram.png}
-\caption[Probabilistic Base Case histogram]{Base Case probabilistic cost model histogram illustrating the distribution of 2000 model realizations. NPV is reported in \$M, where M is million.}
+\caption[Base Case histogram]{Base Case probabilistic cost model histogram illustrating the distribution of 2000 model realizations. NPV is reported in \$M, where M is million.}
 \label{fig:base_case_hist}
 \end{figure}
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-Base_Case_CDF.png}
-\caption[Probabilistic Base Case CDF]{Cumulative distribution function for the Base Case probabilistic cost model. The curve summarizes results from 2000 model realizations. NPV is reported in \$M, where M is million.}
+\caption[Base Case CDF]{Cumulative distribution function for the Base Case probabilistic cost model. The curve summarizes results from 2000 model realizations. NPV is reported in \$M, where M is million.}
 \label{fig:base_case_cdf}
 \end{figure}
 
@@ -116,7 +116,8 @@ P95 NPV & \$15.9M \\ \hline
 \label{tab:base_stats}
 \end{table}
 
-\section{Redevelop Case Probabilistic Model}
+\section{Redevelop Case Model}
+\label{ch6:redevelop_case}
 
 The Redevelop Case model extends the Base Case with a redevelopment plan for the geothermal field to counter thermal decline in the fluid pathways through the reservoir. The Redevelopment decision rule (Section \ref{ch4:dr_redevelop}) is triggered when thermal drawdown causes the produced brine to drop below a threshold temperature. As with the Base Case, model uncertainties include drilling \& completions costs, electricity pricing, geothermal gradient, reservoir temperature, and thermal drawdown rate.
 
@@ -130,14 +131,14 @@ Standard deviation of the ensemble distribution is less than observed for the Ba
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-Redevelop_Case_Histogram.png}
-\caption[Probabilistic Redevelop Case histogram]{Redevelop Case probabilistic cost model histogram illustrating the distribution of 2000 model realizations. NPV is reported in \$M, where M is million.}
+\caption[Redevelop Case histogram]{Redevelop Case probabilistic cost model histogram illustrating the distribution of 2000 model realizations. NPV is reported in \$M, where M is million.}
 \label{fig:redevelop_case_hist}
 \end{figure}
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-Redevelop_Case_CDF.png}
-\caption[Probabilistic Redevelop Case CDF]{Cumulative distribution function for the Redevelop Case probabilistic cost model. The curve summarizes results from 2000 model realizations. NPV is reported in \$M, where M is million.}
+\caption[Redevelop Case CDF]{Cumulative distribution function for the Redevelop Case probabilistic cost model. The curve summarizes results from 2000 model realizations. NPV is reported in \$M, where M is million.}
 \label{fig:redevelop_case_cdf}
 \end{figure}
 
@@ -164,14 +165,15 @@ P95 NPV & \$15.1M \\ \hline
 \label{tab:redevelop_stats}
 \end{table}
 
-\section{Redevelop \& Grow Case Probabilistic Model}
+\section{Redevelop \& Grow Case Model}
+\label{ch6:grow_case}
 
 The Redevelop \& Grow Case model builds on the Redevelop Case with a decision rule around increasing capacity (Section \ref{ch4:dr_grow}). Specifically, when electricity prices rise by an amount larger than the monitored threshold, more power plant modules are installed to capitalize on the increased prices and inferred demand. Like the other probabilistic models, values for drilling \& completions costs, electricity pricing, geothermal gradient, reservoir temperature, and thermal drawdown rate are directly sampled from probability distribution functions (Section \ref{ch4:pdfs}) as part of the Monte Carlo simulation.
 
 \subsection{Model Results}
 \label{ch6:grow_results}
 
-Redevelop \& Grow model results use a field expansion amount of 25\% when the Grow Capacity decision rule is triggered. Assuming the PPA with the purchasing utility company is successfully renegotiated at the time of the expansion, this model results in a dramatic change in project value. ENPV is \$9.7 million, over \$12 million better than the Redevelop Case and over 800\% greater than Static model NPV (Table \ref{tab:grow_stats}). The case shows notable improvement in both Value at Risk and Value at Gain; P$_{05}$ shifts by more than \$7 million to -\$14.2 million, and P$_{95}$ leaps to \$38.2 million as power plant growth captures market potential.
+Redevelop \& Grow model results use a field expansion amount of 25\% when the Capacity Growth decision rule is triggered. Assuming the PPA with the purchasing utility company is successfully renegotiated at the time of the expansion, this model results in a dramatic change in project value. ENPV is \$9.7 million, over \$12 million better than the Redevelop Case and over 800\% greater than Static model NPV (Table \ref{tab:grow_stats}). The case shows notable improvement in both Value at Risk and Value at Gain; P$_{05}$ shifts by more than \$7 million to -\$14.2 million, and P$_{95}$ leaps to \$38.2 million as power plant growth captures market potential.
 
 \begin{figure}[!htp]
 \centering
@@ -180,12 +182,12 @@ Redevelop \& Grow model results use a field expansion amount of 25\% when the Gr
 \label{fig:grow_case_hist}
 \end{figure}
 
-The histogram for Redevelop \& Grow skews noticeably to the left with a long tail of simulation runs marking high-value realizations of the model. Standard deviation of NPV increases compared to the Redevelop Only case, suggesting this model is less robust. However, the greater spread reflects more upside potential and is a desirable feature. It stands to reason then that robustness measured by standard deviation is not as useful a measure of design benefit as the other metrics in Table \ref{tab:grow_stats}. Figure \ref{fig:grow_case_cdf} illustrates the rightward shift of the target curve compared to those shown in Figures \ref{fig:base_case_cdf} and \ref{fig:redevelop_case_cdf}. Only 23\% of simulated results result in a project loss. 
+The histogram for Redevelop \& Grow skews noticeably to the right with a long tail of simulation runs marking high-value realizations of the model. Standard deviation of NPV increases compared to the Redevelop Only case, suggesting this model is less robust. However, the greater spread reflects more upside potential and is a desirable feature. It stands to reason then that robustness measured by standard deviation is not as useful a measure of design benefit as the other metrics in Table \ref{tab:grow_stats}. Figure \ref{fig:grow_case_cdf} illustrates the rightward shift of the target curve compared to those shown in Figures \ref{fig:base_case_cdf} and \ref{fig:redevelop_case_cdf}. Only 23\% of simulated results result in a project loss. 
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-Grow_Case_CDF.png}
-\caption[Probabilistic Redevelop \& Grow Case CDF]{Cumulative distribution function for the Redevelop \& Grow Case probabilistic cost model. The curve summarizes results from 2000 model realizations. NPV is reported in \$M, where M is million.}
+\caption[Redevelop \& Grow Case CDF]{Cumulative distribution function for the Redevelop \& Grow Case probabilistic cost model. The curve summarizes results from 2000 model realizations. NPV is reported in \$M, where M is million.}
 \label{fig:grow_case_cdf}
 \end{figure}
 
@@ -212,27 +214,40 @@ P95 NPV & \$38.2M \\ \hline
 \label{tab:grow_stats}
 \end{table}
 
-\section{Full Flexibility Case Probabilistic Model}
+\section{Full Flexibility Case Model}
+\label{ch6:reduce_case}
+
+Full Flexibility adds a decision rule around reduction of aggregate plant capacity (Section \ref{ch4:dr_reduce}). If electricity prices drop by a threshold amount, power plant modules are proactively decommissioned to reduce electricity production and operating expenses. Redevelopment and Capacity Growth decision rules remain in effect, as does the random sampling treatment for drilling \& completions costs, electricity pricing, geothermal gradient, reservoir temperature, and thermal drawdown rate based on PDFs defined in Section \ref{ch4:pdfs}.
 
 \subsection{Model Results}
 \label{ch6:reduce_results}
 
+In a somewhat surprising outcome, the simulation for Full Flexibility results in an ENPV of \$6.7 million (Table \ref{tab:reduce_stats}). Although this value is 545\% greater than the Static model NPV, it falls short of the Redevelop \& Grow case by nearly \$3 million (see Table \ref{tab:grow_stats}). Both VAR and VAG show less attractive results as well; P$_{05}$ is -\$16.3M and P$_{95}$ is \$36.2 million, both $\approx \$2$ million worse than Redevelop \& Grow.  
+
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-Reduce_Case_Histogram.png}
-\caption[Full Flexibility Case histogram]{CAPTION}
+\caption[Full Flexibility Case histogram]{Full Flexibility Case probabilistic cost model histogram illustrating the distribution of 2000 model realizations. NPV is reported in \$M, where M is million.}
 \label{fig:reduce_case_hist}
 \end{figure}
+
+The results histogram (Figure \ref{fig:reduce_case_hist}) shows the same right skew as the Redevelop \& Grow model but with a slightly more compact form based on the lower standard deviation (Table \ref{tab:reduce_stats}). The difference in median values between the two cases amounts to $\approx\$3$ million, further confirming the Full Flexibility case is entirely dominated by the Redevelop \& Grow case. Figure \ref{fig:reduce_case_cdf} depicts the case target curve. There is a steep climb beginning at -\$14 million such that 33\% of model realizations result in project losses --- 10\% more than Redevelop \& Grow.
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-Reduce_Case_CDF.png}
-\caption[Full Flexibility Case CDF]{CAPTION}
+\caption[Full Flexibility Case CDF]{Cumulative distribution function for the Full Flexibility Case probabilistic cost model. The curve summarizes results from 2000 model realizations. NPV is reported in \$M, where M is million.}
 \label{fig:reduce_case_cdf}
 \end{figure}
 
+It is interesting to note that the modeled electricity forecast includes enough volatility to generate cases with both +20\% and -20\% price deviations (Figure \ref{fig:elec_price_prob}), potentially (and perhaps unrealistically) triggering both a capacity expansion and reduction within the same 30-year project lifespan. In addition, since modeled prices increase over time, except briefly when the randomly-placed step-change is negative, lost revenue from the utility forcing PPA renegotiations if electricity pricing went into a multi-year decline (e.g., Low Renewable Technology Cost case in Figure \ref{fig:EFS_electricification}) is not simulated here. These factors may play a role in the dominance of the Redevelop \& Grow case over Full Flexibility.
+
+Nevertheless, there is an additional simple explanation for the model behavior. If power plant modules are decommissioned, the model is more sensitive to the drop in revenue from reduced electricity generation than any benefit realized by discounted OPEX. The cost savings is just not significant enough to make up for less income.
+
 \subsection{Summary Statistics}
 \label{ch6:reduce_stats}
+
+Table \ref{tab:reduce_stats} outlines key statistical measures summarizing the performance of the Full Flexibility Case probabilistic cost model.
 
 \begin{table}[H]
 \centering
@@ -250,34 +265,59 @@ P95 NPV & \$36.2M \\ \hline
 \label{tab:reduce_stats}
 \end{table}
 
-\section{Full Flexibility Sensitivity Testing}
-\label{ch6:sensitivity}
+\section{Combined Model Comparison}
+
+Figure \ref{fig:all_case_cdf} illustrates the target curves for the four (4) probabilistic models discussed in the previous sections. The Base Case model is dominated by all other models on the low-side and merges with the Redevelop Case on the high-side. The Full Flexibility Case greatly improves on the Base and Redevelop Cases. Redevelop \& Grow appears farthest to the right, making it the preferred model for the cost model parameterization as described in Section \ref{ch4:cm_params}. 
 
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-All_Case_CDF.png}
-\caption[All Cases CDF]{CAPTION}
+\caption[All Cases CDF]{Cumulative distribution functions for all probabilistic cases evaluated in Sections \ref{ch6:base_case} to \ref{ch6:reduce_case}. Each curve summarizes results from 2000 model realizations. NPV is reported in \$M, where M is million.}
 \label{fig:all_case_cdf}
 \end{figure}
+
+\section{Full Flexibility Case Sensitivity Testing}
+\label{ch6:sensitivity}
+
+In order to explore the hypothesis that the Full Flexibility Case model is responding to revenue losses, a series of sensitivity tests considered adjustments to the \textit{Reduction amount} parameter controlling how many modules are removed by the Capacity Reduction decision rule (Table \ref{tab:cm_econ_params}, Section \ref{ch4:dr_reduce}). The default value applied throughout this analysis has been 25\% to match the \textit{Expansion amount} parameter used by the Capacity Growth decision rule (Table \ref{tab:cm_econ_params}, Section \ref{ch4:dr_grow}). Sensitivity testing with the \textit{Expansion amount} parameter is also conducted.
 
 \subsection{Reduction Amount}
 \label{ch6:sens_redamt}
 
+The gap between the Full Flexibility (yellow) and Redevelop \& Grow (gray) curves broadens for higher \textit{Reduction amount} values. However, the curves begin to overlap for \textit{Reduction amount} values of $\leq{15}\%$. The difference is subtle, but the 5\% case shows a slight rightward step-out in the high-side values for Full Flexibility compared to the Redevelop \& Grow. This is not seen in the 4\% or 6\% scenarios, suggesting 5\% is the sweet spot for \textit{Reduction amount} when a significant electricity price drop is detected. For values above 5\%, the gain from OPEX reductions cannot overcome revenue lost from reduced capacity, which likely reflects the influence of PPA contracts that stabilize the year-to-year price paid for generated electricity. For values less than 5\%, the Full Flexibility Case merges with the Redevelop \& Grow Case as the number of decommissioned modules trends toward zero (0).
+
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.98\textwidth]{templates/images/Figure-Sensitivity_Reduction.pdf.png}
-\caption[Reduction Amount sensitivity test]{Reduction Amount sensitivity test}
+\caption[Reduction Amount sensitivity test]{\textit{Reduction amount} sensitivity test using model target curves. Each curve illustrates results for a Monte Carlo simulation with 2000 runs of the indicated models. \textit{Reduction amount} only impacts Full Flexibility Case (yellow), so Base Case (orange), Redevelop Case (blue), and Redevelop \& Grow Case (gray) remain unchanged. \textit{Reduction amount values} include A. 35\%, B. 25\%, C. 15\%, D. 6\%, E. 5\%, and F. 4\%. NPV is reported in \$M, where M is million.}
 \label{fig:sens_test_reduction}
 \end{figure}
 
 \subsection{Expansion Amount}
 \label{ch6:sens_expamt}
 
+A similar sensitivity test is executed by varying the \textit{Expansion amount} parameter while holding \textit{Reduction amount} at 5\%. Both the Full Flexibility and Redevelop \& Grow target curves respond to this parameter since both cases include the Capacity Growth decision rule (Section \ref{ch4:dr_grow}). Figure \ref{fig:sens_test_expansion} illustrates the results for step-wise increases to \textit{Expansion amount} by an increment of 20\%. 
+
+Full Flexibility and Redevelop \& Grow target curves closely match each other except in the high-side model realizations, i.e., those above \$20 million NPV, and in the low-side near -\$20 million NPV. The low side variability relates to the sparse count of model realizations at -\$20 million NPV in each Monte Carlo simulation. For the better-constrained high-side, Full Flexibility shows a slight advantage when \textit{Expansion amount} is 25\% and 65\%. However, the separation is more pronounced for a 45\% \textit{Expansion amount}. In this sweet spot case, Full Flexibility ENPV amounts to \$13.7 million, $\approx\$1$ million greater than that for Redevelop \& Grow. This optimized potential would be missed without testing and refining the project growth and reduction strategies through sensitivity testing and parameter tuning.
+
 \begin{figure}[!htp]
 \centering
 \includegraphics[width=.98\textwidth]{templates/images/Figure-Sensitivity_Expansion_Amount.png}
-\caption[Expansion Amount sensitivity test]{Expansion Amount sensitivity test}
+\caption[Expansion Amount sensitivity test]{\textit{Expansion amount} sensitivity test using model target curves. Each curve illustrates results for a Monte Carlo simulation with 2000 runs of the indicated models. \textit{Expansion amount} impacts both Redevelop \& Grow (gray) and Full Flexibility (yellow) target curves. Base Case (orange) and Redevelop Case (blue) remain unchanged. \textit{Expansion amount values} include A. 25\%, B. 45\%, and C. 65\%. NPV is reported in \$M, where M is million.}
 \label{fig:sens_test_expansion}
 \end{figure}
 
 \section{Recap}
+
+This chapter covered the execution of cost models described in Chapter \ref{ch4:cm_prep}. Results for a deterministic model and four (4) probabilistic models illustrate how incorporating uncertainties and decision rules into a modeling approach can provide important insights into potential project profit and loss. By comparing summary metrics and target curves, this methodology allows a decision-maker to test strategies for mitigating the risk of an unprofitable EGS expansion to an existing power plant.
+\\
+\\
+Key insights from cost modeling include:
+\begin{enumerate}
+    \item Static (deterministic) cost models that use average or most-likely parameter values are inherently flawed. They distort estimates of project value and may lead to poor project decisions.
+    \item Probabilistic model result ensembles from Monte Carlo simulation are best compared using target curves (CDFs) and summary statistics like ENPV. Solution distribution robustness is not necessarily desirable --- imbalance toward the high side means a model has more Value at Gain.
+    \item Redeveloping geothermal wells to counter reservoir thermal decline reduces downside risk but does not improve upside potential for the project.
+    \item Installing additional power plant modules in response to greater demand results in significantly greater project value with reduced downside risk.
+    \item Decommissioning power plant modules in response to plummeting prices generally does not capture greater project value, likely due to the lost revenue from reduced power generation outpacing savings in OPEX in this model formulation.
+    \item Sensitivity testing of decision rule parameters is a means of optimizing operational strategy and can reveal hidden project value.
+\end{enumerate}

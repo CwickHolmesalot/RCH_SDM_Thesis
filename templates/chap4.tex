@@ -597,15 +597,15 @@ To counteract the negative impact of this decline, a full field re-drill campaig
 \textbf{Redevelopment Decision Rule}
 \label{ch4:dr_redevelop}
 \begin{enumerate}
-	\item Determine \textit{Thermal drawdown threshold} from \textit{Initial average reservoir temperature} using Equation \ref{eq:drawdown_threshold} for $\Delta T_{max}$.
-	\item Use \textit{Thermal drawdown rate} to calculate the number of years until the \textit{Thermal drawdown threshold} is reached based on Equation \ref{eq:redevelop_time}. Store this value in the \textit{Redevelop every} field.
-	\item In the annual cash flow analysis, \textbf{IF} power plant modules were installed a multiple of the \textit{Redevelop Every} years ago \textbf{AND} the year is not within 5 years of \textit{Plant useful life}, \textbf{THEN}:
+	\item Determine the temperature threshold for viable power production using Equation \ref{eq:drawdown_threshold} and the initial reservoir temperature.
+	\item Calculate the number of years until the temperature threshold is reached based on the thermal drawdown rate and Equation \ref{eq:redevelop_time}. This defines the redevelopment interval for the field.
+    \item In the annual cash flow analysis, determine if time since installation of any power plant modules is a multiple of the redevelopment interval. If so and the year being evaluated does not fall within the final 5 years of the project lifespan:
 	\begin{enumerate}
-	    \item Store the number of modules in \textit{Capacity level increase} from \textit{Redevelop every} years ago in the \textit{Units redeveloped} field.
-	    \item Add \textit{Capacity level increase [Input]} for the current year to \textit{Units redeveloped}. Multiply this by \textit{Wells per module} and add to \textit{Wells drilled or redrilled} from the previous year to determine the current year’s \textit{Wells drilled or redrilled}.
-	    \item Determine \textit{CAPEX (Redevelopment)} as \textit{Units redeveloped} $\cdot$ \textit{Total capital costs (drilling)} $\cdot$ \textit{Redevelopment factor}. Scale this value by the learning rate discount of the form $i^B$, where $i$ is \textit{Wells drilled or redrilled} from the previous year and $B$ is the \textit{Learning rate exponent}.
-	    \item Reset \textit{Heat inlet temperature} to \textit{Production temperature (@WH)}.
-	\end{enumerate}
+	    \item Identify how many modules need to be redeveloped. Multiply this by 2 to define the number of wells being sidetracked (or redrilled). This assumes the wells are in pairs for each module.
+	    \item Calculate CAPEX for redevelopment by multiplying the drilling costs per well by the number of wells being reworked, then discount by the pre-determined redevelopment factor. Scale this by the learning rate discount based on the number of wells already drilled since field operations began.
+	    \item Update the running tally of wells drilled or redrilled to include wells from this redevelopment effort.
+	    \item Reset the produced brine temperature to the initial reservoir temperature.
+    \end{enumerate}
 \end{enumerate}
 
 \subsection{Redevelop \& Grow Case}
@@ -616,17 +616,13 @@ Redevelopment of the geothermal field is primarily a mitigation against loss of 
 \textbf{Capacity Growth Decision Rule}
 \label{ch4:dr_grow}
 \begin{enumerate}
-    \item Set the \textit{Auto-renegotiated price} to the \textit{Price forecast} for the current year multiplied by the \textit{Contract rate above wholesale}.
-    \item In the annual cash flow analysis, look up the forecast wholesale electricity price for the current year (p2). Compare this value to the base price (p1) determined the last time \textit{Capacity level increase} was non-zero, i.e., when the last PPA was negotiated. Note that p1 captures the price \underline{before} the \textit{Contract rate above wholesale} mark-up. Calculate \textit{Price deviance} as \(\frac{(p2-p1)}{p1}\). 
-    \item \textbf{IF} \textit{Price deviance} exceeds the \textit{Price trigger for flexibility} and the current year is not within 5 years of \textit{Plant useful life}, \textbf{THEN}:
+    \item In the annual cash flow analysis, look up the predicted wholesale electricity price for the current year and determine the deviance between this price and the wholesale price used in the last PPA contract (i.e., when the last capacity change took place). Here, deviance is defined as: \(\frac{(\text{current price} - \text{past price})}{\text{past price}}\).
+    \item If the deviance exceeds the pre-set price trigger and the year being evaluated does not fall within the final 5 years of the project lifespan:
     \begin{enumerate}
-        \item Multiply the past year’s \textit{Unit count} by the \textit{Expansion amount}. Round this number up to the nearest integer. This is the \textit{Capacity level change [Auto]}.
-        \item Add \textit{Capacity level increase [Input]} + \textit{Capacity level change [Auto]} + \textit{Units redeveloped}. Multiply this by \textit{Wells per module} and add to \textit{Wells drilled or redrilled} from the previous year to determine the current year’s \textit{Wells drilled or redrilled}.
-        \item Add drilling costs to that year’s CAPEX in two parts: new wells and redeveloped wells.
-        \begin{enumerate}
-            \item For the \textbf{CAPEX redevelopment} field, determine the costs as described in the Redevelop Only decision rule.
-            \item For the \textit{CAPEX drilling} field, multiply the sum total of \textit{Capacity level increase [Input]} and \textit{Capacity level change [Auto]} by \textit{Total capital costs (drilling)} and apply the learning rate discount as defined in the Redevelop Only decision rule (\ref{ch4:dr_redevelop}). Note that Total Capital Costs (drilling) is a per-module value, not per well.
-        \end{enumerate}
+        \item Multiply the number of operating power plant modules in the field by the pre-set expansion parameter to determine the number of modules to add.
+        \item Calculate CAPEX for drilling an injector-producer pair for each added module. Scale this value by the learning rate discount based on the number of wells previously drilled or redrilled in the field.
+        \item Update the tallies for the number of modules in the field and the number of wells drilled or redrilled to include the added modules and their wells.
+        \item Determine the new PPA contract price by multiplying the predicted wholesale electricity price for the current year by the pre-determined contract rate above wholesale factor.
     \end{enumerate}
 \end{enumerate}
 
@@ -638,23 +634,25 @@ Price swings can go the opposite direction as well. The NREL Electrification Fut
 \textbf{Capacity Reduction Decision Rule}
 \label{ch4:dr_reduce}
 \begin{enumerate}
-    \item Calculate \textit{Price deviance} as in the Grow Capacity decision decision rule (\ref{ch4:dr_grow}).
-    \item \textbf{IF} \textit{Price deviance} is negative, exceeds the \textit{Price trigger for flexibility} in magnitude, and the current year is not within 5 years of \textit{Plant useful life}, \textbf{THEN}:
+    \item In the annual cash flow analysis, look up the predicted wholesale electricity price for the current year and determine the deviance between this price and the wholesale price used in the last PPA contract (i.e., when the last capacity change took place). Here, deviance is defined as: \(\frac{(\text{current price} - \text{past price})}{\text{past price}}\).
+    \item If the deviance is negative and exceeds the pre-set price trigger (in magnitude), and the current year does not fall within the final 5 years of the project lifespan:
     \begin{enumerate}
-        \item Multiply the past year’s \textit{Unit count} by the \textit{Reduction amount}. Round this number down to the nearest integer and multiply by -1. This is the \textit{Capacity level change [Auto]}.
-        \item Store the sum of the previous year’s \textit{Unit count} and the current year’s \textit{Capacity level change [Auto]} as the current year’s \textit{Unit count}. OPEX is calculated using this value, so any reduction in number of modules will reduce OPEX accordingly.
-        \item WARNING: Do not reduce \textit{Wells drilled or redrilled} using a negative value for \textit{Capacity level change [Auto]}. This variable tracks learning over time and shutting down a module does not negate the experience of drilling that module’s wells.
+        \item Multiply the number of operating power plant modules in the field by the pre-set reduction amount parameter to determine the number of modules to decommission.
+        \item Reduce the count of operating modules in the field to account for taking these modules offline.
+        \item Make sure OPEX is only calculated for operating power plant modules.
+        \item Do not reduce the running tally of wells drilled or redrilled. Shutting down modules does not negate the learning experience of drilling the wells associated with those modules.
     \end{enumerate}
 \end{enumerate}
 
 \section{Recap} \label{ch4:recap}
 
 This chapter covered the methodology for using cost models to mitigate the risk of expanding an existing power facility with geothermal production. The Lightning Dock KGRA and present-day power plant are the subject of a hypothetical 5 MW EGS expansion project. The model assumes a 30-year useful life for the expansion, and construction is based on the deployment of pre-fabricated binary cycle modules with one injector-producer pair per module.
-
+\\
+\\
 The modeling strategy follows a step-wise increase in model complexity:
 \begin{enumerate}
     \item Start with a static model that calculates NPV based on estimates for Revenue, CAPEX, and OPEX. The model includes thermal drawdown of the reservoir, power plant degradation, a learning rate for drilling costs, and a discount rate for the time value of money. All parameters are pre-defined.
-    \item Replace the static model with a probabilistic one by assigning probability density functions to key model parameters. Sensitivity testing high-grades which variables to treat as uncertain in the model. Results are obtained through Monte Carlo sampling to build a solution ensemble, evaluated using ENPV, target curves, and NPV percentiles.
+    \item Replace the static model with a probabilistic one by assigning probability density functions to key model parameters. Sensitivity testing high-grades which variables to treat as uncertain in the model. Results are obtained through Monte Carlo sampling to build a solution ensemble, evaluated by multiple measures like ENPV, target curves, and NPV percentiles.
     \item Incorporate flexibility with design options as decision rules in the probabilistic model. The decision rules being evaluated include: field redevelopment due to thermal drawdown, growth in capacity when prices surge, and capacity reductions when prices decline.
 \end{enumerate}
 
