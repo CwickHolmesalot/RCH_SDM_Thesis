@@ -215,35 +215,79 @@ Models represent simplified approximations of real systems, which respond to and
 
 This thesis considers a modeling approach where all three types of uncertainty are directly addressed. The variety of models, and more specifically, the locations where models differ the most as a result of uncertainty analysis, can provide as much useful information for how to proceed in a geothermal project as the model results alone.
 
-\section{Power Generation}\label{ch2:elec}
+\section{Power Generation}\label{ch2:power_gen}
 
-\subsection{Surface}
+\begin{wrapfigure}{R}{0.6\linewidth}
+\centering
+\includegraphics[scale=0.65]{templates/images/Figure-PowerProduction-SolutionNeutral.png}
+\singlespacing
+\caption[Intent to concept for geothermal power plants]{Mapping solution neutral functional intent to geothermal power plant concept.}
+\label{fig:solution_neutral}
+\end{wrapfigure}
 
-\subsubsection{Dry Steam}
+Geothermal facilities share similarities with many other methods of energy capture. Fundamentally, the primary value function at the center of a facility is producing power, further specified as a turbine generating electricity (Figure \ref{fig:solution_neutral}). This solution-neutral function could be specified into a variety of concepts that involve different operands --- wind, solar, water, hydrocarbons --- to produce the same result.  For geothermal, the common concepts include steam plants, flash plants, and binary cycle plants. Each concept has a range of temperatures and typical depths over which it is best suited to operate. Additional applications for geothermal are depicted in Figure \ref{fig:geotherm_apps}, including heat pumps and direct use, however those concepts abstract to a different functional intent than energy production. Also shown are specific types of geothermal systems like hot sedimentary basins, co-production from non-geothermal wells, and EGS. Note that the EGS oval could extend shallower for tight reservoirs as proposed in Chapter 4, but deeper wells (> 3-5 km) become more challenging to justify primarily due to cost of drilling \citep{moore_more_2013}.
 
-\subsubsection{Flash}
+\begin{figure}[htp!]
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-Geothermal_Use_Moore2013.png}
+\caption[Geothermal applications by temperature and depth]{Traditional temperatures and depths associated with different geothermal applications. Boiling point defines the upper bound for geothermal use. Ellipses are approximate. Figure adapted from \protect\citep{moore_more_2013}.}
+\label{fig:geotherm_apps}
+\end{figure}
 
-\subsubsection{Binary Cycle}
+Although the thermodynamics of the geothermal system go beyond the intended scope of this thesis, the basics for how heat becomes electricity are worth visiting. Geothermal plants use a working fluid in vapor form to spin the turbine that generates electricity. The enthalpy of the working fluid defines the energy available to perform work. Fluid enthalpy in the surface plant is less than that of the reservoir due to losses in the system \citep[p.\ 204]{glassley_geothermal_2015}. Produced fluid loses heat energy when traveling up the production well and can suffer frictional losses as well, resulting in a small reduction in enthalpy that sometimes is ignored due to its relatively low impact \citep[p.\ 204]{glassley_geothermal_2015}. Other sources of enthalpy loss depend on the specifics of the system, as discussed in the following overview.
 
-\subsection{Subsurface}
+\subsubsection{Steam Power Plant}
+\label{ch2:steam_plant}
 
-\subsubsection{Natural Drive}
+Direct steam-based power production dates back to the first power plant in Larderello, Italy and is the method for energy capture at The Geysers field in the U.S. as well \citep[p.\ 131-132]{dipippo_geothermal_2012}. This type of system involves dry steam with no fluid secondary phase that could remove enthalpy from the vapor as it separates at lower pressures. As a result, dry-steam power plants are simpler to engineer than other plants, and the produced vapor delivers the highest energy per kilogram of the different geothermal systems \citep[p.\ 205]{glassley_geothermal_2015}.  
 
-\subsubsection{Hard Rock EGS}
+The power generation performance of a steam turbine primarily depends on the difference in enthalpy between the steam entering and exiting the turbine, discounted by the efficiencies of the turbine \citep[p. 206][generally >85\%]{glassley_geothermal_2015} and the generator \citep[p.\ 116][$\approx$98\%]{augustine_hydrothermal_2009}. Steam exiting the turbine is cooled in a condenser to liquid form before reinjection back into the ground. Figure \ref{fig:steam_plant} illustrates a simple schematic of how a dry-steam system works.
 
-\subsubsection{Stratigraphic EGS}
+\begin{figure}[htp!]
+\centering
+\includegraphics[width=.9\textwidth]{templates/images/Figure-SteamPlant_Schematic.png}
+\caption[Steam geothermal power plant schematic]{Dry-steam power plant schematic. Steam is produced directly from the subsurface, passed through a turbine to generate electricity, cooled and condensed to a brine, and reinjected. The condenser likely connects with a cooling tower for sufficient cooling before injection (not shown).}
+\label{fig:steam_plant}
+\end{figure}
 
-\subsubsection{Advanced Closed Loop}
+\subsubsection{Flash Power Plant}
+\label{ch2:flash_plant}
 
-\subsection{Uncertainties}
+Reservoirs that produce wet steam with sustained wellhead temperatures of over 200$^\circ$C commonly use flash plants for power generation \citep{moore_more_2013}. Fluids in these systems “flash” to vapor when produced and thus require both fluid and vapor management. 
+
+The steam quality, or steam-liquid ratio, strongly influences power production efficiency; for every percentage increase in liquid mixed in with the steam, turbine efficiency degrades by 0.5-1.0\% \citep[p.\ 207][Baumann Rule]{glassley_geothermal_2015}. In addition, the separation of the produced fluid into liquid and vapor also partitions the enthalpy. Therefore, maximizing the amount of steam produced and removing the liquid phase before steam enters the turbine are key factors for operating a flash system \citep[p.\ 215-216]{glassley_geothermal_2015}. A cyclone separator is commonly installed between the wellhead and turbine inlet to manage the latter issue. This component removes the fluid phase such that power production beyond the separator works the same as a dry-steam plant \citep[p.\ 88]{dipippo_geothermal_2012}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.9\textwidth]{templates/images/Figure-FlashPlant_Schematic.png}
+\caption[Flash geothermal power plant schematic]{Single flash power plant schematic. Brine produced from the subsurface flashes to vapor in a cyclone separator. Residual fluid is diverted for reinjection, while the vapor enters the turbine to generate electricity, cools in the condenser, and is also reinjected. The condenser likely connects with a cooling tower and/or an air-cooling system for sufficient cooling before injection (not shown).}
+\label{fig:flash_plant}
+\end{figure}
+
+Dual and triple flash systems operate the same way as single-flash but add sequential secondary and tertiary flashing and separation at incrementally lower temperatures and pressures. This results in greater energy extraction --- 20-30\% above single flash for dual, and even more for triple \citep[p.\ 216]{glassley_geothermal_2015}. Figure \ref{fig:flash_plant} illustrates the mechanics of a flash system.
+
+\subsubsection{Binary Cycle Power Plant}
+
+When produced brine temperatures fall below 200$^\circ$C, systems relying on steam generation from the brine alone will no longer perform with reasonable efficiency. Binary systems fill this gap by adding a heat exchanger and secondary organic working fluid with a lower boiling point than water \citep{moore_more_2013}. The second fluid cycle is closed loop, meaning the subsurface brine --- and any entrained particulates or corrosive chemistry --- never interacts with the turbine. Heat from produced water instead flashes the working fluid to vapor and that secondary fluid drives the turbine. This process is known as an Organic Rankine Cycle (ORC) and commonly involves fluids like isobutane (boiling point -12$^\circ$C) and isopentane (boiling point of 28$^\circ$C) \citep[p.\ 219]{glassley_geothermal_2015}. ORC manages vapor creation at lower production temperatures, but it also introduces another point of potential enthalpy loss to the power generation process. Figure \ref{fig:binary_plant} depicts the mechanics of a binary cycle geothermal system.
+
+Because natural drive of the brine from subsurface to surface diminishes at lower temperatures, and mineral deposition in the wells (scaling) can also be an issue, pressure must be managed with downhole pumps \citep[p.\ 153]{dipippo_geothermal_2012}. A pump is also needed to regulate flow of the secondary fluid. These pumps add another efficiency factor on the system while acting as parasitic loads on the power generation, reducing the net power output of the plant \citep[][Figure 2]{lowry_implications_2017}.
+
+\begin{figure}[htp!]
+\centering
+\includegraphics[width=.9\textwidth]{templates/images/Figure-BinaryPlant_Schematic.png}
+\caption[Binary cycle geothermal power plant schematic]{Binary cycle power plant schematic. Brine produced from the subsurface flashes a secondary working fluid to vapor, which enters the turbine to generate electricity, condenses back to fluid, and is re-flashed in a closed loop. Produced brine is similarly cooled and reinjected. Pumps are used to maintain flow in both cycles. Cooling is typically facilitated by a fan array (not shown).}
+\label{fig:binary_plant}
+\end{figure}
 
 \section{Cost Modeling}\label{ch2:costmod}
 
 \subsection{Review of Approaches}
 
+\subsection{Uncertainties}
+
 \section{Case Study: Southwest New Mexico}\label{ch2:case}
 
-The area of interest (AOI) for the geothermal exploration section of this thesis is a 37,600 square mile region of southwest New Mexico covered by nine counties: Cibola, Valencia, Catron, Socorro, Grant, Sierra, Luna, Dona Ana, and Hidalgo (Figure \ref{fig:phys-provinces}). This region defines the conjunction of four significant geologic provinces. The Southern Basin and Range province extends across the lower third of the AOI. To the east lies the Rio Grande Rift, marked today by the course of the Rio Grande river. The Colorado Plateau covers the north of the study area, and the central-west region is blanketed by the Mogollon-Datil Volcanic Field. The unique environments presented by each province may have implications on geothermal favorability \citep{pepin_new_2018} (Figure \ref{fig:phys-provinces}).
+The area of interest (AOI) for the geothermal exploration section of this thesis is a 37,600 square mile region of southwest New Mexico covered by nine counties: Cibola, Valencia, Catron, Socorro, Grant, Sierra, Luna, Dona Ana, and Hidalgo (Figure \ref{fig:phys-provinces}). This region is defined by the conjunction of four significant geologic provinces. The Southern Basin and Range province extends across the lower third of the AOI. To the east lies the Rio Grande Rift, marked today by the course of the Rio Grande river. The Colorado Plateau covers the north of the study area, and the central-west region is blanketed by the Mogollon-Datil Volcanic Field. The unique environments presented by each province may have implications on geothermal favorability \citep{pepin_new_2018} (Figure \ref{fig:phys-provinces}).
 
 \begin{figure}[!ht]
 \centering
@@ -254,24 +298,32 @@ The area of interest (AOI) for the geothermal exploration section of this thesis
 
 \subsubsection{Basin and Range}
 
-Plate tectonic activity along the western edge of the United States transitioned $\sim$30 \acrshort{ma} from subduction of the ancient Farallon plate to the present-day arrangement of transform motion along the San Andreas Fault and subduction of the Juan de Fuca plate off of the Pacific Northwest \citep[p.\ 81]{fowler_solid_2005}. This transition created a broad extensional regime within the southwestern section of the United States and into Mexico, believed to be responsible for the alternating narrow fault-bounded mountain and valley signature of the \acrlong{br} (\acrshort{br}) \citep{henry_real_1992}. The successive north-south striking normal faults level out with depth, creating asymmetric graben structures \citep[p.\ 28-29]{frisch_continental_2011}. Cumulative extension reduced the crust thickness to 30-35 km on average, with associated enhanced volcanism, geothermal gradient, and average heat flow throughout the BR province \citep{lerch_crustal_2007}.
+Plate tectonic activity along the western edge of the United States transitioned $\approx$30 \acrshort{ma} from subduction of the ancient Farallon plate to the present-day arrangement of transform motion along the San Andreas Fault and subduction of the Juan de Fuca plate off of the Pacific Northwest \citep[p.\ 81]{fowler_solid_2005}. This transition created a broad extensional regime in the Southwest U.S. and into Mexico believed to be responsible for the alternating narrow fault-bounded mountain and valley signature of the \acrlong{br} (\acrshort{br}) \citep{henry_real_1992}. The successive north-south striking normal faults level out with depth, creating asymmetric graben structures \citep[p.\ 28-29]{frisch_continental_2011}. Cumulative extension reduced the crust thickness to 30-35 km on average, with associated enhanced volcanism, geothermal gradient, and average heat flow throughout the BR province \citep{lerch_crustal_2007}.
 
 \subsubsection{Rio Grande Rift}
 
-Even greater extension was experienced within the \acrlong{rgr} (\acrshort{rgr}) province, a $\sim$1000 km long zone separating the Great Plains to the east and Colorado Plateau to the west. Rifting occurred in at least three stages; initiation began $\sim$36 Ma, extension rapidly increased $\sim$28 Ma as part of the BR formation, and then more localized thinning took place between $\sim$10-3 Ma \citep{bielicki_hydrogeolgic_2015,mack_geology_2008,seager_new_1984}. Basins chained along the rift show an alternating asymmetry, with transfer faults and accommodation zones separating successive basins. The faults that bound these basins and define the complex transfer zones could create favorable structural settings for geothermal systems \citep{faulds_favorable_2015}. Very high heat flow measurements suggest geothermal gradients that, upon extrapolation, would exceed the solidus at the crust-mantle boundary and thus support a thermal anomaly and asthenospheric convection beneath the rift center \citep{olsen_rio_1987}. Furthermore, both seismic and gravity data show crustal thinning to ~30 km, with greater thinning to the south \citep{keller_rio_1999}. Geologic and geophysical observations therefore support a high chance of both heat and permeability risk elements being met in the RGR province. 
+Even greater extension was experienced within the \acrlong{rgr} (\acrshort{rgr}) province, a $\approx$1000 km long zone separating the Great Plains to the east and Colorado Plateau to the west. Rifting occurred in at least three stages; initiation began $\approx$36 Ma, extension rapidly increased $\approx$28 Ma as part of the BR formation, and then more localized thinning took place between $\approx$10-3 Ma \citep{bielicki_hydrogeolgic_2015,mack_geology_2008,seager_new_1984}. Basins chained along the rift show an alternating asymmetry, with transfer faults and accommodation zones separating successive basins. The faults that bound these basins and define the complex transfer zones could create favorable structural settings for geothermal systems \citep{faulds_favorable_2015}. Very high heat flow measurements suggest geothermal gradients that, upon extrapolation, would exceed the solidus at the crust-mantle boundary \citep{olsen_rio_1987}. This could be explained by a thermal anomaly and asthenospheric convection beneath the rift center \citep{olsen_rio_1987}. Additionally, seismic and gravity data show crustal thinning to $\approx$30 km, with even greater thinning to the south \citep{keller_rio_1999}. In summary, geologic and geophysical observations collectively support an increased likelihood of the heat and permeability risk elements being met in the RGR province. 
 
 \subsubsection{Colorado Plateau}
 
-The \acrlong{cp} (\acrshort{cp}) province presents a very different geologic picture, one of stability and lack of significant deformation for around 600 MY \citep{leighty_neogene_1997}. Uplift of the Colorado Plateau took place over several different phases, beginning with the Laramide orogeny (80-40 Ma) responsible for the Rocky Mountains, and totaling more than 2 km relative to sea level based on exposed outcrops \citep{moucha_deep_2009}. Unlike the surrounding provinces, the CP acted as a cohesive block and still maintains a significantly greater crustal thickness ($\sim$45 km) compared to the BR or RGR \citep{wilson_imaging_2005}. Recent models suggest CP uplift continues as complex replacement interactions between the denser brittle lithosphere and more buoyant underlying asthenosphere take place \citep{levander_continuing_2011}, yet lower heat flow values compared to the surrounding provinces \citep{thompson_regional_1979} suggest these crust-mantle dynamics have little effect on CP geothermal potential.
+The \acrlong{cp} (\acrshort{cp}) province presents a very different geologic picture, one of stability and lack of significant deformation for around 600 MY \citep{leighty_neogene_1997}. Uplift of the Colorado Plateau took place over several different phases, beginning with the Laramide orogeny (80-40 Ma) responsible for the Rocky Mountains, and totaling more than 2 km relative to sea level based on exposed outcrops \citep{moucha_deep_2009}. Unlike the surrounding provinces, the CP acted as a cohesive block and still maintains a significantly greater crustal thickness ($\approx$45 km) compared to the BR or RGR \citep{wilson_imaging_2005}. Recent models suggest CP uplift continues as complex replacement interactions between the denser brittle lithosphere and more buoyant underlying asthenosphere take place \citep{levander_continuing_2011}, yet lower heat flow values compared to the surrounding provinces \citep{thompson_regional_1979} suggest these crust-mantle dynamics have little effect on CP geothermal potential.
 
 \subsubsection{Mogollon-Datil Volcanic Field}
 
-On the western side of the AOI is the \acrlong{mdvf} (\acrshort{mdvf}), a 15,000 square mile outpouring of rhyolitic flows as part of a super-eruptive episode in western New Mexico that preceded rifting in the RGR province \citep{keller_rio_1999}. The timing indicates the thermal source for the MDVF magmas likely originated from a Farallon subduction-related event rather than onset of extension, and extrusive activity only represents a fraction of the total magma volume in the underlying composite pluton \citep{olsen_rio_1987,schneider_crustal_1994}. MDVF is just one of several Late Eocene-Oligocene volcanic fields in a chain from Colorado though to central Mexico, and isotopic dating shows a history of four pulses of surface activity beginning 36 Ma near Las Cruces, NM and ending conclusively 24 Ma after a general westward migration \citep{mcintosh_time-stratigraphic_1992}. Lack of consistent trends in current heat flow measurements across the field match the heterogeneous distribution of volcanic features and extrusive volumes \citep{mcintosh_time-stratigraphic_1992}, although some evidence suggests greater water availability and geothermometry measurements make MDVF worth considering for geothermal exploration \citep{pepin_new_2018}.
+On the western side of the AOI is the \acrlong{mdvf} (\acrshort{mdvf}), a 15,000 square mile outpouring of rhyolitic flows as part of a super-eruptive episode in western New Mexico that preceded rifting in the RGR province \citep{keller_rio_1999}. The timing indicates the thermal source for the MDVF magmas likely originated from a Farallon subduction-related event rather than onset of extension, and extrusive activity only represents a fraction of the total magma volume in the underlying composite pluton \citep{olsen_rio_1987,schneider_crustal_1994}. MDVF is just one of several Late Eocene-Oligocene volcanic fields in a chain from Colorado though to central Mexico, and isotopic dating defines four pulses of surface activity beginning 36 Ma near Las Cruces, NM and ending conclusively 24 Ma after a general westward migration \citep{mcintosh_time-stratigraphic_1992}. Lack of consistent trends in current heat flow measurements across the field match the heterogeneous distribution of volcanic features and extrusive volumes \citep{mcintosh_time-stratigraphic_1992}, although some evidence suggests greater water availability and geothermometry measurements make MDVF worth considering for geothermal exploration \citep{pepin_new_2018}.
 
-\subsection{Lightning Dock} \label{ch2:lightning_dock}
+\subsection{Lightning Dock (DBGF)} 
+\label{ch2:lightning_dock}
 
-\subsubsection{Animas Valley}
+\begin{wrapfigure}{R}{0.65\linewidth}%[!htp]
+\centering
+\includegraphics[scale=0.6]{templates/images/Figure-Lightning_Dock_Location_composite.png}
+\caption[Lightning Dock location map]{CAPTION}
+\label{fig:lightning_dock_map}
+\end{wrapfigure}
 
-\subsubsection{Power Plant}
+Present-day commercial geo-thermal activity in New Mexico is limited to a single hydrothermal power plant in Hidalgo County, which defines the boot heel in the southwestern corner of the state (Figure \ref{fig:lightning_dock_map}). The power plant, traditionally known as Lightning Dock and recently renamed the Dale Burgett Geothermal Facility, sits atop a known geothermal resource area documented by the USGS in 1974 \citep{dahal_evaluation_2012}, around twenty (20) miles southwest of Lordsburg, NM. Although the hydrothermal resource was originally blind, boiling water was encountered in 1948 by drilling operations for water wells \citep{elston_geology_1983}. Commercial use of the resource dates back to 1977 to support greenhouse facilities and later, in the 1990s, for aquaculture \citep{crowell_history_2014}. Power production commenced in 2013 under the ownership of Cyrq Energy with a 4 MW air-cooled binary cycle power plant composed of four (4) power blocks \citep{goodman_lightning_2013}. \acrlong{pnm} (\acrshort{pnm}) signed a long-term \acrlong{ppa} (\acrshort{ppa}) for the generated electricity \citep{dahal_evaluation_2012}, as encouraged by the New Mexico \acrlong{rps} (\acrshort{rps}) carve-out for 5\% non-wind, non-solar renewable technologies \citep{dsire_dsire_2021}. Lightning Dock was fully revamped in 2018 by Turboden to its present-day 11.2 MW (net) single-turbine binary cycle architecture \citep{bonafin_repowering_2019}. The twenty (20)-year PPA with PNM was reset and secures power sales through 2038 \citep{oconnell_matter_2018}.
 
-The plant currently operates using a single-turbine binary cycle design with isobutane working fluid and air-cooled condenser \citep{altieri_overview_2017}. Produced hydrothermal brine enters the system at 155 $^\circ$C at a flow rate of 235 kg/s, and fluid outflow is reinjected at a temperature of $\approx 55^\circ$C \citep{bonafin_repowering_2019}.
+
+
+\section{Recap}
