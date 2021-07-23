@@ -1,4 +1,4 @@
-\chapter{Power Plant Cost Model Design}
+\chapter{Power Plant Expansion Cost Model}
 \label{ch4:cm_prep}
 
 \section{EGS Expansion Concept}\label{ch4:cm_concept}
@@ -302,7 +302,7 @@ Initial average reservoir temperature & 149 $^\circ$C & \citep{schochet_developm
 Cooling in production well & 7.5\% & \citep{lowry_geovision_2017} \\ \hline
 Flow rate per producer & 40 kg/s & \citep{entingh_volume_2006} \\ \hline
 Thermal drawdown rate & 0.5\% & \citep{entingh_volume_2006} \\ \hline
-Water loss rate & 2\% & \citep{freeman_system_2018} \\ \hline
+Water loss rate & 2\% & \citep{blair_system_2018} \\ \hline
 \end{tabular}}
 \caption[Cost model parameters for resource recovery]{Parameters related to resource recovery in the cost model}
 \label{tab:cm_resource_params}
@@ -519,7 +519,7 @@ Having established which uncertainties impact the cost model the most, \acrlong{
 \subsubsection{Thermal Drawdown Rate}
 \label{cm4:prob_tdr}
 
-The latest version of GETEM \citep{mines_getem_2016} and its variant in the NREL System Advisor Model \citep{freeman_system_2018} apply 0.5\% as a default value for thermal drawdown rate. Higher decline rates tend to be associated with older models; 1-2\% for GEOPHIRES \citep{beckers_low-temperature_2016}, 3\% in a thesis by \citet{augustine_hydrothermal_2009}, and 4\% for work done in the 1990s by \citet{tester_economic_1990}. The probability density function for thermal drawdown was designed using a beta function such that the P$_{50}$ value aligns with 0.5\% annual drawdown rate, and 4.0\% represents the P$_{97.5}$ case (Figure \ref{fig:cm_probdists}A). Note that the beta function was slightly altered to follow a linear trend from P$_{95}$ to P$_{100}$ to ensure rare extremely high rates in the distribution function do not asymptotically approach over 10\% per year. The highest rate supported by the distribution is 5.6\%.
+The latest version of GETEM \citep{mines_getem_2016} and its variant in the NREL System Advisor Model \citep{blair_system_2018} apply 0.5\% as a default value for thermal drawdown rate. Higher decline rates tend to be associated with older models; 1-2\% for GEOPHIRES \citep{beckers_low-temperature_2016}, 3\% in a thesis by \citet{augustine_hydrothermal_2009}, and 4\% for work done in the 1990s by \citet{tester_economic_1990}. The probability density function for thermal drawdown was designed using a beta function such that the P$_{50}$ value aligns with 0.5\% annual drawdown rate, and 4.0\% represents the P$_{97.5}$ case (Figure \ref{fig:cm_probdists}A). Note that the beta function was slightly altered to follow a linear trend from P$_{95}$ to P$_{100}$ to ensure rare extremely high rates in the distribution function do not asymptotically approach over 10\% per year. The highest rate supported by the distribution is 5.6\%.
 
 \subsubsection{Drilling \& Completions Costs}
 \label{cm4:prob_dc}
