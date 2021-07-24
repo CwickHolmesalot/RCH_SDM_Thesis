@@ -411,7 +411,8 @@ reserved.\par\permission}}
 %% \copyrightnoticetext{stuff} to specify the exact text of the copyright
 %% notice.
 \ifodd\vithesis \copyrightnoticetext{\copyright\ \@author,
-\uppercase\expandafter{\romannumeral\@degreeyear}.  All rights reserved.\par\permission}
+\uppercase\expandafter{\@degreeyear}.  All rights reserved.\par\permission}
+%\uppercase\expandafter{\romannumeral\@degreeyear}.  All rights reserved.\par\permission}
 %% or just
 %%\@degreeyear}}
 \typeout{Copyright given to author,

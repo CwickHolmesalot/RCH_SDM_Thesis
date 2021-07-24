@@ -651,6 +651,7 @@ Unlike standard regression problems that result in continuous variable predictio
 where $p_i$ represents the probability assigned to class label $i$. Entropy maps can be defined using the output probabilities of a single classification model or the results in an ensemble of predictions by first averaging across class probabilities for each map location.
 
 \subsubsection{Structural Uncertainty}
+\label{ch5:model_uncertainty}
 
 The specific choice of classification algorithm implicitly applies constraints on the solution space for the problem. For example, logistic regression solutions assume there is a linear relationship between predictor variables and the log-odds of the response variable. And decision trees use hard thresholds that can create step-like model behavior. Figure \ref{fig:combined_maps} shows the four machine learning model results for the southwestern NM AOI. Not only do the models differ in how individual areas are classified, but the overall character of the predictions suggests each model has a signature predictive style.
 
@@ -689,6 +690,7 @@ Figure \ref{fig:structural_entropy_map}B illustrates an alternative way of prese
 \end{figure}
 
 \subsubsection{Parameter Uncertainty}
+\label{ch5:param_uncertainty}
 
 The fitting procedure for machine learning models like logistic regression and neural networks involves minimizing a cost function as updates are iteratively made to model parameters, e.g., feature weights. However, the final model solutions typically present these parameters as deterministic values with no uncertainty. The complexity of neural networks, and the potential for different parameterizations as randomness in techniques like dropout and mini-batching influence the training process, suggest such representations under-characterize the model space. By defining the range of uncertainty on model parameters, it is possible to generate many solutions from the same model that define an ensemble of valid predictions. Uncertainty estimates derived from this ensemble can introduce a measure of confidence in a model’s output, allowing the model to directly explain what it knows and, more importantly, what it doesn’t know in the solutions it produces.
 
@@ -793,6 +795,8 @@ After re-training the BNN on the full WDS4 data set, predictions for the entire 
 \end{figure}
 
 \subsubsection{Measurement Uncertainty}
+\label{ch5:measure_uncertainty}
+
 Data modeling and analytics generally begin with the collection, engineering, and conditioning of features of interest. Building the perfect dataframe for machine learning may be the first priority, but capturing standard error estimates for its constituent features is fundamental to understanding how much uncertainty they bring to the prediction problem.
 
 In this analysis, the sources of data, types of data, and options for error estimation vary greatly. Several features were acquired as pre-gridded raster files without error assessments or access to the original source data (Table \ref{tab:features}), e.g., air temperature, precipitation, strain rate, and layers from the \citeauthor{bielicki_hydrogeolgic_2015} OpenEI submission \citep{kelley_geothermal_2015}. Table \ref{tab:feature_std_error} shows the top ten features identified by Shapley analysis for the XGBoost model in Section \ref{ch5:xgb_shapley}. Among those variables, \acrlong{sigt} (\acrshort{sigt}), Heat Flow, and Boron Concentration have readily-available standard error estimates either from the original source or data preparation process. Crustal Thickness standard error is both unknown and difficult to ascertain; the feature grid comes from contours fit to 2D seismic models \citep{keller_comparative_1991}, which are unavailable for further analysis and review. The remaining top ten features consist of point or line data converted to density layers using KDE. Standard errors could be estimated for these features by performing bootstrap or jackknife resampling, applying KDE on the derivative data sets, and calculating standard errors from that sample population \multicitep{james_introduction_2013, p.\ 187-190;mcintosh_jackknife_2016}.
