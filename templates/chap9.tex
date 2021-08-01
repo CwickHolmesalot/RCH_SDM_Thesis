@@ -5,7 +5,7 @@ In this chapter, directions of further inquiry are suggested as both extensions 
 
 \section{Machine Learning Applications}\label{ch9:future_work_ml}
 
-This thesis primarily focused on supervised classification models in its survey of machine learning methods for geothermal exploration. Maintaining a limited scope in modeling -- as well as for data gathering and preparation --- was intentional, but doing so set aside a number of topics worthy of follow-up analysis:
+This thesis primarily focused on supervised classification models in its survey of machine learning methods for geothermal exploration. Maintaining a limited scope in modeling -- as well as in data-gathering and preparation --- was intentional, but doing so set aside a number of topics worthy of follow-up analysis:
 
 \begin{itemize}
     \item Machine learning methods in Chapter \ref{ch5:ml_results} framed the prediction problem as a classification with four distinct labels for assignment (see Section \ref{ch3:gradient_classes}). Although convenient, this choice is problematic for continuous response variables like geothermal gradient. Classifiers treated each gradient class as independent, with no inherent ordered relationship. This assumption is of course false. Binning continuous variables makes sense when training data is sparse, but care must be taken for cases near the bounds between those bins. Further research on applying regression methods would help answer whether similar machine learning tools can perform well at predicting those edge case gradients where even the best classifiers (XGBoost, ANN) appeared to have difficulty.
