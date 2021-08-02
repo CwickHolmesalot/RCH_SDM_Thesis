@@ -511,7 +511,7 @@ After re-training the BNN on the full WDS4 data set, predictions for the entire 
 \end{figure}
 
 \subsection{Measurement Uncertainty}\label{ch5:measure_uncertainty}
-In this Southwestern NM case study, the sources of data, types of data, and options for error estimation vary greatly. Several features were acquired as pre-gridded raster files without accompanying error assessments or access to the original source data (Table \ref{tab:features}), e.g., air temperature, precipitation, strain rate, and layers from the \citeauthor{bielicki_hydrogeolgic_2015} OpenEI submission \citep{kelley_geothermal_2015}. Table \ref{tab:feature_std_error} shows the top ten features identified by Shapley analysis for the XGBoost model in Section \ref{ch5:xgb_feature_selection}. Among those variables, \acrlong{sigt} (\acrshort{sigt}), Heat Flow, and Boron Concentration have readily-available standard error estimates either from the original source or data preparation process. Crustal Thickness standard error is both unknown and difficult to ascertain; the feature grid comes from contours fit to 2D seismic models \citep{keller_comparative_1991}, which are unavailable for further analysis and review. The remaining top ten features consist of point or line data converted to density layers using KDE. Standard errors could be estimated for these features by performing bootstrap or jackknife resampling, applying KDE on the derivative data sets, and calculating standard errors from that sample population \multicitep{james_introduction_2013, p.\ 187-190;mcintosh_jackknife_2016}.
+In this Southwestern NM case study, the sources of data, types of data, and options for error estimation vary greatly. Several features were acquired as pre-gridded raster files without accompanying error assessments or access to the original source data (Table \ref{tab:features}), e.g., air temperature, precipitation, strain rate, and layers from the \citeauthor{bielicki_hydrogeolgic_2015} OpenEI submission \citep{kelley_geothermal_2015}. Table \ref{tab:feature_std_error} shows the top ten features identified by Shapley analysis for the XGBoost model in Section \ref{ch5:xgb_feature_selection}. Among those variables, \acrlong{sigt} (\acrshort{sigt}), Heat Flow, and Boron Concentration have readily-available standard error estimates either from the original source or data preparation process. Crustal Thickness standard error is both unknown and difficult to ascertain; the feature grid comes from contours fit to 2-D seismic models \citep{keller_comparative_1991}, which are unavailable for further analysis and review. The remaining top ten features consist of point or line data converted to density layers using KDE. Standard errors could be estimated for these features by performing bootstrap or jackknife resampling, applying KDE on the derivative data sets, and calculating standard errors from that sample population \multicitep{james_introduction_2013, p.\ 187-190;mcintosh_jackknife_2016}.
 
 \begin{table}[htp]
 \centering
@@ -521,7 +521,7 @@ In this Southwestern NM case study, the sources of data, types of data, and opti
 \textbf{Name}                     & \textbf{Type}         & \textbf{Std Err Estimation} & \multicolumn{1}{c|}{\textbf{Comments}}             \\ \hline
 Si-Geotherm. Temperature & Overlapping points & Kriging & Standard error estimates directly from kriging. \\ \hline
 Heat Flow & Non-overlapping points & Directly provided & Standard error estimates provided for each grid point. \\ \hline
-Crustal Thickness & Lines & Unknown & Contours based on 2D seismic lines. Uncertainty in interpretation   (e.g., velocity model) unavailable. \\ \hline
+Crustal Thickness & Lines & Unknown & Contours based on 2-D seismic lines. Uncertainty in interpretation   (e.g., velocity model) unavailable. \\ \hline
 Volcanic Dike Density & Lines & Resampling & Jackknife/bootstrap resample and generate density estimates. \\ \hline
 Spring Density & Non-overlapping points & Resampling & Jackknife/bootstrap resample and generate density estimates. \\ \hline
 Earthquake Density & Overlapping Points & Resampling & Jackknife/bootstrap resample and generate density estimates. \\ \hline
@@ -565,18 +565,73 @@ XGBoost models, parameterized as described for WDS4 in Table \ref{tab:xgb_tuning
 
 Interestingly, variations in SiGT values result in high classification uncertainty in many locations across the AOI (Figure \ref{fig:mu_masked_pred_map}). Concentrated areas of uncertainty are observed in the east-southeast -- an area where silica samples were collected but not where many WDS4 well observations are located (Figure \ref{fig:mu_stderr_entropy}A-B). Similarly, large patches of higher entropy appear in the north and just west of the AOI center. Once again, these are under-sampled regions in WDS4 (Figure \ref{fig:mu_stderr_entropy}B). It appears that as training data values for SiGT change due to perturbations, thresholds for XGBoost decision trees shift enough to significantly impact the stability of model predictions away from wells. SiGT-related splits will appear near the root node of decision trees based on its dominance over other features for classification importance. Changes to the decision thresholds will thus have a strong cascading effect on the final classification choices for XGBoost models. The problem lies in both the magnitude of SiGT standard errors as well as the heterogeneous sampling of the study area by WDS4 well locations. The degree of uncertainty seen here would likely be reduced if WDS4 included more comprehensive coverage of the study area.
 
-\section{General Insights}\label{ch5:general_insights}
-\subsection{Previous Work}
+\section{Case Study Insights}\label{ch5:case_insights}
+\subsection{Southwestern New Mexico PFA}
+In the Southwestern NM PFA project, \citet{bielicki_hydrogeolgic_2015} focused on hydrogeologic windows, defined as areas where erosion, faulting, or volcanic intrusions breach regional sealing layers and allow heated groundwater to reach the surface. Fundamentally, their work targeted hydrothermal systems when assigning geothermal favorability scores, treating heat, fluid volume, and flow path/reservoir as the key risk elements. The last risk element combines particle tracking of geochemical signatures (lithium, boron) with fluid recharge-discharge pathways, effectively replacing permeability and seal risk elements with a model of the subsurface water cycle. Although interesting in its own right, the integrated nature of the PFA favorability map makes it a poor benchmark for the machine learning results here which focus on the heat risk element alone. Instead, the geothermal gradient feature map described in Figure \ref{app:dl_geothermal_gradient}, which \citet{bielicki_hydrogeolgic_2015} derived from NGDS data paired with additional oil \& gas well measurements, serves as the best reference for comparison. 
+
+\begin{figure}
+\centering
+\includegraphics[width=.75\textwidth]{templates/images/Figure-PFA_Gradient_Labels.png}
+\caption[SW NM PFA prospective areas]
+{Four prospective regions (dark red outlines) selected among several in the Southwestern NM PFA study \protect\citep{bielicki_hydrogeolgic_2015}, including the Gila region, Lightning Dock, Rincon, and Truth or Consequences. Filled red polygons map areas with high-grade geothermal gradients in the \citeauthor{bielicki_hydrogeolgic_2015} feature map. Black dots mark locations of USGS Known Geothermal Areas with most-likely resource temperatures >60$^\circ$C. Labeled physiographic regions include Colorado Plateau (CP), Great Plains (GP), Mogollon-Datil Volcanic Field (MDVF), Rio Grande Rift (RGR), and Southern Basin and Range (SBR).}
+\label{fig:pfa_prospects}
+\end{figure}
+
+The PFA study also honed in on specific locations in the study area due to perceived geothermal favorability. Figure \ref{fig:pfa_prospects} highlights four regions of interest in the context of the SW NM physiographic provinces and areas noted for high geothermal gradients (>60 K/km) in the \citeauthor{bielicki_hydrogeolgic_2015} gradient feature map. To the southwest in the BR province lies Lightning Dock, the focus of the cost model case study in Chapters \ref{ch4:cm_prep} and \ref{ch6:cm_results} and a USGS-designated hydrothermal KGRA since 1974. To the south in the RGR province, the Rincon geothermal region is marked by high boron concentrations, high heat flow, and shallow geothermal gradients exceeding 300 K/km \citep{witcher_deep_2002}. North of Rincon is Truth or Consequences, an area locally known for low-temperature hot springs, high permeability, and elevated concentrations of both boron and lithium \citep{pepin_deep_2015}. Finally, a region near the Gila River within the MDVF province was flagged by \citet{bielicki_hydrogeolgic_2015} as prospective based on known hot springs, high heat flow, and positive well geochemistry.
+
+In Figure \ref{fig:ml_models_prospects}, the same prospect polygons are superimposed on the geothermal gradient solutions for the four supervised machine learning models. All models identify high-grade geothermal gradients in the Lightning Dock (LD) and Rincon (RC) areas. Interestingly, the decision tree model predicts a relatively lower gradient at the Radium Springs KGA (white marker, Figure \ref{fig:ml_models_prospects}B) where high gradient values have been  directly measured. This serves as a good example of where individual models can deviate from a multi-model consensus. All models predict high-grade geothermal gradients in the northwest section of the Truth or Consequences polygon, although the marked spring in the southeast of the polygon corresponds with low- to mid-grade gradient classifications (Figure \ref{fig:ml_models_prospects}). Based on these model solutions, the geothermal spring location does not stand out as particularly prospective from a heat risk element perspective. The Gila region also has mixed signals in the models; the decision tree (Figure \ref{fig:ml_models_prospects}B) and neural network (Figure \ref{fig:ml_models_prospects}D) models suggest isolated patches of high geothermal gradient potential, but the logistic regression (Figure \ref{fig:ml_models_prospects}A) and XGBoost (Figure \ref{fig:ml_models_prospects}C) models make Gila look fairly unremarkable.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{templates/images/Figure-AllModels-ProspectiveAreas.png}
+\caption[Machine learning models with prospective areas]
+{Machine learning results for WDS4 from A. logistic regression, B. decision tree, C. XGBoost, and D. neural network models. Dark red outlines and labels identify prospective locations discussed in the text. Bold black lines define the boundaries between the main physiographic regions in the study area. White markers plot KGAs related to the prospects with most-likely resource temperatures >60$^\circ$C.}
+\label{fig:ml_models_prospects}
+\end{figure}
+
+Uncertainty analysis plots generated in section \ref{ch5:uncertainty_analysis} offer additional guidance on evaluating the exploration potential of the four prospects. Figure \ref{fig:structural_uncertainty_prospects} demonstrates low structural uncertainty (model agreement) for mid-grade gradients in Gila or Truth and Consequences regions, and moderate-low uncertainty for high-grade gradients at Lightning Dock. High structural uncertainty is found in the northwestern section of the Truth and Consequences polygon and throughout the Rincon polygon. These areas were already noted to differ from model-to-model. In an exploration campaign, more analysis should be conducted to reduce uncertainties at these locations before any expensive field operations (e.g., exploration drilling) commence.
+
+\begin{figure}
+\centering
+\includegraphics[width=.75\textwidth]{templates/images/Figure-Masked_Average_Gradient_Map-Prospect_Zones.png}
+\caption[Structural uncertainty map with prospective areas]
+{Probability-averaged prediction map with uncertainty masking as described for Figure \ref{fig:avg_gradient_masked_map}. Dark red outlines and labels identify prospective locations discussed in the text. Bold black lines define the boundaries between the main physiographic regions in the study area. White markers plot KGAs related to the prospects with most-likely resource temperatures >60$^\circ$C.}
+\label{fig:structural_uncertainty_prospects}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=.75\textwidth]{templates/images/Figure-BNN_All_Gradient_Map_Masked_Prospect_Zones.png}
+\caption[Parameter uncertainty map with prospective areas]
+{BNN-averaged prediction map with parameter uncertainty masking as described for Figure \ref{fig:bnn_masked_pred_map}. Dark red outlines and labels identify prospective locations discussed in the text. Bold black lines define the boundaries between the main physiographic regions in the study area. White markers plot KGAs related to the prospects with most-likely resource temperatures >60$^\circ$C.}
+\label{fig:param_uncertainty_prospects}
+\end{figure}
+
+Figure \ref{fig:param_uncertainty_prospects} illustrates the parameter uncertainty based on 1000 runs of the Bayesian neural network model. There is high certainty in the neural network classification for Lightning Dock as high-grade gradient, moderate certainty for the Gila and Truth and Consequences classifications as mid/low-grade gradient, and low certainty in the Rincon prediction. If Rincon is the target prospect, the neural network model cannot provide a classification with confidence, perhaps because of the complexity of the area, but also because the data under-constrains such a complex model. Explorationists would do well to choose a simpler model with more parameter certainty if no additional data is available for training the neural network.
+
+\begin{figure}
+\centering
+\includegraphics[width=.75\textwidth]{templates/images/Figure-MU_Masked_Average_Gradient_Map_Prospect_Zones.png}
+\caption[Measurement uncertainty map with prospective areas]
+{Probability-averaged WDS4 XGBoost prediction map with SiGT measurement uncertainty masking as described for Figure \ref{fig:mu_masked_pred_map}. Dark red outlines and labels identify prospective locations discussed in the text. Bold black lines define the boundaries between the main physiographic regions in the study area. White markers plot KGAs related to the prospects with most-likely resource temperatures >60$^\circ$C.}
+\label{fig:measure_uncertainty_prospects}
+\end{figure}
+
+Measurement uncertainty depicted in Figure \ref{fig:measure_uncertainty_prospects} considers Si Geothermometer Temperature (SiGT) in isolation from the rest of the input feature set. Noting that SiGT dominates the other features in Shapley importances for the XGBoost model (see Section \ref{ch5:xgb_feature_selection}), the level of measurement certainty for all four prospective areas is striking. A strip of low measurement certainty appears in the NW section of the Truth and Consequences polygon, and likewise for Rincon. However, there is less of a need to supplement the existing SiGT data set to reduce measurement uncertainty for these four prospect areas than in other locations within the AOI.
+
+\subsection{SW New Mexico PCA}
+
+In an unsupervised machine learning assessment of the Southwestern NM study area, \citet{pepin_new_2019} noted the physiographic provinces in New Mexico exert strong controls on the presence and type of USGS-identified KGRAs that exist across the state. Specifically, the  highest geothermal potential falls within a predominantly high-heat hydrothermal zone stretching east-west from Lightning Dock to the eastern AOI boundary and up along the Rio Grande to just above Rincon \citep[Figure 3.5A]{pepin_new_2019}. A second high-potential region surrounds the narrow zone where the CP, MDVF, and RGR provinces all converge \citep[Figure 3.5C]{pepin_new_2019}, although this second group largely comprises systems with low-temperature hot springs. 
+
+The supervised learning results presented in Figures \ref{fig:ml_models_prospects} and \ref{fig:structural_uncertainty_prospects} clearly display a correlation between high-grade geothermal gradient and physiographic province, the relationship differs from that described by \citet{pepin_new_2019}. Models consistently predict low risk for the presence of geothermal heat in the southern RGR and eastern MDVF provinces, with an additional ``hot spot'' where the RGR narrows to the north. This pattern repeats for all four machine learning models, and is present, albeit less obvious, in the geothermal gradient feature map from \citet{bielicki_hydrogeolgic_2015} (see Figure \ref{fig:pfa_prospects}). 
 
 
-\textbf{COMPARE TO PEPIN AND BELICKI ET AL.}
-
-
-\subsection{Decision Support}
-\textbf{STEP THROUGH EXAMPLE FOR 2-3 LOCATIONS ON MAP - INCLUDE LIGHTNING DOCK}
 
 \section{Recap}\label{ch5:recap}
 \textbf{TO BE COMPLETED}
+
+
+%%%  TEXT BELOW INTEGRATED INTO CHAPTER 3 %%%
 
 %\section{Data Modeling}\label{ch5:modeling_overview}
 %\begin{wrapfigure}{R}{0.45\textwidth}
