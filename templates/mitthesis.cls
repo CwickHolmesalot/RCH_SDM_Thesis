@@ -399,7 +399,7 @@
 \def\copyrightnotice#1{\copyrightnoticetext{\copyright\ #1.  All rights
 reserved.\par\permission}}
 
-% Occacionally you will need to exactly specify the text of the 
+% Occasionally you will need to exactly specify the text of the 
 % copyright notice.  The \copyrightnoticetext command is then useful.
 \long\def\copyrightnoticetext#1{\gdef\@copyrightnotice{#1}}
 \def\@copyrightnotice{\copyright\ \Mit\ \@degreeyear.  All rights reserved.}
@@ -410,7 +410,7 @@ reserved.\par\permission}}
 %% \copyrightnotice{stuff} to copyright to someone else, or
 %% \copyrightnoticetext{stuff} to specify the exact text of the copyright
 %% notice.
-\ifodd\vithesis \copyrightnoticetext{\copyright\uppercase\expandafter{\@degreeyear}\ \@author.  All rights reserved.\par\permission}
+\ifodd\vithesis \copyrightnoticetext{\copyright\uppercase\expandafter{\@degreeyear}\ \@author.  All rights reserved.\vskip 0.75em\permission}
 %\uppercase\expandafter{\romannumeral\@degreeyear}.  All rights reserved.\par\permission}
 %% or just
 %%\@degreeyear}}
@@ -434,8 +434,10 @@ reserved.\par\permission}}
 % to \supervisor
 \newbox\@titlesupervisor 	\newbox\@abstractsupervisor
 
+% {\unvbox\@titlesupervisor \vskip 10pt% plus 1fil minus 1fil
+
 \def\supervisor#1#2{\setbox\@titlesupervisor\vbox
-  {\unvbox\@titlesupervisor \vskip 10pt% plus 1fil minus 1fil
+  {\unvbox\@titlesupervisor \vskip 4pt% plus 1fil minus 1fil
   \def\baselinestretch{1}\large
   \signature{Certified by}{#1 \\ #2 \\ Thesis Supervisor}}
   \setbox\@abstractsupervisor\vbox{\unvbox\@abstractsupervisor
@@ -449,32 +451,33 @@ reserved.\par\permission}}
 %% a macro to change the (expanded) argument to uppercase.
 \def\maketitle{\begin{titlepage}
 \large
-{\def\baselinestretch{1.2}\Large\bf \choosecase{\@title} \par}
-by\par
+{\def\baselinestretch{1.2}\Large\bf \choosecase{\@title} \vskip .75em} %\par
+by \vskip 1em %\par
 {\Large  \choosecase{\@author}}
-\par
+\vskip .75em %\par
 \@prevdegrees
-\par
+%\par
+\vskip 1\baselineskip
 \choosecase{Submitted to the} \choosecase{\@department} \\
 \choosecase{in partial fulfillment of the requirements for the}
 \choosecase{\@degreeword} 
 \choosecase{of}
-\par
+\vskip 1em %\par
 \choosecase{\@degree}
-\par
+\vskip 1em %\par
 at the
-\par\MIT\par
+\vskip 1em %\par
+\MIT
+\vskip 1em %\par
 \@degreemonth\ \@degreeyear
-\par
+\vskip 1\baselineskip
 \@copyrightnotice
-\par
-\vskip 3\baselineskip
+%\par
+\vskip 2em%\baselineskip
 \signature{Author}{\@department \\ \@thesisdate}
-\par
-\vfill
+\vskip .25em %\par %\vfill
 \unvbox\@titlesupervisor
-\par
-\vfill
+\vskip 1em %\par %\vfill
 \signature{Accepted by}{\@chairmanname \\ \@chairmantitle}
 \vfill
 \end{titlepage}}

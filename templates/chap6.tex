@@ -2,12 +2,8 @@
 
 Chapter \ref{ch4:cm_prep} outlined the cost modeling strategy for a hypothetical 5 MW expansion project of the Lightning Dock power plant in Animas Valley, NM. This chapter reviews the results of the different model approaches, explores insights gained from those models, and describes how this approach mitigates risks associated with geothermal production.
 
-\section{Static Model}
-\label{ch6:static_mod}
-
-\subsection{Model Selection}
-\label{ch6:static_select}
-
+\section{Static Model}\label{ch6:static_mod}
+\subsection{Model Selection}\label{ch6:static_select}
 Section \ref{ch4:cm_rev} described the use of brine effectiveness in the cost model for determining the power output of a binary cycle plant for a given production temperature and flow rate. This formulation provides a choice of how to manage the cost model mechanics due to a trade-off between plant capacity and flow rate for a given brine effectiveness (Equation \ref{eq:cm_rev}).
 
 In addition, installation of the Lightning Dock expansion can take place over a variety of different deployment schedules due to the modularity of the system. Rather than drill ten wells and install five binary cycle plants all at once, delaying aspects of the installation can be financially beneficial and less of an initial risk for the project.
@@ -22,10 +18,8 @@ Figure \ref{fig:static_model_compare} shows the results for the pre-set capacity
 \label{fig:static_model_compare}
 \end{figure}
 
-\subsection{Construction Optimization}
-\label{ch6:static_schedule}
-
-Lifting the fixed-capacity requirement changes the production potential for each power plant module. Based on the production parameters defined in Section \ref{ch4:cm_params}, each module can now generate 2.1 MW. Since this is a hypothetical case study with Climeon modules used as an analog only, further modeling uses this value with the caveat that future efforts confirm its viability as the modular power plant technology continues to evolve.
+\subsection{Construction Optimization}\label{ch6:static_schedule}
+Lifting the fixed-capacity requirement changes the production potential for each power plant module. Using the parameters defined in Section \ref{ch4:cm_params}, each module can now generate 2.1 MW. Since this is a hypothetical case study with Climeon modules used as an analog only, further modeling uses this value with the caveat that future efforts confirm its viability as the modular power plant technology continues to evolve.
 
 The updated power production per module reduces the required module count to a total of three (3) modules based on the original expansion target of $\approx$5 MW. Table \ref{tab:static_optimization} revisits the installation schedule grid search exercise to determine the optimal project plan under these circumstances. At an NPV of \$1.0 million, the best option deploys two (2) modules initially and adds an additional one (1) at the end of the first year. In order to standardize cost models for direct comparison, this installation plan is used for all cost models throughout the rest of this analysis.
 
@@ -45,9 +39,7 @@ The updated power production per module reduces the required module count to a t
 \label{tab:static_optimization}
 \end{table}
 
-\subsection{Summary Statistics}
-\label{ch6:static_stats}
-
+\subsection{Summary Statistics}\label{ch6:static_stats}
 As a deterministic cost model, Static model performance is measured strictly on calculated NPV. This will act as a benchmark value for the other cost models explored in the rest of this chapter.
 
 \begin{table}[H]
@@ -61,21 +53,15 @@ NPV & \$1.0 \\ \hline
 \label{tab:static_mod_stats}
 \end{table}
 
-\section{Probabilistic Model Metrics}
-\label{ch6:cost_model_metrics}
-
+\section{Probabilistic Model Metrics}\label{ch6:cost_model_metrics}
 Monte Carlo simulation is applied to all of the probabilistic models to estimate the range of model behavior. For each model, results represent 2000 simulated runs where each realization defines a unique combination of variable values sampled from the PDFs reviewed in Section \ref{ch4:pdfs}. 
 
 Common methods for evaluating a Monte Carlo ensemble include building a NPV histogram, constructing a \acrlong{cdf} (\acrshort{cdf} or target curve), and averaging the results together for \acrlong{enpv} (\acrshort{enpv}). Other interesting metrics for model comparison include standard deviation, individual percentiles, and direct comparison with the static model NPV (NPV$_{s}$). Standard deviation is the measure of how tightly the results cluster around the central value. Distributions with low standard deviations are sometimes referred to as robust distributions. P$_{50}$ marks the the median, and P$_{05}$ and P$_{95}$ define marginal percentiles for 5\% \acrlong{var} (\acrshort{var}) and \acrlong{vag} (\acrshort{vag}), respectively. Each of these measures is reported for the probabilistic model cases described below.
 
-\section{Base Case Model}
-\label{ch6:base_case}
-
+\section{Base Case Model}\label{ch6:base_case}
 The Base Case model mimics the Static model in form, but incorporates uncertainties in drilling \& completions costs, electricity pricing, geothermal gradient, reservoir temperature, and thermal drawdown rate to provide a more realistic forecast. No decision rules are included in this scenario. 
 
-\subsection{Model Results}
-\label{ch6:base_results}
-
+\subsection{Model Results}\label{ch6:base_results}
 At -\$4.8 million ENPV, the Base Case model predicts over 560\% lower project value than predicted with the Static model (Table \ref{tab:base_stats}). This result alone illustrates how probabilistic approaches can significantly differ from deterministic models that use most-likely or average values. Skewed system performance occurs even when variable distributions are balanced, which makes deterministic results both unrealistic and unreliable measures for decision-making \citep[p.\ 48-49]{de_neufville_flexibility_2011}. Here, unanticipated high-side (P$_{95}$ value of \$15.9 million) does exist, but the influence of the low-side (P$_{05}$ value of -\$28.2 million) dominates overall (Table \ref{tab:base_stats}).
 
 The Base Case ensemble shows a symmetric, pseudo-Gaussian distribution of NPV results, with the exception of a long right tail capturing rare but very positive project outcomes (Figure \ref{fig:base_case_hist}). Figure \ref{fig:base_case_cdf} illustrates the target curve tracing cumulative probabilities for observed NPV values. The P$_{50}$ value of -\$3.9 million suggests the highly-negative values in the lower half of results pull the average (ENPV) further into negative project value territory. Cumulatively, $\approx60\%$ of the realizations end in a net loss for the project (Figure \ref{fig:base_case_cdf}). And at $\approx 3\times$ both the median and ENPV, standard deviation of NPV indicates this solution is not robust. 
@@ -95,12 +81,10 @@ The Base Case ensemble shows a symmetric, pseudo-Gaussian distribution of NPV re
 \end{figure}
 
 All told, the Base Case results display both a negative ENPV and a high likelihood of project financial loss. Without a clear strategy for mitigating risk, this project would and should be rejected by a responsible portfolio manager.
-
-\subsection{Summary Statistics}
-\label{ch6:base_stats}
-
+\pagebreak
+\subsection{Summary Statistics}\label{ch6:base_stats}
 Table \ref{tab:base_stats} outlines key statistical measures summarizing the performance of the Base Case probabilistic cost model.
-
+%\begin{wraptable}{R}{0.5\linewidth}
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|r|}
@@ -116,16 +100,16 @@ P95 NPV & \$15.9M \\ \hline
 \caption[Probabilistic Base Case statistics]{Base case probabilistic model statistics for 2000 model realizations. NPV is reported in \$M, where M is million. NPV$_s$ refers to the static model NPV, as reported in Table \ref{tab:static_mod_stats}.}
 \label{tab:base_stats}
 \end{table}
-
+%\end{wraptable}
+\vfill
+\pagebreak
 \section{Redevelop Case Model}
 \label{ch6:redevelop_case}
 
 The Redevelop Case model extends the Base Case with a redevelopment plan for the geothermal field to counter thermal decline in the fluid pathways through the reservoir. The Redevelopment decision rule (Section \ref{ch4:dr_redevelop}) is triggered when thermal drawdown causes the produced brine to drop below a threshold temperature. As with the Base Case, model uncertainties include drilling \& completions costs, electricity pricing, geothermal gradient, reservoir temperature, and thermal drawdown rate.
 
-\subsection{Model Results}
-\label{ch6:redevelop_results}
-
-Adding the Redevelopment rule improves the project ENPV by \$2.3 million over the Base Case, but it still remains negative at -\$2.5 million, 340\% below the Static model NPV. Redevelopment drilling costs come into play as the VAG (P$_{05}$ value of \$15.1 million) decreases slightly relative to the Base Case. But VAR (P$_{95}$ value of \$21.3 million) shows a larger difference, improving by nearly \$7 million over the Base Case (Table \ref{tab:redevelop_stats}). This clearly reflects the improved production and power sales possible by managing reservoir conditions.
+\subsection{Model Results}\label{ch6:redevelop_results}
+Adding the Redevelopment rule improves the project ENPV by \$2.3 million over the Base Case, but it still remains negative at -\$2.5 million, 340\% below the Static model NPV. Redevelopment drilling costs come into play as the VAG (P$_{95}$ value of \$15.1 million) decreases slightly relative to the Base Case. But VAR (P$_{05}$ value of -\$21.3 million) shows a larger difference, improving by nearly \$7 million over the Base Case (Table \ref{tab:redevelop_stats}). This clearly reflects the improved production and power sales possible by managing reservoir conditions.
 
 Standard deviation of the ensemble distribution is less than observed for the Base Case, likely due to a narrower overall distribution without as many outliers in the tails (Figure \ref{fig:redevelop_case_hist}). The balance in distribution shape is reflected in the small difference (\$0.2 million) between ENPV and the P$_{50}$ result (Table \ref{tab:redevelop_stats}). Comparing the target curves between the Redevelop Case (Figure \ref{fig:redevelop_case_cdf}) and Base Case (Figure \ref{fig:base_case_cdf}), it becomes clear that the redevelopment flexibility does not address upside potential. Instead, it acts as a partial stop-gap on the worst case realizations of the model. The lower half of the curve tightens up, but there is little overall curve movement to the right to make the project more profitable.
 
@@ -145,9 +129,7 @@ Standard deviation of the ensemble distribution is less than observed for the Ba
 
 As a brief caveat: the idea of periodic redevelopment for a geothermal field is not novel. In fact, many geothermal cost models include it as default behavior \citep[e.g.,\ ][]{entingh_volume_2006, blair_system_2018}. Nevertheless, the analysis above illustrates why this design option should be included in geothermal operations to help mitigate the risk of high thermal drawdown rates --- as long as drilling costs are low enough to make it attractive. 
 
-\subsection{Summary Statistics}
-\label{ch6:redevelop_stats}
-
+\subsection{Summary Statistics}\label{ch6:redevelop_stats}
 Table \ref{tab:redevelop_stats} outlines key statistical measures summarizing the performance of the Redevelop Case probabilistic cost model.
 
 \begin{table}[H]
@@ -166,14 +148,10 @@ P95 NPV & \$15.1M \\ \hline
 \label{tab:redevelop_stats}
 \end{table}
 
-\section{Redevelop \& Grow Case Model}
-\label{ch6:grow_case}
-
+\section{Redevelop \& Grow Case Model}\label{ch6:grow_case}
 The Redevelop \& Grow Case model builds on the Redevelop Case with a decision rule around increasing capacity (Section \ref{ch4:dr_grow}). Specifically, when electricity prices rise by an amount larger than the monitored threshold, more power plant modules are installed to capitalize on the increased prices and inferred demand. Like the other probabilistic models, values for drilling \& completions costs, electricity pricing, geothermal gradient, reservoir temperature, and thermal drawdown rate are directly sampled from probability distribution functions (Section \ref{ch4:pdfs}) as part of the Monte Carlo simulation.
 
-\subsection{Model Results}
-\label{ch6:grow_results}
-
+\subsection{Model Results}\label{ch6:grow_results}
 Redevelop \& Grow model results use a field expansion amount of 25\% when the Capacity Growth decision rule is triggered. Assuming the PPA with the purchasing utility company is successfully renegotiated at the time of the expansion, this model results in a dramatic change in project value. ENPV is \$9.7 million, over \$12 million better than the Redevelop Case and over 800\% greater than Static model NPV (Table \ref{tab:grow_stats}). The case shows notable improvement in both Value at Risk and Value at Gain; P$_{05}$ shifts by more than \$7 million to -\$14.2 million, and P$_{95}$ leaps to \$38.2 million as power plant growth captures market potential.
 
 \begin{figure}[!htp]
@@ -194,9 +172,7 @@ The histogram for Redevelop \& Grow skews noticeably to the right with a long ta
 
 Some caution should be taken in applying learnings from this model to a real-world geothermal project. Results here depend on a few important assumptions, including the willingness of a partner utility company to accept capacity increases above the market rate for electricity on any given year, the direct relationship between large price increases and electricity demand, and the overall monotonic increase in electricity prices over time. With regard to the latter, the price model used in this analysis includes a single step change and annual volatility (see Figure \ref{fig:elec_price_prob}), but other forecasts exist that depict negative year-on-year trends not modeled here \citep{murphy_electrification_2021}. As discussed in Section \ref{ch4:electrification_uncertainty}, the interactions between different energy markets and dynamics of major events like future electrification are complex, worth considering, and beyond the scope of this thesis. 
 
-\subsection{Summary Statistics}
-\label{ch6:grow_stats}
-
+\subsection{Summary Statistics}\label{ch6:grow_stats}
 Table \ref{tab:grow_stats} outlines key statistical measures summarizing the performance of the Redevelop \& Grow Case probabilistic cost model.
 
 \begin{table}[H]
@@ -215,14 +191,10 @@ P95 NPV & \$38.2M \\ \hline
 \label{tab:grow_stats}
 \end{table}
 
-\section{Full Flexibility Case Model}
-\label{ch6:reduce_case}
-
+\section{Full Flexibility Case Model}\label{ch6:reduce_case}
 Full Flexibility adds a decision rule around reduction of aggregate plant capacity (Section \ref{ch4:dr_reduce}). If electricity prices drop by a threshold amount, power plant modules are proactively decommissioned to reduce electricity production and operating expenses. Redevelopment and Capacity Growth decision rules remain in effect, as does the random sampling treatment for drilling \& completions costs, electricity pricing, geothermal gradient, reservoir temperature, and thermal drawdown rate based on PDFs defined in Section \ref{ch4:pdfs}.
 
-\subsection{Model Results}
-\label{ch6:reduce_results}
-
+\subsection{Model Results}\label{ch6:reduce_results}
 In a somewhat surprising outcome, the simulation for Full Flexibility results in an ENPV of \$6.7 million (Table \ref{tab:reduce_stats}). Although this value is 545\% greater than the Static model NPV, it falls short of the Redevelop \& Grow case by nearly \$3 million (see Table \ref{tab:grow_stats}). Both VAR and VAG show less attractive results as well; P$_{05}$ is -\$16.3M and P$_{95}$ is \$36.2 million, both $\approx \$2$ million worse than Redevelop \& Grow.  
 
 \begin{figure}[!htp]
@@ -245,9 +217,7 @@ It is interesting to note that the modeled electricity forecast includes enough 
 
 Nevertheless, there is an additional simple explanation for the model behavior. If power plant modules are decommissioned, the model is more sensitive to the drop in revenue from reduced electricity generation than any benefit realized by discounted OPEX. The cost savings is just not significant enough to make up for less income.
 
-\subsection{Summary Statistics}
-\label{ch6:reduce_stats}
-
+\subsection{Summary Statistics}\label{ch6:reduce_stats}
 Table \ref{tab:reduce_stats} outlines key statistical measures summarizing the performance of the Full Flexibility Case probabilistic cost model.
 
 \begin{table}[H]
@@ -267,8 +237,7 @@ P95 NPV & \$36.2M \\ \hline
 \end{table}
 
 \section{Combined Model Comparison}
-
-Figure \ref{fig:all_case_cdf} illustrates the target curves for the four (4) probabilistic models discussed in the previous sections. The Base Case model is dominated by all other models on the low-side and merges with the Redevelop Case on the high-side. The Full Flexibility Case greatly improves on the Base and Redevelop Cases. Redevelop \& Grow appears farthest to the right, making it the preferred model for the cost model parameterization as described in Section \ref{ch4:cm_params}. 
+Figure \ref{fig:all_case_cdf} illustrates the target curves for the four probabilistic models discussed in the previous sections. The Base Case model is dominated by all other models on the low-side and merges with the Redevelop Case on the high-side. The Full Flexibility Case greatly improves on the Base and Redevelop Cases. Redevelop \& Grow appears farthest to the right, making it the preferred model for the cost model parameterization as described in Section \ref{ch4:cm_params}. 
 
 \begin{figure}[!htp]
 \centering
@@ -277,15 +246,11 @@ Figure \ref{fig:all_case_cdf} illustrates the target curves for the four (4) pro
 \label{fig:all_case_cdf}
 \end{figure}
 
-\section{Full Flexibility Case Sensitivity Testing}
-\label{ch6:sensitivity}
-
+\section{Full Flexibility Case Sensitivity Testing}\label{ch6:sensitivity}
 In order to explore the hypothesis that the Full Flexibility Case model is responding to revenue losses, a series of sensitivity tests considered adjustments to the \textit{Reduction amount} parameter controlling how many modules are removed by the Capacity Reduction decision rule (Table \ref{tab:cm_econ_params}, Section \ref{ch4:dr_reduce}). The default value applied throughout this analysis has been 25\% to match the \textit{Expansion amount} parameter used by the Capacity Growth decision rule (Table \ref{tab:cm_econ_params}, Section \ref{ch4:dr_grow}). Sensitivity testing with the \textit{Expansion amount} parameter is also conducted.
 
-\subsection{Reduction Amount}
-\label{ch6:sens_redamt}
-
-The gap between the Full Flexibility (yellow) and Redevelop \& Grow (gray) curves broadens for higher \textit{Reduction amount} values. However, the curves begin to overlap for \textit{Reduction amount} values of $\leq{15}\%$. The difference is subtle, but the 5\% case shows a slight rightward step-out in the high-side values for Full Flexibility compared to the Redevelop \& Grow. This is not seen in the 4\% or 6\% scenarios, suggesting 5\% is the sweet spot for \textit{Reduction amount} when a significant electricity price drop is detected. For values above 5\%, the gain from OPEX reductions cannot overcome revenue lost from reduced capacity, which likely reflects the influence of PPA contracts that stabilize the year-to-year price paid for generated electricity. For values less than 5\%, the Full Flexibility Case merges with the Redevelop \& Grow Case as the number of decommissioned modules trends toward zero (0).
+\subsection{Reduction Amount}\label{ch6:sens_redamt}
+The gap between the Full Flexibility (yellow) and Redevelop \& Grow (gray) curves broadens for higher \textit{Reduction amount} values. However, the curves begin to overlap for \textit{Reduction amount} values of $\leq{15}\%$. The difference is subtle, but the 5\% case shows a slight rightward step-out in the high-side values for Full Flexibility compared to the Redevelop \& Grow. This is not seen in the 4\% or 6\% scenarios, suggesting 5\% is the sweet spot for \textit{Reduction amount} when a significant electricity price drop is detected. For values above 5\%, the gain from OPEX reductions cannot overcome revenue lost from reduced capacity, which likely reflects the influence of PPA contracts that stabilize the year-to-year price paid for generated electricity. For values less than 5\%, the Full Flexibility Case merges with the Redevelop \& Grow Case as the number of decommissioned modules trends toward zero.
 
 \begin{figure}[!htp]
 \centering
@@ -309,12 +274,13 @@ Full Flexibility and Redevelop \& Grow target curves closely match each other ex
 \end{figure}
 
 \section{Recap}\label{ch6:recap}
-This chapter covered the execution of cost models described in Chapter \ref{ch4:cm_prep}. Results for a deterministic model and four (4) probabilistic models illustrate how incorporating uncertainties and decision rules into a modeling approach can provide important insights into potential project profit and loss. By comparing summary metrics and target curves, this methodology allows a decision-maker to test strategies for mitigating the risk of an unprofitable EGS expansion to an existing power plant.
+This chapter covered the execution of cost models described in Chapter \ref{ch4:cm_prep}. Results for a deterministic model and four probabilistic models illustrate how incorporating uncertainties and decision rules into a modeling approach can provide important insights into potential project profit and loss. By comparing summary metrics and target curves, this methodology allows a decision-maker to test strategies for mitigating the risk of an unprofitable EGS expansion to an existing power plant.
+\\
 \\
 Key insights from cost modeling include:
 \begin{enumerate}
     \item Static (deterministic) cost models that use average or most-likely parameter values are inherently flawed. They distort estimates of project value and may lead to poor project decisions.
-    \item Probabilistic model result ensembles from Monte Carlo simulation are best compared using target curves (CDFs) and summary statistics like ENPV. Solution distribution robustness is not necessarily desirable --- imbalance toward the high side means a model has more Value at Gain.
+    \item Probabilistic model result ensembles from Monte Carlo simulation are best compared using target curves (CDFs) and summary statistics like ENPV. Solution distribution robustness is not necessarily desirable --- non-robust imbalance toward the high side means a model has more Value at Gain, which is desired.
     \item Redeveloping geothermal wells to counter reservoir thermal decline reduces downside risk but does not improve upside potential for the project.
     \item Installing additional power plant modules in response to greater demand results in significantly greater project value with reduced downside risk.
     \item Decommissioning power plant modules in response to plummeting prices generally does not capture greater project value, likely due to the lost revenue from reduced power generation outpacing savings in OPEX in this model formulation.
