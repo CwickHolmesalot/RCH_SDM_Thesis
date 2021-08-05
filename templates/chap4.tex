@@ -1,9 +1,12 @@
-\chapter{Cost-Modeling for an \\EGS Power Plant Expansion}\label{ch4:cm_prep}
+\chapter{Cost Modeling for an\\EGS Power Plant Expansion}\label{ch4:cm_prep}
+
+The second of the two research questions presented in Chapter \ref{ch1:intro} addressed the topic of risk in geothermal development and production. As discussed in Chapter \ref{ch2:background}, production planning generally includes economic analysis of the subsurface conditions, development plan, and power plant concept projected over the anticipated lifespan of a field. This chapter describes a methodology for modeling the value of an EGS power generation project, applied to the Lightning Dock KGRA in Southwestern New Mexico. The method combines uncertainties and variable operational strategies to mitigate risk in geothermal production.
+
 \section{EGS Expansion Concept}\label{ch4:cm_concept}
 \subsection{Lightning Dock EGS}\label{ch4:lightning_dock_egs}
-Lightning Dock is presently the only commercial power plant operating in the state of New Mexico (see Section \ref{ch2:lightning_dock}). The net generating capacity after its first phase of development was 4 MW in 2013, with the expectation of upgrading to 10 MW in a second development phase that never came to fruition. Instead, the facility underwent a significant refit in 2018, resulting in a net capacity of 11.2 MW generated entirely from hydrothermal brine production \citep{bonafin_repowering_2019}.
+Lightning Dock is presently the only commercial power plant operating in the state of New Mexico (see Section \ref{ch2:lightning_dock}). The net generating capacity after its first phase of development was 4 MW in 2013. An expected second-phase upgrade to 10 MW never came to fruition. Instead, the facility underwent a significant refit in 2018, resulting in a net capacity of 11.2 MW generated entirely from hydrothermal brine production \citep{bonafin_repowering_2019}.
 
-Department of Energy-funded efforts to characterize the geothermal resources of the Animas Valley --- where Lightning Dock is located --- revealed the presence of two different thermal reservoirs: the hydrothermal resource targeted by Lightning Dock where deep geothermal fluids ascend along the Animas Valley Fault complex to $\approx$365-1000 m depth, and a secondary interval at $\approx$900-1200 m depth that requires permeability enhancement for production \citep{schochet_development_2001}. The Horquilla limestone formation defines the second reservoir, estimated to span a minimum volume of 6 cubic km based on conservative figures. By one proprietary study completed in 2001 for Ormat Technologies, a commercial geothermal company, the Horquilla has a 88\% probability of 6 MW in recoverable electricity generation potential \citep{schochet_development_2001}.
+DOE-funded efforts to characterize the geothermal resources of the Animas Valley --- where Lightning Dock is located --- revealed the presence of two different thermal reservoirs: the hydrothermal resource targeted by Lightning Dock where deep geothermal fluids ascend along the Animas Valley Fault complex to $\approx$365-1000 m depth, and a secondary interval at $\approx$900-1200 m depth that requires permeability enhancement for production \citep{schochet_development_2001}. The Horquilla limestone formation defines the second reservoir, estimated to span a minimum volume of 6 cubic km based on conservative figures. By one proprietary study completed in 2001 for Ormat International, the Horquilla has a most-likely production potential of 9.3 MW, and an 88\% probability of exceeding 6 MW \citep{schochet_development_2001}.
 
 \citet{schochet_development_2001} proposed the construction of a 6 MW hybrid power plant combining hydrothermal and EGS-sourced power generation a decade before operations commenced at Lightning Dock. In their development plan, they noted several benefits of pursuing EGS in this location:
 \begin{itemize}[itemsep=2pt]\label{ch4:ld_egs_support}
@@ -12,12 +15,12 @@ Department of Energy-funded efforts to characterize the geothermal resources of 
     \item Low/no assessed environmental impact from geothermal operations
     \item Direct access to in-place transmission lines  
     \item Opportunity for direct electricity sales to local users
-    \item Purchase agreements with regional utilities are incentivized by NM legislation
+    \item Purchase agreements with regional utilities incentivized by NM legislation
 \end{itemize}
 
-As suggested by this list, conditions at Lightning Dock offer a nearly ideal test case for a EGS proof of concept on a manageable scale. In addition, land utilization in the area is historically agricultural with few residences, so risk is low for adverse impact on an existing population. And the use of binary cycle generation as proposed by \citet{schochet_development_2001} supports power production with zero greenhouse gas emissions.  
+As suggested by this list, conditions at Lightning Dock offer a nearly ideal test case for an EGS proof of concept on a manageable scale. In addition, land utilization in the area is historically agricultural with few residences, so risk is low for adverse impact on an existing population. And the use of binary cycle generation as proposed by \citet{schochet_development_2001} supports power production with zero greenhouse gas emissions.  
 
-In this thesis, the \citeauthor{schochet_development_2001} concept is revisited with the existing geothermal production at Lightning Dock kept in mind; rather than building a new hybrid facility, the revised concept involves targeting the deeper reservoir as a NF-EGS development with a tie-back to the current Lightning Dock facility. Stepping out from the hydrothermal zone in proximity to the Animas Valley Fault complex, thermal conditions settle to a high background geothermal gradient between $\approx$ 80-120 K/km based on boreholes TG 56-14 and TG 12-7 \citep{cunniff_final_2003} --- high enough to support geothermal capture. These conditions make for an interesting case study on risk mitigation options for EGS production planning founded on a NF-EGS concept already proven at The Geysers \citep{pan_establishment_2019}.
+In this thesis, the \citeauthor{schochet_development_2001} concept is revisited with the existing geothermal production at Lightning Dock kept in mind; rather than building a new hybrid facility, the revised concept involves targeting the deeper reservoir as a NF-EGS development that ties back to the current Lightning Dock facility. Stepping out from the hydrothermal zone in proximity to the Animas Valley Fault complex, thermal conditions settle to a high background geothermal gradient between $\approx$ 80-120 K/km based on boreholes TG 56-14 and TG 12-7 \citep{cunniff_final_2003} --- high enough to support geothermal capture. These conditions make for an interesting case study on risk mitigation options for EGS production planning founded on a NF-EGS concept that was already proven at The Geysers \citep{pan_establishment_2019}.
 
 Public records regarding power generation at Lightning Dock provide some guidance on the appropriate size of such an EGS expansion. After its original phase 1 development, the plant produced 4 MW. An additional 6 MW was slated for phase 2, but re-powering of the plant actually added 7 MW to the capacity after several years of development stasis \citep{think_geoenergy_turboden_2020}. \citeauthor{schochet_development_2001} originally proposed a 6 MW hybrid plant for the site, but they also noted 6 MW was likely understating the full reservoir potential of the Horquilla alone (\citeyear{schochet_development_2001}). In consideration of the step-wise trajectory of plant improvements and the assessment of available thermal resources, this case study targets 5 MW as an expansion goal. 
 
@@ -62,18 +65,15 @@ Following the general outline for geothermal cost modeling from previous work \c
     OM_t &= \left[OM_{pp} + OM_{well} + OM_{water}\right]_t
     \end{aligned}
 \end{equation}
-\\
 Revenue and expenses are treated on an annual basis, meaning shorter-term fluctuations like price and production seasonality are not explicitly modeled. $D_t$ in Equation \ref{eq:cm_components} defines the time-based conversion factor between cash flow for a specific year and discounted cash flow for the basis year (see Equation \ref{eq:discount_rate}).
 
 \subsubsection{Revenue}\label{ch4:cm_rev}
-Calculations of undiscounted revenue require an estimate of the electricity produced within a year ($W$) and the price set by a power purchase agreement ($p_{PPA}$) for that electricity \citep{entingh_volume_2006}. 
-
+Annual revenue calculations rely on an estimate of power production within a year ($W$) and the power purchase agreement pricing ($p_{PPA}$) for that electricity \citep{entingh_volume_2006}. 
 \begin{equation}
     \label{eq:cm_rev}
     R = W \cdot p_{PPA} = (b_e \cdot \dot{m}) \cdot p_{PPA}
 \end{equation}
-Brine effectiveness ($b_e$) describes the electricity output per unit flow of produced brine ($\dot{m}$) and depends on the production temperature of the brine. The GETEM model uses an empirical correlation between the brine temperature ($^\circ$C) and effectiveness (w-hr/kg) \citep[p.\ 62]{entingh_volume_2006}:
-
+Brine effectiveness ($b_e$) describes the electricity output per unit flow of produced brine ($\dot{m}$) and depends on the production temperature of the brine. The GETEM model uses an empirically-defined relationship with brine temperature ($^\circ$C) to determine brine effectiveness (w-hr/kg) \citep[p.\ 62]{entingh_volume_2006}:
 \begin{equation}
 \begin{aligned}
     \label{eq:brine_eff}
@@ -86,7 +86,7 @@ Brine effectiveness ($b_e$) describes the electricity output per unit flow of pr
 \end{aligned}
 \end{equation}
 
-In the GETEM interface, a user chooses either to determine the electricity output for a specified input temperature and flow rate, or alternatively, derive the required flow rate to meet a pre-determined power sales capacity at the same input fluid temperature \citep{entingh_volume_2006}. Since the Climeon analog has a known net capacity of 150 kW per unit or 1.05 MW for each PowerBlock, and standard flow rates are provided in models like GETEM, both options are explored in this thesis.
+In the GETEM interface, a user chooses either to determine the electricity output for a specified input temperature and flow rate, or alternatively, derive the required flow rate to meet a pre-determined power sales capacity at the same input fluid temperature \citep{entingh_volume_2006}. Since the Climeon analog has a known net capacity of 150 kW per unit or 1.05 MW for each Power Block, and standard flow rates are provided in models like GETEM, both options are explored in this thesis.
 
 \subsubsection{Exploration Capital Expenses}\label{ch4:cm_capex_expl}
 Costs for exploration activities are estimated by the same method defined for the 2012 GETEM model (Equation \ref{eq:cm_capex_expl}) \citep{eere_getem_2012}. 
