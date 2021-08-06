@@ -55,7 +55,7 @@ In the cost model outlined below, the economic analysis incorporates uncertainty
 Geothermal cost models typically report Levelized Cost of Electricity (LCOE) for simple comparison with other renewable energy sources. However, LCOE is standardized to represent the total lifetime costs incurred by a power plant normalized by the total power generation from start-up to plant decommissioning. LCOE is thus not well-suited for communicating projected gains or losses under different plant designs or scenarios, which are the focus of this analysis. Instead, the model described here relies on \acrlong{npv} (\acrshort{npv}), a simple measure of project worth that accounts for the time value of money by applying a single interest rate, the discount rate, for both borrowing and deposits \citep[p.\ 195-215]{de_neufville_flexibility_2011}. Here, ``present value'' refers to a 2020 cost basis. For power generation over a 30-year lifespan -- the default for geothermal models like GETEM \citep{entingh_volume_2006} -- this basis takes the model out to 2050, a common benchmark year for future projections. 
 
 \subsection{NPV Model}\label{ch4:cm_npv}
-Following the general outline for geothermal cost modeling from previous work \citep[e.g.,][]{augustine_hydrothermal_2009, beckers_introducing_2013,tester_future_2006}, this thesis considers revenue (R), operating \& maintenance costs (\acrshort{opex} or OM), and capital expenditures (\acrshort{capex} or C) as the primary components defining annual cash flow (see Equation \ref{eq:cm_components}). Capital expenses can be further decomposed into five  sub-components associated with exploration, drilling \& completions, reservoir stimulation, fluid distribution, and power plant costs. Likewise, operating expenses subdivide into subsidiary costs for the power plant, wells, and water management.
+Following the general outline for geothermal cost modeling from previous work \citep[e.g.,][]{augustine_hydrothermal_2009, beckers_introducing_2013,tester_future_2006}, this thesis considers revenue (R), operating \& maintenance costs (\acrshort{opex} or OM), and capital expenditures (\acrshort{capex} or C) as the primary components defining annual cash flow (see Equation \ref{eq:cm_components}). Capital expenses can be further decomposed into five  sub-components associated with exploration, drilling, reservoir stimulation, fluid distribution, and power plant costs. Likewise, operating expenses subdivide into subsidiary costs for the power plant, wells, and water management.
 \begin{equation}
     \label{eq:cm_components}
     \begin{aligned}
@@ -86,7 +86,7 @@ Brine effectiveness ($b_e$) describes the electricity output per unit flow of pr
 \end{aligned}
 \end{equation}
 
-In the GETEM interface, a user chooses either to determine the electricity output for a specified input temperature and flow rate, or alternatively, derive the required flow rate to meet a pre-determined power sales capacity at the same input fluid temperature \citep{entingh_volume_2006}. Since the Climeon analog has a known net capacity of 150 kW per unit or 1.05 MW for each Power Block, and standard flow rates are provided in models like GETEM, both options are explored in this thesis.
+In the GETEM interface, users choose to either determine electricity output for a specified input temperature and flow rate, or alternatively, derive the flow rate required to meet a pre-determined power sales capacity for the same fluid temperature \citep{entingh_volume_2006}. Since the Climeon analog has a known net capacity of 150 kW per unit or 1.05 MW for each Power Block \citep{climeon_climeon_2021-1}, and standard flow rates are provided in models like GETEM, both options are explored in Chapter \ref{ch6:cm_results}.
 
 \subsubsection{Exploration Capital Expenses}\label{ch4:cm_capex_expl}
 Costs for exploration activities are estimated by the same method defined for the 2012 GETEM model (Equation \ref{eq:cm_capex_expl}) \citep{eere_getem_2012}. 
@@ -96,10 +96,10 @@ Costs for exploration activities are estimated by the same method defined for th
     C_{expl} = PPI \cdot \left[ 1.12 \cdot (\$1\text{M} + 0.6\cdot C_{dc}) \right]
 \end{equation}
 
-This relationship assumes slim hole (3-6" diameter) drilling for exploration at a 60\% discounted cost compared to standard-sized ($\geq$ 8.5" diameter) geothermal wells. The constant \$1M term accounts for pre-drilling costs, including field work, geophysical surveys of field structure, and interpretation of results. Technical and office support is covered by an additional 12\% applied to the estimate \citep{eere_getem_2012}. Total exploration costs are converted to a 2020 cost basis using the \acrlong{ppi} (\acrshort{ppi}) for electric power generation from the U.S. Bureau of Labor and Statistics \citep{us_bls_ppi_2021}.
+This relationship assumes slim hole (3-6" diameter) drilling for exploration at a 60\% discounted cost compared to standard-sized ($\geq$ 8.5" diameter) geothermal wells \citep{eere_getem_2012}. The constant \$1M term accounts for pre-drilling costs, including field work, geophysical surveys of field structure, and interpretation of results \citep{eere_getem_2012}. Technical and office support is covered by an additional 12\% applied to the estimate \citep{eere_getem_2012}. Total exploration costs are converted to a 2020 cost basis using the \acrlong{ppi} (\acrshort{ppi}) for electric power generation from the U.S. Bureau of Labor and Statistics \citep{us_bls_ppi_2021}.
 
-\subsubsection{Drilling \& Completions Capital Expenses} \label{ch4:cm_capex_dc}
-Geothermal drilling and completions costs differ from traditional oil \& gas wells due to differences in hole diameter, thermal and geochemical conditions, and the strength and abrasiveness of the target formations \citep{lowry_geovision_2017}. Here, drilling capital expenditures rely on a cost curve described by \citet[Eq. 4,\ ][]{beckers_introducing_2013}.
+\subsubsection{Drilling Capital Expenses} \label{ch4:cm_capex_dc}
+Geothermal drilling costs differ from traditional oil \& gas wells due to differences in hole diameter, thermal and geochemical conditions, and the strength and abrasiveness of the target formations \citep{lowry_geovision_2017}. Here, drilling capital expenditures rely on a cost curve described by \citet[Eq. 4,\ ][]{beckers_introducing_2013}.
 
 \begin{equation}
 \label{eq:cm_cdc}
@@ -107,7 +107,7 @@ Geothermal drilling and completions costs differ from traditional oil \& gas wel
 \end{equation}
 where $C_{dc}$ is measured in \$M and MD refers to well measured depth in meters. Each power plant module will require an injector-producer pair, so this represents one-half of the drilling cost per module. Drilling costs are converted to a 2020 cost basis using the PPI for electric power generation \citep{us_bls_ppi_2021}. 
 
-Note that Equation \ref{eq:cm_cdc} was derived for well depths of 1600-9000 m. Assuming an average geothermal gradient of 100 K/km (Table \ref{tab:cm_resource_params}), the wells considered for this study could extend slightly shallower than this range, so this should be viewed as a minimum drilling \& completions estimate. The stochastic model considered later in this study includes variability in both geothermal gradient and drilling costs for a more comprehensive treatment of both variables.
+Note that Equation \ref{eq:cm_cdc} was derived for well depths of 1600-9000 m. Assuming an average geothermal gradient of 100 K/km (Table \ref{tab:cm_resource_params}), the wells considered for this study could extend slightly shallower than this range, so this should be viewed as a minimum drilling estimate. The probabilistic model considered later in this study includes variability in both geothermal gradient and drilling costs for a more comprehensive treatment of both variables.
 
 \subsubsection{Simulation Capital Expenses}\label{ch4:cm_stim}
 EGS at Lightning Dock requires stimulation of the Horquilla reservoir to create fluid pathways for thermal extraction. The stimulation cost estimate used in this study comes from the recent GeoVision analysis \citep{lowry_geovision_2017}:
@@ -128,7 +128,7 @@ Fluid distribution costs include the entire surface piping system between the we
 \end{equation}
 where $q_{in}$ is the heat input from the produced brine and $PPI$ converts this 2012 value to a 2020 cost basis. 
 
-The 2nd Law efficiency or thermodynamic efficiency ($\eta$) governs how much heat from the input fluid can be converted to work. \citeauthor{beckers_low-temperature_2016} provides an estimate for sub-critical ORC power plants as follows (\citeyear[p.\ 39-41]{beckers_low-temperature_2016}):
+The 2nd Law efficiency or thermodynamic efficiency ($\eta$) governs how much heat from the input fluid can be converted to work. \citeauthor{beckers_low-temperature_2016} provides an estimate for sub-critical ORC power plant thermodynamic efficiency as follows (\citeyear[p.\ 39-41]{beckers_low-temperature_2016}):
 
 \begin{equation}
 \begin{aligned}
@@ -144,21 +144,21 @@ Combining Equations \ref{eq:cm_dist} and \ref{eq:2ndlaw_eff} allows distribution
 \label{eq:cm_dist_eta}
     C_{dist} = PPI \cdot \left[ \$50,000 \cdot W \cdot (0.002713 \cdot T_{prod} - 0.0918) \right]
 \end{equation}
-where W is the electricity output. Under the scenario where modular power plant units are pre-fabricated and directly provided by a company like Climeon, fluid distribution may be included in the installation fees. Distribution capital expenditures would therefore be subsumed by power plant costs and $C_{dist}$ would reduce to zero. However, without confirmation of the fee break-down structure from Climeon, the model described here relies on Equation \ref{eq:cm_dist_eta}. 
+where $W$ is the electricity output and $T_{prod}$ is the temperature of the produced brine. Under the scenario where modular power plant units are pre-fabricated and directly provided by a company like Climeon, fluid distribution may be included in the installation fees. Distribution capital expenditures would therefore be subsumed by power plant costs and $C_{dist}$ would reduce to zero. However, without confirmation of the fee break-down structure from Climeon, the model described here relies on Equation \ref{eq:cm_dist_eta}. 
 
 \subsubsection{Power Plant Capital Expenses}\label{ch4:cm_capex_pp}
-Power plant costs for a modular installation remain a source of significant uncertainty for this cost model. The GEOPHIRES model implements a temperature-variable cost estimate first described by \citet{tester_future_2006} for a binary cycle power plant \citep{beckers_introducing_2013}. \citet{schochet_development_2001} predicted produced fluid temperatures of 280-320$^\circ$F (137-160 $^\circ$C) for the Lightning Dock EGS reservoir, which equates to \$1565-\$1694 per kW by the GEOPHIRES estimate. Converted to a 2020 cost basis \citep{us_bls_ppi_2021}, this amounts to \$2230-\$2415 per kW.
+Power plant costs for a modular installation remain a source of significant uncertainty for this cost model. The GEOPHIRES model implements a temperature-variable cost estimate first described by \citet{tester_future_2006} for a binary cycle power plant \citep{beckers_introducing_2013}. \citet{schochet_development_2001} predicted produced fluid temperatures of 280--320$^\circ$F (137--160$^\circ$C) for the Lightning Dock EGS reservoir, which equates to \$1565--\$1694 per kW by the GEOPHIRES estimate. Converted to a 2020 cost basis \citep{us_bls_ppi_2021}, this amounts to \$2230--\$2415 per kW.
 
-If power plant capacity is modularized with pre-fabricated units like the Climeon PowerBlock concept, economies of scale should reduce the cost of construction and installation. Unanswered company inquiries left this rationale unconfirmed. Nevertheless, the author chose to assume a round-number estimate accounting for a modularity discount (Equation \ref{eq:cm_pp}). This could be replaced by more accurate numbers when those values become available.
+If power plant capacity is modularized with pre-fabricated units like the Climeon Power Block concept, economies of scale should reduce the cost of construction and installation. Unanswered company inquiries left this rationale unconfirmed. Nevertheless, the author chose to assume a round-number estimate accounting for a modularity discount (Equation \ref{eq:cm_pp}). This could be replaced by more accurate numbers when those values become available.
 
 \begin{equation}
 \label{eq:cm_pp}
     C_{pp} = \$2,000 \cdot W
 \end{equation}
-where W is the electricity output of the plant in kW and $C_{pp}$ is measured against a 2020 cost basis. Pump costs are assumed to be included in this expense.
+where $W$ is the electricity output of the plant in kW and $C_{pp}$ is measured against a 2020 cost basis. Pump costs are assumed to be included in this expense.
 
 \subsubsection{Well Operating Expenses}\label{ch4:cm_opex_well}
-Operations and maintenance costs per geothermal well combines labor with a fraction of the drilling \& completions expenses \citep[Equation 12,\ ][]{beckers_introducing_2013}.
+Operations and maintenance costs per geothermal well combines labor with a fraction of the drilling expenses \citep[Equation 12,\ ][]{beckers_introducing_2013}.
 
 \begin{equation}
 \label{eq:cm_om_well}
@@ -211,7 +211,7 @@ Discount rate defines the time value of money and is held constant throughout th
 where $DCF$ is discounted cash flow, $CF$ is the cash flow for a specific year,  $r$ is the discount rate, and $n$ represents the number of years between the modeled year and the basis year. Combining this relationship with Equation \ref{eq:cm_components}, $(1+r)^{-t}$ replaces $D_t$ as the discount term needed to calculate $NPV$.
 
 \subsubsection{Learning Rate}\label{ch4:learn_rate}
-Learning rate defines the improvement in cost as a result of accumulated knowledge and experience from repeatedly performing an action. In this model, a learning rate only applies to the drilling \& completions costs for EGS wells in the expansion project area. Drilling costs progressively decrease based on the following relationship \citep[p.\ 213]{de_neufville_flexibility_2011}:
+Learning rate defines the improvement in cost as a result of accumulated knowledge and experience from repeatedly performing an action. In this model, a learning rate only applies to the drilling costs for EGS wells in the expansion project area. Drilling costs progressively decrease based on the following relationship \citep[p.\ 213]{de_neufville_flexibility_2011}:
 
 \begin{equation}
     \label{eq:learning_rate}
@@ -241,8 +241,7 @@ where $C_0$ and $C_n$ are power plant capacity factors at years 0 and n, $a$ is 
 In order to estimate the values for the NPV model components, several parameters related to resource recovery, field and plant operations, and key economic factors were chosen for the cost model. The selected parameters are representative of the Lightning Dock area and limits on components of the system to the best of the author's knowledge.
 
 \subsubsection{Resource recovery parameters}\label{ch4:resource_params}
-
-\begin{table}[!htp]
+\begin{table}[H]
 \centering
 \resizebox{.9\textwidth}{!}{
 \begin{tabular}{|l|c|l|}
@@ -261,8 +260,7 @@ Water loss rate & 2\% & \citep{blair_system_2018} \\ \hline
 \end{table}
 
 \subsubsection{Field and plant operations parameters}\label{ch4:ops_params}
-
-\begin{table}[!htp]
+\begin{table}[H]
 \centering
 \resizebox{.75\textwidth}{!}{
 \begin{tabular}{|l|c|l|}
@@ -278,8 +276,7 @@ Plant degradation factor & 0.5\% & \citep{augustine_geovision_2019} \\ \hline
 \end{table}
 
 \subsubsection{Economic factors}\label{ch4:econ_params}
-
-\begin{table}[!htp]
+\begin{table}[H]
 \centering
 \resizebox{.75\textwidth}{!}{
 \begin{tabular}{|l|c|l|}
@@ -297,9 +294,9 @@ Reduction amount & 25\% & for Section \ref{ch4:dr_reduce} \\  \hline
 \end{table}
 
 \subsubsection{Electricity Price}\label{ch4:elec_price}
-Electricity prices are referenced from the industrial electricity price forecast for the Mountain region (including New Mexico) provided by the EIA in their \acrlong{steo} (\acrshort{steo}) projections out to 2023 \citep{eia_short-term_2021}. While industrial pricing differs slightly from wholesale, it more closely mimics wholesale prices than residential or commercial rates and was therefore selected as a wholesale proxy for the cost model. The Forecast Tool in Excel projected prices out to 2050 with 95\% confidence bounds (Figure \ref{fig:electricity_pricing}) using the Exponential Triple Smoothing algorithm for time series data \citep{microsoft_forecastets_2021}. For the static or deterministic cost model, electricity prices are directly sampled from the forecast for any year when capacity increases and multiplied by the PPA \textit{Contract rate above wholesale} value listed in Table \ref{tab:cm_econ_params}. This simulates amending the PPA with a local utility whenever new capacity is available for power sales. Electricity pricing is held flat compared to the previous year when no capacity change occurs.
+Electricity prices are referenced from the industrial electricity price forecast for the Mountain region (including New Mexico) provided by the EIA in their \acrlong{steo} (\acrshort{steo}) projections out to 2023 \citep{eia_short-term_2021}. While industrial pricing differs slightly from wholesale, it more closely mimics wholesale prices than residential or commercial rates and was therefore selected as a wholesale proxy for the cost model. The Forecast Tool in Excel projected prices out to 2050 with 95\% confidence bounds (Figure \ref{fig:electricity_pricing}) using the Exponential Triple Smoothing algorithm for time series data \citep{microsoft_forecastets_2021}. For the static cost model, electricity prices are directly sampled from the forecast for any year when capacity increases and then multiplied by the PPA \textit{Contract rate above wholesale} value listed in Table \ref{tab:cm_econ_params}. This simulates amending the PPA with a local utility whenever new capacity is available for power sales. Electricity pricing is held flat compared to the previous year when no capacity change occurs.
 
-\begin{figure}[!htp]
+\begin{figure}
 \centering
 \includegraphics[width=.8\textwidth]{templates/images/Figure-EIA_Electricity_Forecast.png}
 \caption[Electricity price forecast]{Price of electricity from the EIA Short-Term Energy Outlook \protect\citep{eia_short-term_2021}, forecast out to 2050.}
@@ -320,10 +317,10 @@ Recognizing the full probable range of variable values and the scenarios that tr
 \caption[Carbon tax price impact]{National average retail electricity price changes with benchmark levels of carbon taxation, after \protect\citep[Figure\ 30]{larson_energy_2018}.}
 \label{fig:carbon_tax_pricing}
 \end{wrapfigure}
-One proposal for advancing the transition to more renewable and sustainable energy solutions involves a carbon tax levied on fossil fuels. The SIPA Center on Global Energy Policy at Columbia University recently studied three analytical scenarios based on federal agency benchmark taxation rates of \$14/ton, \$50/ton, and \$73/ton CO$_2$ equivalent with annual percentage rate increases of 3, 2, and 1.5\%, respectively \citep{larson_energy_2018} (Figure \ref{fig:carbon_tax_pricing}). Their analysis forecasts the impact on electricity pricing out to 2030, with relatively steady-state implications that depend on the specified carbon tax rate. In all taxation cases, electricity prices increase over the present-day, no-tax scenario, likewise boosting the value of a zero-emissions geothermal power relative to fossil fuel-based options. The selected value range for sensitivity testing was a 0-28\% increase in wholesale price, which matches Figure \ref{fig:carbon_tax_pricing}.
+One proposal for advancing the transition to more renewable and sustainable energy solutions involves a carbon tax levied on fossil fuels. The SIPA Center on Global Energy Policy at Columbia University recently studied three analytical scenarios based on federal agency benchmark taxation rates of \$14/ton, \$50/ton, and \$73/ton CO$_2$-equivalent with annual percentage rate increases of 3, 2, and 1.5\%, respectively \citep{larson_energy_2018} (Figure \ref{fig:carbon_tax_pricing}). Their analysis forecasts the impact on electricity pricing out to 2030, with relatively steady-state implications that depend on the specified carbon tax rate. In all taxation cases, electricity prices increase over the present-day, no-tax scenario, likewise boosting the value of a zero-emissions geothermal power relative to fossil fuel-based options. The selected value range for sensitivity testing was a 0-28\% increase in wholesale price, which matches Figure \ref{fig:carbon_tax_pricing}.
 
 \subsubsection{Future Electrification}\label{ch4:electrification_uncertainty}
-NREL published a report earlier this year outlining the potential impact of heightened public trends away from non-electric sources of consumed energy, otherwise known as widespread electrification \citep{murphy_electrification_2021}. Some key findings include: (i) end-use natural gas consumption decreases, but so do natural gas prices, which can lead to an increase in natural gas-fueled power plants -- assuming no curtailments due to fossil fuel policies, (ii) deployment of renewables will intensify overall, and (iii) local resources, potentially including new renewable electricity generation facilities, will be relied on to mitigate the need for long-distance electricity transmission \citep{murphy_electrification_2021}.
+NREL published a report earlier this year outlining the impact of heightened public trends away from non-electric sources of consumed energy, otherwise known as widespread electrification \citep{murphy_electrification_2021}. Some key findings include: (i) end-use natural gas consumption decreases, but so do natural gas prices, which can lead to an increase in natural gas-fueled power plants if no curtailments are imposed by fossil fuel policies, (ii) deployment of renewables will intensify overall, and (iii) local resources, potentially including new renewable power generation facilities, will mitigate the need for long-distance electricity transmission \citep{murphy_electrification_2021}.
 
 \begin{wrapfigure}{R}{0.6\linewidth}
 \centering
@@ -359,16 +356,8 @@ Geothermal plant performance is sensitive to the temperature difference between 
 
 \citeauthor{frankson_new_2019} present a range of model scenarios for temperature changes in New Mexico related to climate change (\citeyear[Figure 1]{frankson_new_2019}). The high emissions case predicts an average of $\approx 2.7^\circ$C and a maximum of $\approx 4.2^\circ$C increase in state-wide temperatures by 2050. An adjustment of 0-4.2$^\circ$C is therefore applied to this variable for cost model sensitivity testing.
 
-\subsubsection{Drilling \& Completions}\label{ch4:drilling_uncertainty}
+\subsubsection{Drilling Costs}\label{ch4:drilling_uncertainty}
 Studies consistently show drilling-related costs are the primary contributor to overall geothermal project expenses --- up to 60-75\% of the total cost of an EGS project \citep{lukawski_uncertainty_2016}. According to annual benchmark standards published by \citet{nrel_2020_2020}, future advances in geothermal drilling technology must address several factors for cost-reduction, including but not limited to: efficiencies in penetration rate and bit life, number of casing intervals, and consumption of drilling materials. All aspects of stimulation also must show improved economics to drive down costs \citep{nrel_2020_2020}.
-
-\begin{figure}[!htp]
-\centering
-\includegraphics[width=0.8\textwidth]{templates/images/Figure-Drilling_Cost_Curves.png}
-\singlespacing
-\caption[GeoVision drilling cost curves]{Drilling cost curves in \$M USD per meters depth for a large-diameter open-hole vertical well, adapted from \citep[Figure 8]{augustine_geovision_2019}}
-\label{fig:drill_cost_curves}
-\end{figure}
 
 Multiple scenario-based drilling cost curves were derived in association with the 2017 GeoVision study as potential updates for the GETEM model (Figure \ref{fig:drill_cost_curves}) \citep{lowry_implications_2017}. The following list covers the geothermal drilling technology advancements required to justify these curves \citep{augustine_geovision_2019}:
 \begin{itemize}[itemsep=2pt]
@@ -378,17 +367,26 @@ Multiple scenario-based drilling cost curves were derived in association with th
     \item Logging while drilling (LWD) replaces wireline drilling for up to the entire well length in the ideal case.
     \item Contingency costs related to unexpected or adverse conditions drop from 15\% to 0\% across the four cases.
 \end{itemize}
-In consideration of the cost curves in Figure \ref{fig:drill_cost_curves} and the anticipated depths for the target reservoir in the Lighting Dock expansion, the selected range of drilling costs to test for model sensitivity is \$1-\$3 million.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{templates/images/Figure-Drilling_Cost_Curves.png}
+\singlespacing
+\caption[GeoVision drilling cost curves]{Drilling cost curves in \$M USD per meters depth for a large-diameter open-hole vertical well, adapted from \citep[Figure 8]{augustine_geovision_2019}}
+\label{fig:drill_cost_curves}
+\end{figure}
+
+In consideration of the cost curves in Figure \ref{fig:drill_cost_curves} and the anticipated depths for the target reservoir in the Lighting Dock expansion, the selected range of drilling costs to test for model sensitivity is \$1--\$3 million.
 
 \subsubsection{Thermal Drawdown Rate}\label{ch4:drawdown_uncertainty}
-Much like water wells or those drilled for oil \& gas extraction, geothermal wells generate a drawdown effect from production activities. The thermal drawdown rate defines how quickly the heat content (enthalpy) accessible within the reservoir fracture network declines over time. As thermal drawdown increases, the temperature of produced fluids decreases, as does the amount of electricity generated by the binary cycle process.
+Much like wells for water access or oil \& gas production, geothermal wells create drawdown effects from extended operations. The thermal drawdown rate defines how quickly the heat content (enthalpy) accessible within the reservoir fracture network declines over time. As thermal drawdown increases, the temperature of produced fluids decreases, as does the amount of electricity generated by the binary cycle process.
 
-Recent EGS studies suggest 0.5-0.6\%/year is an appropriate drawdown rate for EGS applications \citep{augustine_geovision_2019}, although more pessimistic assessments range from 1.5\%/year \citep{beckers_low-temperature_2016}, to 3.3\%/year \citep{augustine_comparison_2006} and 4\%/year \citep{tester_economic_1990}. End-cap values of 0.5\% and 4\% are used for sensitivity analysis.
+Recent EGS studies suggest 0.5--0.6\%/year is an appropriate drawdown rate for EGS \citep{augustine_geovision_2019}, although more pessimistic assessments range from 1.5\%/year \citep{beckers_low-temperature_2016}, to 3.3\%/year \citep{augustine_comparison_2006} and 4\%/year \citep{tester_economic_1990}. End-cap values of 0.5\% and 4\% are used for sensitivity analysis.
 
 \subsubsection{Geothermal Gradient}\label{ch4:gradient_uncertainty}
-As a blind geothermal system with no original surface expression, the Lightning Dock discovery only occurred after anomalously high temperature gradients (and boiling water) were found in local agricultural wells \citep{crowell_history_2014}. Table \ref{tab:ld_gradient_holes} lists bottom hole temperatures for wells drilled within a 0.5-4.0 km distance from the field-central TFD55-7 well during the 2001-2004 Geothermal Resource Evaluation and Definition (GRED) program \citep{cunniff_final_2005}. Note that the Gradient column describes a linear fit from an assumed surface temperature of 15$^\circ$C to BHT, potentially over-simplifying complex temperature relationships with depth. The gradients in the Reported column come from more reliable assessments near well total depth (TD) as documented by \citet{cunniff_final_2003}. 
+As a blind geothermal system with no original surface expression, the Lightning Dock discovery only occurred after anomalously high temperature gradients (and boiling water) were found in local agricultural wells \citep{crowell_history_2014}. Table \ref{tab:ld_gradient_holes} lists bottom hole temperatures for wells drilled within a 0.5--4.0 km distance from the field-central TFD55-7 well during the 2001--2004 Geothermal Resource Evaluation and Definition (GRED) program \citep{cunniff_final_2005}. Note that the Gradient column in the table describes a linear fit from an assumed surface temperature of 15$^\circ$C to BHT, potentially over-simplifying complex temperature relationships with depth. The gradients in the Reported column come from more reliable assessments near well total depth (TD) as documented by \citet{cunniff_final_2003}. 
 \\
-\begin{table}[!htp]
+\begin{table}%[!htp]
 \centering
 \begin{tabular}{|l|c|c|c|c|}
 \hline
@@ -405,14 +403,14 @@ As a blind geothermal system with no original surface expression, the Lightning 
 \label{tab:ld_gradient_holes}
 \end{table}
 
-Thermal models calibrated to these wells show local gradients in excess of 300 K/km near the field center, and temperature inversions occur on the flanks of the main Lightning Dock thermal anomaly \citep[see Figs.\ 23-24]{cunniff_final_2005}. Away from this fault-centered hydrothermal plume --- where an EGS expansion project would be targeted --- the thermal field settles into a more traditional monotonically-increasing depth trend. Wells TG12-7 and TG56-14, located 1 km and 4 km away from TFD55-7, respectively, have reported gradients of 80-120 K/km. This range is used for testing model sensitivity to thermal gradient variations.
+Thermal models calibrated to these wells show local gradients in excess of 300 K/km near the field center, and temperature inversions occur on the flanks of the main Lightning Dock thermal anomaly \citep[see Figs.\ 23--24,][]{cunniff_final_2005}. Away from this fault-centered hydrothermal plume --- where an EGS expansion project would be targeted --- the thermal field settles into a more traditional monotonically-increasing depth trend. Wells TG12-7 and TG56-14, located 1 km and 4 km away from TFD55-7, respectively, have reported gradients of 80--120 K/km. This range is used for testing model sensitivity to thermal gradient variations.
 
 \subsection{Sensitivity Testing}\label{ch4:sensitivity}
-Selecting which of the uncertainties discussed in Section \ref{ch4:cm_uncertainties} should be treated as probabilistic values in the cost model requires testing the sensitivity of NPV to model adjustments bounded by the uncertainty ranges. Specifically, NPV is recalculated after changing a single model variable at a time to match the extremal values outlined in the previous discussion. The full NPV calculation follows the model descriptions given in Sections \ref{ch4:cm_npv}-\ref{ch4:cm_params}, with the exception of price-related uncertainties, which are modeled by changing the price annually to mimic the most price-sensitive scenario where PPAs are market-based rather than fixed. No flexibility is assumed for this exercise, so the full power plant expansion takes place at the start of the 30-year timeline. Also, the sensitivity analysis uses the version of the static model where production flow rate is fixed at 40 kg/s (see Table \ref{tab:cm_resource_params}) and the capacity per module depends only on the temperature of the produced brine. The reasons for this choice of model structure over one where power output is strictly capped at 5 MW are discussed further in Chapter \ref{ch6:cm_results}.
+Selecting which of the uncertainties discussed in Section \ref{ch4:cm_uncertainties} should be treated as probabilistic values in the cost model requires testing the sensitivity of NPV to model adjustments bounded by parameter uncertainty ranges. Specifically, NPV is recalculated after changing a single model variable at a time to match the extremal values outlined in the previous discussion. The full NPV calculation follows the model descriptions given in Sections \ref{ch4:cm_npv}--\ref{ch4:cm_params}, with the exception of price-related uncertainties, which are modeled by changing the price annually to mimic the most price-sensitive scenario where PPAs are market-based rather than fixed. No flexibility is assumed for this exercise, so the full power plant expansion takes place at the start of the 30-year timeline. Also, the sensitivity analysis uses the version of the static model where production flow rate is fixed at 40 kg/s (see Table \ref{tab:cm_resource_params}) and the capacity per module depends only on the temperature of the produced brine. The reasons for this choice of model structure over one where power output is strictly capped at 5 MW are discussed further in Chapter \ref{ch6:cm_results}.
 
 The tornado diagram in Figure \ref{fig:tornado} provides a simple visualization of model sensitivity based on NPV calculation results for the different uncertainties, sorted in order of descending importance. Results also appear in Table \ref{tab:tornado_table}. The baseline static model predicts a NPV of $\approx \$91,000$. Results deviate from baseline most significantly for thermal drawdown rate; when no measurable drawdown takes place, NPV reaches \$18 million, but predicted losses top \$47 million if the drawdown rate is as high as 4\%. Uncertainties related to drilling costs, future electrification, and the geothermal gradient all show moderate importance for project NPV. Changes to ambient surface temperature (i.e., due to climate change) and pricing from carbon taxation both have an order of magnitude less influence on project NPV than other uncertainties. Based on this sensitivity test, variables tied to the top 4 uncertainties are treated as random variables for a probabilistic NPV model.
 
-\begin{figure}[!htp]
+\begin{figure}%[!htp]
 \centering
 \includegraphics[width=0.8\textwidth]{templates/images/Figure-Tornado.png}
 \singlespacing
@@ -420,13 +418,13 @@ The tornado diagram in Figure \ref{fig:tornado} provides a simple visualization 
 \label{fig:tornado}
 \end{figure}
 
-\begin{table}[!htp]
+\begin{table}%[!htp]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
 \textbf{} & \textbf{Low (\$M)} & \textbf{High (\$M)} & \textbf{Range (\$M)} \\ \hline
 \textbf{Thermal Drawdown Rate} & -\$47.0 & \$18.0 & \$65.0 \\ \hline
-\textbf{Drilling \& Completions} & -\$14.5 & \$9.4 & \$23.9 \\ \hline
+\textbf{Drilling Costs} & -\$14.5 & \$9.4 & \$23.9 \\ \hline
 \textbf{Future Electrification} & -\$5.5 & \$11.7 & \$17.2 \\ \hline
 \textbf{Geothermal Gradient} & -\$9.4 & \$5.4 & \$14.7 \\ \hline
 \textbf{Ambient Temperature} & -\$6.7 & -\$0.1 & \$6.6 \\ \hline
@@ -437,24 +435,24 @@ The tornado diagram in Figure \ref{fig:tornado} provides a simple visualization 
 \end{table}
 
 \subsection{Probability Density Functions}\label{ch4:pdfs}
-Having established which uncertainties impact the cost model the most, \acrlong{pdf}s (\acrshort{pdf}s) can be assigned to the related variables for use as part of a stochastic NPV assessment. Running the model multiple times in succession creates a Monte Carlo ensemble of NPV solutions, each representing the model response to a different sampling of variable PDFs. The ensemble can be evaluated using a combination of metrics for individual model analysis or comparison with alternative models. Chapter \ref{ch6:cm_results} outlines the results of the Monte Carlo approach applied to the Lightning Dock expansion cost model using the variable PDFs in figure \ref{fig:cm_probdists} and described below.
+Having established the key uncertainties, \acrlong{pdf}s (\acrshort{pdf}s) can be assigned to the related model parameters for use as part of a stochastic NPV assessment. Running the model multiple times in succession creates a Monte Carlo ensemble of NPV solutions, each representing the model response to a different sampling of the parameter PDFs. The ensemble can be evaluated using a combination of metrics for individual model analysis or comparison with alternative models. Chapter \ref{ch6:cm_results} outlines the results of the Monte Carlo approach applied to the Lightning Dock expansion cost model using the PDFs in figure \ref{fig:cm_probdists} and described below.
 
-\begin{figure}[htp]
+\begin{figure}%[htp]
 \centering
 \includegraphics[width=.85\textwidth]{templates/images/Figure-ProbDists.png}
 \singlespacing
-\caption[Cost model probability distributions]{Probability distribution functions for A. thermal drawdown rate, B. drilling \& completions costs, C. electricity pricing, and D. geothermal gradient.}
+\caption[Cost model probability distributions]{Probability distribution functions for A. thermal drawdown rate, B. drilling costs, C. electricity pricing, and D. geothermal gradient.}
 \label{fig:cm_probdists}
 \end{figure}
 
 \subsubsection{Thermal Drawdown Rate}\label{cm4:prob_tdr}
-The latest version of GETEM \citep{mines_getem_2016} and its variant in the NREL System Advisor Model \citep{blair_system_2018} apply 0.5\% as a default value for thermal drawdown rate. Higher decline rates tend to be associated with older models; 1-2\% for GEOPHIRES \citep{beckers_low-temperature_2016}, 3\% in a thesis by \citet{augustine_hydrothermal_2009}, and 4\% for work done in the 1990s by \citet{tester_economic_1990}. The probability density function for thermal drawdown was designed using a beta function such that the P$_{50}$ value aligns with 0.5\% annual drawdown rate, and 4.0\% represents the P$_{97.5}$ case (Figure \ref{fig:cm_probdists}A). Note that the beta function was slightly altered to follow a linear trend from P$_{95}$ to P$_{100}$ to ensure rare extremely high rates in the distribution function do not asymptotically approach over 10\% per year. The highest rate supported by the distribution is 5.6\%.
+The latest version of GETEM \citep{mines_getem_2016} and its variant in the NREL System Advisor Model \citep{blair_system_2018} apply 0.5\% as a default value for thermal drawdown rate. Higher decline rates tend to be associated with older references; 1-2\% for GEOPHIRES \citep{beckers_low-temperature_2016}, 3\% in a thesis by \citet{augustine_hydrothermal_2009}, and 4\% for work done in the 1990s by \citet{tester_economic_1990}. The probability density function for thermal drawdown was designed using a beta function such that the P$_{50}$ value aligns with 0.5\% annual drawdown rate, and 4.0\% represents the P$_{97.5}$ case (Figure \ref{fig:cm_probdists}A). Note that the beta function was slightly altered to follow a linear trend from P$_{95}$ to P$_{100}$ to ensure rare extremely high rates in the distribution function do not asymptotically approach over 10\% per year. The highest rate supported by the distribution is 5.6\%.
 
-\subsubsection{Drilling \& Completions Costs}\label{cm4:prob_dc}
-Drilling costs for geothermal wells remain a topic of debate due in part to the small number of direct analogs, particularly for EGS wells, and the documented differences with oil \& gas drilling operations. This discrepancy was noted in the 2006 MIT study on EGS, which promoted the use of a dedicated geothermal drilling cost index as a solution \citep{tester_future_2006}. Nevertheless, numerous and sometimes quite disparate relationships have appeared in the years since; for the 1.0-1.5 km drilling depths considered in this study, recent estimates range from a low $\approx\$500$/m \citep{lukawski_uncertainty_2016} to a very high \$2,800/m \citep{lowry_implications_2017}. In order to capture a reasonable spread while recognizing the uncertainty in even defining a distribution shape, geothermal drilling costs are modeled as a triangular distribution (Figure \ref{fig:cm_probdists}B). The midpoint value of \$1400/m comes from the predicted well depth and cost in the static model (see Section \ref{ch4:cm_capex_dc}). The extreme values of \$1000/km and \$2800/km approximate the range shown for depths of 1.0-1.5 km among the drilling cost curves from the recent GeoVision study (Figure \ref{fig:drill_cost_curves}).
+\subsubsection{Drilling Costs}\label{cm4:prob_dc}
+Drilling costs for geothermal wells remain a topic of debate due in part to the small number of direct analogs, particularly for EGS wells, and the documented differences with oil \& gas drilling operations. This discrepancy was noted in the 2006 MIT study on EGS, which promoted the use of a dedicated geothermal drilling cost index as a solution \citep{tester_future_2006}. Nevertheless, numerous and sometimes quite disparate relationships have appeared in the years since; for the 1.0-1.5 km drilling depths considered in this study, recent estimates range from a low $\approx\$500$/m \citep{lukawski_uncertainty_2016} to a very high \$2,800/m \citep{lowry_implications_2017}. In order to capture a reasonable spread while recognizing the uncertainty in even defining a distribution shape, geothermal drilling costs are modeled as a triangular distribution (Figure \ref{fig:cm_probdists}B). The midpoint value of \$1400/m comes from the predicted well depth and cost in the static model (see Section \ref{ch4:cm_capex_dc}). The extreme values of \$1000/km and \$2800/km approximate the range shown for depths of 1.0--1.5 km among the drilling cost curves from the recent GeoVision study (Figure \ref{fig:drill_cost_curves}).
 
 \subsubsection{Electricity Pricing}\label{cm4:prob_price}
-Electricity prices in the static cost model are determined by the EIA STEO price forecast for the Mountain region (Figure \ref{fig:electricity_pricing}) \citep{eia_short-term_2021}. Two variable price components are superimposed on this trend for the probabilistic model. First, a disruption to the cost curve is simulated by randomly-selecting a year between 2020-2050 and introducing a step-change in price to capture the sudden nature of energy transition events. The magnitude of the step change is determined from a uniform distribution bounded by the range of 2050 High Future Electrification prices relative to the 2020 HFE base case in the Electrification Futures Study (Figure \ref{fig:cm_probdists}C) \citep{murphy_electrification_2021}. An example of how this randomly-timed, randomly-sampled step change affects the price curve is shown in Figure \ref{fig:elec_price_prob}A. 
+Electricity prices in the static cost model are determined by the EIA STEO price forecast for the Mountain region (Figure \ref{fig:electricity_pricing}) \citep{eia_short-term_2021}. Two variable price components are superimposed on this trend for the probabilistic model. First, a disruption to the cost curve is simulated by randomly-selecting a year between 2020--2050 and introducing a step-change in price to capture the sudden nature of energy transition events. The magnitude of the step change is determined from a uniform distribution bounded by the range of 2050 High Future Electrification prices relative to the 2020 HFE base case in the Electrification Futures Study (Figure \ref{fig:cm_probdists}C) \citep{murphy_electrification_2021}. An example of how this randomly-timed, randomly-sampled step change affects the price curve is shown in Figure \ref{fig:elec_price_prob}A. 
 
 Second, volatility could also influence the spot price used for setting a power purchase agreement for a given model year. Using the 95\% confidence bounds on the price curve to derive standard deviation, each point in the forecast is replaced by a normal distribution and randomly sampled to produce different price model realizations (Figure \ref{fig:elec_price_prob}B). This curve will regenerate as a unique price projection for each Monte Carlo realization of the cost model.
 
@@ -467,25 +465,28 @@ Second, volatility could also influence the spot price used for setting a power 
 \end{figure}
 
 \subsubsection{Geothermal Gradient}\label{cm4:prob_gradient}
-Local spatial variations in geothermal gradient are difficult to characterize with only a sparse sampling of the Lightning Dock area by predominantly shallow boreholes. Subsurface models like those shown in Figures 22-24 of \citep{cunniff_final_2005} generally predict a smoothly-varying thermal field in areas without direct observational data. But the complex temperature structure associated with the Lightning Dock hydrothermal plume suggests thermal heterogeneity can exist away from the Animas Valley fault. Uncertainty in geothermal gradient is therefore represented in the cost model by a uniform probability distribution with end points determined by measured gradients from wells TG12-7 and TG56-14 (Figure \ref{fig:cm_probdists}D).
+Local spatial variations in geothermal gradient are difficult to characterize with only a sparse sampling of the Lightning Dock area by predominantly shallow boreholes. Subsurface models like those shown in Figures 22--24 of \citep{cunniff_final_2005} generally predict a smoothly-varying thermal field in areas without direct observational data. But the complex temperature structure associated with the Lightning Dock hydrothermal plume suggests thermal heterogeneity can exist away from the Animas Valley fault. Uncertainty in geothermal gradient is therefore represented in the cost model by a uniform probability distribution with end points determined by measured gradients from wells TG12-7 and TG56-14 (Figure \ref{fig:cm_probdists}D).
 
 \subsubsection{Reservoir Temperature}\label{cm4:prob_temp}
-\begin{wrapfigure}{R}{0.55\linewidth} %[htp]
+Although not included in the sensitivity testing exercise in Section \ref{ch4:sensitivity}, the original proposal for EGS production at Lightning Dock by \citet{schochet_development_2001} noted a range of likely reservoir temperatures in the Horquilla limestone formation. Geothermal power production relies first and foremost on the subsurface temperatures being ``mined'' by circulating fluids. Uncertainty in initial reservoir temperature is therefore included in the cost model, represented by a uniform probability distribution with bounds determined from the temperatures proposed by \citet{schochet_development_2001} (Figure \ref{fig:cm_temp_pdf}).
+
+\begin{figure}[H]
+%\begin{wrapfigure}{R}{0.55\linewidth} %[htp]
 \centering
 \includegraphics[scale=0.45]{templates/images/Figure-Reservoir_Temp_PDF.png}
 \singlespacing
 \caption[Reservoir temperature PDF]{Reservoir temperature probability density function. The value range is based on values originally proposed by \protect\citet{schochet_development_2001}.}
 \label{fig:cm_temp_pdf}
-\end{wrapfigure}
-Although not included in the sensitivity testing exercise in Section \ref{ch4:sensitivity}, the original proposal for EGS production at Lightning Dock by \citet{schochet_development_2001} noted a range of likely reservoir temperatures in the Horquilla limestone formation. Geothermal power production relies first and foremost on the subsurface temperatures being ``mined'' by circulating fluids. Uncertainty in initial reservoir temperature is therefore included in the cost model, represented by a uniform probability distribution with bounds determined from the temperatures proposed by \citet{schochet_development_2001} (Figure \ref{fig:cm_temp_pdf}).
-\vfill 
+%\end{wrapfigure}
+\end{figure}
+
 \section{Flexibility with Design Options}\label{ch4:flex_design_options}
 The addition of probability density functions to the cost model for Monte Carlo simulation provides a means of testing the model response to uncertainties in the system. But this probabilistic Base Case model still remains inflexible in the face of emergent conditions that would trigger actions in a real-life scenario. These actions are sometimes characterized as design options that, like financial options, can be exercised in the future if doing so might benefit system stakeholders \citep[p.\ 270-272]{de_neufville_flexibility_2011}.
 
-Design options can be implemented as decision rules defining how a model behaves based on past observations. Decision rules may act independently or be chained together to mimic complex system flexibilities that can reveal otherwise hidden financial value. The following scenarios extend the Base Case model with one or more decision rules. Chapter \ref{ch6:cm_results} examines how implementing these rules impacts predicted model ENPV, target curves, and other forecast performance measures described in Section \ref{ch6:cost_model_metrics}.
+Design options define decision rules for how a model behaves based on past observations. Decision rules may act independently or be chained together to mimic complex system flexibilities that can reveal otherwise hidden financial value. The following scenarios extend the Base Case model with one or more decision rules. Chapter \ref{ch6:cm_results} examines how implementing these rules impacts predicted model ENPV, target curves, and other forecast performance measures described in Section \ref{ch6:cost_model_metrics}.
 
 \subsection{Redevelop Only Case}\label{ch4:flex_redevelop_case}
-Sensitivity testing revealed thermal drawdown rate as the most important uncertainty governing the cost model performance (Figure \ref{fig:tornado}). Over time, cooling of the reservoir by injected fluids results in declining input temperatures to the binary cycle plant and hence lower electricity production. If the latter drops below a certain level, redrilling or restimulation of the reservoir are required to ensure generation rates remain within a reasonable (or profitable) range. The GETEM model tracks thermal decline and discounts power plant performance until the accessible reservoir temperature reaches a certain threshold defined by \citep{entingh_volume_2006}:
+Sensitivity testing revealed thermal drawdown rate as the most important uncertainty governing cost model performance (Figure \ref{fig:tornado}). Over time, cooling of the reservoir by injected fluids results in declining input temperatures to the binary cycle plant and hence lower electricity production. If the latter drops below a certain level, redrilling or restimulation of the reservoir are required to ensure generation rates remain within a reasonable (or profitable) range. The GETEM model tracks thermal decline and discounts power plant performance until the accessible reservoir temperature reaches a certain threshold defined by \citep{entingh_volume_2006}:
 \begin{equation}
 \label{eq:drawdown_threshold}
     \Delta T_{max} = (T_f-T_i)_{max} = 0.21 \cdot T_i - 12.2
@@ -525,7 +526,7 @@ To counteract the negative impact of this decline, a full field re-drill campaig
 \end{enumerate}
 
 \subsection{Redevelop \& Grow Case}\label{ch4:flex_grow_case}
-Redevelopment of the geothermal field is primarily a mitigation against loss of accessible resource as thermal drawdown impacts the flow paths between wells. Capturing upside potential is equally important. The Redevelop \& Grow case recognizes that up-swings in wholesale electricity prices may signal a comprehensive shift in long-term energy pricing due to influences like societal shifts toward electrification. To take advantage of the opportunity, this case considers a price change threshold as the trigger for installing additional geothermal power plant modules and renegotiating the PPA with the local utility company (\textit{Price trigger for flexibility}, see Table \ref{tab:cm_econ_params}). The scenario assumes a flat percentage increase in capacity (\textit{Expansion amount}, see Table \ref{tab:cm_econ_params}) and universal success in establishing new power agreements at a set mark-up percentage above wholesale (\textit{Contract rate over wholesale}, see Table \ref{tab:cm_econ_params}). The field redevelopment decision rule outlined for the Redevelop Only case remains intact, and another decision rule for design flexibility in modular growth is as follows:
+Redevelopment of the geothermal field is primarily a mitigation against loss of accessible resource as thermal drawdown impacts the flow paths between wells. Capturing upside potential is equally important. The Redevelop \& Grow case recognizes that up-swings in wholesale electricity prices may signal a comprehensive shift in long-term energy pricing due to influences like societal shifts toward electrification. To take advantage of the opportunity, this case considers a price change threshold (\textit{Price trigger for flexibility}, see Table \ref{tab:cm_econ_params}) as the trigger for installing additional geothermal power plant modules and renegotiating the PPA with the local utility company. The scenario assumes a flat percentage increase in capacity (\textit{Expansion amount}, see Table \ref{tab:cm_econ_params}) and universal success in establishing new power agreements at a set mark-up percentage above wholesale (\textit{Contract rate over wholesale}, see Table \ref{tab:cm_econ_params}). The field redevelopment decision rule outlined for the Redevelop Only case remains intact, and another decision rule for design flexibility in modular growth is as follows:
 \\
 \\
 \textbf{Capacity Growth Decision Rule}\label{ch4:dr_grow}
@@ -563,8 +564,8 @@ This chapter covered the methodology for using cost models to mitigate the risk 
 The modeling strategy follows a step-wise increase in model complexity:
 \begin{enumerate}
     \item Start with a static model that calculates NPV based on estimates for Revenue, CAPEX, and OPEX. The model includes thermal drawdown of the reservoir, power plant degradation, a learning rate for drilling costs, and a discount rate for the time value of money. All parameters are pre-defined.
-    \item Replace the static model with a probabilistic one by assigning probability density functions to key model parameters. Sensitivity testing high-grades which variables to treat as uncertain in the model. Results are obtained through Monte Carlo sampling to build a solution ensemble, evaluated by multiple measures like ENPV, target curves, and NPV percentiles. The key variables defined with probability distributions in this analysis include: thermal drawdown rate, drilling \& completions costs, electricity pricing, geothermal gradient, and reservoir temperature.
+    \item Replace the static model with a probabilistic one by assigning probability density functions to key model parameters. Sensitivity testing high-grades which parameters to treat as uncertain in the model. Results are obtained through Monte Carlo sampling to build a solution ensemble, evaluated by multiple measures like ENPV, NPV percentiles, and target curves. Variables defined with PDFs in this analysis include: thermal drawdown rate, drilling costs, electricity pricing, geothermal gradient, and reservoir temperature.
     \item Incorporate flexibility with design options as decision rules in the probabilistic model. The decision rules being evaluated in this analysis include: field redevelopment due to thermal drawdown, growth in capacity when prices surge, and capacity reductions when prices decline.
 \end{enumerate}
 
-Results from the application of these methods are explored in Chapter \ref{ch6:cm_results}. 
+Results from applying these methods in the context of a risk-mitigation strategy for geothermal production are explored in Chapter \ref{ch6:cm_results}. 

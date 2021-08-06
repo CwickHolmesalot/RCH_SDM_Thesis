@@ -19,7 +19,10 @@ Chapter \ref{ch3:expl_ml_prep} outlined the machine learning and uncertainty ana
 \label{tab:logreg_tuning}
 \end{wraptable}
 
-\begin{figure}[!htp]
+
+The logistic regression (LR) model used in this analysis \citep{pedregosa_scikit-learn_2011} includes a single tunable hyperparameter, \verb|C|. Rather than rely on the pre-split training and validation subsets defined in Section \ref{ch3:strat_sample} to tune this hyperparameter, the subsets were re-combined and stratified-sampled as part of a 10-fold CV process. ROC AUC OvR was used as the scoring metric. Results vary for the different input data sets; CV results for WDS show a clear maximum AUC marking the optimal value for \verb|C|, whereas CV for WDS4 and WDS8 demonstrate a leveling-off trend and the optimal value must be selected near the elbow (Figure \ref{fig:logreg_hp_tuning}). The chosen \verb|C| values for WDS, WDS4, and WDS8 are listed in Table \ref{tab:logreg_tuning}.
+
+\begin{figure}%[!htp]
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-LR_C_tuning.png}
 \singlespacing
@@ -27,11 +30,9 @@ Chapter \ref{ch3:expl_ml_prep} outlined the machine learning and uncertainty ana
 \label{fig:logreg_hp_tuning}
 \end{figure}
 
-The logistic regression (LR) model used in this analysis \citep{pedregosa_scikit-learn_2011} includes a single tunable hyperparameter, \verb|C|. Rather than rely on the pre-split training and validation subsets defined in Section \ref{ch3:strat_sample} to tune this hyperparameter, the subsets were re-combined and stratified-sampled as part of a 10-fold CV process. ROC AUC OvR was used as the scoring metric. Results vary for the different input data sets; CV results for WDS show a clear maximum AUC marking the optimal value for \verb|C|, whereas CV for WDS4 and WDS8 demonstrate a leveling-off trend and the optimal value must be selected near the elbow (Figure \ref{fig:logreg_hp_tuning}). The chosen \verb|C| values for WDS, WDS4, and WDS8 are listed in Table \ref{tab:logreg_tuning}.
-
 Out-of-sample AUC values calculated on the testing subset indicate WDS4 has the best performance of the three data sets. Figure \ref{fig:logreg_coefs} shows a plot of the feature coefficients for each of the class-specific OvR classifiers in the WDS4 model. Longer bars indicate larger influence on the model prediction. The top 5 features across the four classifiers are Si Geothermometer Temperature, Basement Depth, Drainage Density, Spring Density, and Volcanic Dike Density.
 
-\begin{figure}%[!htp]
+\begin{figure}
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-LR-coefficients.png}
 \singlespacing
@@ -42,7 +43,7 @@ Out-of-sample AUC values calculated on the testing subset indicate WDS4 has the 
 \subsection{Feature Selection} \label{ch5:lr_feature_selection}
 Figure \ref{fig:logreg_rfe} presents the results of Recursive Feature Selection (RFE, see Section \ref{ch3:lr_rfe}) applied to the LR model for WDS4. Based on the plot, a local peak in AUC occurs when 18 features are used. Adding the remaining features results in small gains in AUC, but with diminishing returns for six additional features of complexity. Using this threshold, the data layers removed from the model include: DEM Gradient, Gravity Gradient, Magnetic Anomaly, Magnetic Anomaly Gradient, Water Table Depth, and Average Precipitation. Note that Average Precipitation appears higher on the coefficients plot (Figure \ref{fig:logreg_coefs}) than other features that were not removed. Since RFE iteratively removes predictors and refits the model, relative coefficients can change, particularly if there was collinearity with a removed variable.
 
-\begin{figure}[!htp]
+\begin{figure}
 \centering
 \includegraphics[width=0.70\textwidth]{templates/images/Figure-LR_feature_selection.png}
 \singlespacing
@@ -51,18 +52,17 @@ Figure \ref{fig:logreg_rfe} presents the results of Recursive Feature Selection 
 \end{figure}
 
 \subsection{Optimized Model Results}\label{ch5:lr_final_results}
-%\begin{wrapfigure}{R}{0.50\linewidth}
-\begin{figure}%{R}{0.50\linewidth}
+
+\begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{templates/images/Figure-LR-ConfusionMatrix.png}
 \singlespacing
 \caption[Logistic regression confusion matrix]{Confusion matrix for the tuned LR model trained on WDS4.}
 \label{fig:logreg_conf_matrix}
-%\end{wrapfigure}
 \end{figure}
-A final LR model trained on WDS4 was constructed using the tuned C hyperparameter and reduced feature set from RFE. The confusion matrix suggests shows moderately good model performance (Figure \ref{fig:logreg_conf_matrix}). Correct predictions for each of the four classes of geothermal gradient (TP) outnumber the misclassifications for those classes (FP). The model appears to struggle most with differentiating between class 2 and class 3 locations, which separate mid-grade (40-60 K/km) from high-grade gradients (>60 K/km), although there are a large number of misclassifications (26) of low-grade gradient as high-grade as well.
+A final LR model trained on WDS4 was constructed using the tuned \verb|C| hyperparameter and reduced feature set from RFE. The confusion matrix shows moderately good model performance (Figure \ref{fig:logreg_conf_matrix}). Correct predictions for each of the four classes of geothermal gradient (TP) outnumber the misclassifications for those classes (FP). The model appears to struggle most with differentiating between class 2 and class 3 locations, which separate mid-grade (40--60 K/km) from high-grade gradients (>60 K/km), although there are a large number of misclassifications (26) of low-grade gradient as high-grade as well.
 
-Figure \ref{fig:logreg_auc} plots the macro average, micro average, and individual class ROC curves. Class 0 (non-thermal) predictive ability is quite high, pulling the micro-average AUC up to 0.88.  The macro AUC value of 0.85 is more aligned with the performance for other classes, which range from an AUC of 0.79-0.83. The trade-off between Class 2 and Class 3 is apparent in how the curve shapes mirror each other.
+Figure \ref{fig:logreg_auc} plots the macro average, micro average, and individual class ROC curves. Class 0 (non-thermal) predictive ability is quite high, pulling the micro-average AUC up to 0.88.  The macro AUC value of 0.85 is more aligned with the performance for other classes, which range from an AUC of 0.79--0.83. The trade-off between Class 2 and Class 3 is apparent in how the curve shapes mirror each other.
 
 \begin{figure}[!htp]
 \centering
@@ -72,7 +72,7 @@ Figure \ref{fig:logreg_auc} plots the macro average, micro average, and individu
 \label{fig:logreg_auc}
 \end{figure}
 
-Model predictions for the study area are generated by passing the FDS through the final trained model. Class predictions are plotted in Figure \ref{fig:logreg_final_map}. High-grade geothermal gradient patches are concentrated to the southeast and through the center of the AOI. Smaller high-grade regions are observed along the southwest state boundary, following the Rio Grande River to the northeast, and a smaller patch directly to the north.  Comparing this result to the Southwestern NM PFA geothermal gradient data layer from \citet{bielicki_hydrogeolgic_2015}, high-grade predictions match in general spatial location except for the predicted patches to the north. The LR model tends to predict more widespread and spatially-continuous high-grade regions, while under-predicting lower gradient regions to the north, east, and mid-AOI near the Rio Grande River compared to the PFA layer.
+Model predictions for the study area are generated by passing the FDS through the final trained model. Class predictions are plotted in Figure \ref{fig:logreg_final_map}. High-grade geothermal gradient patches are concentrated to the southeast and through the center of the AOI. Smaller high-grade regions are observed along the southwest state boundary, following the Rio Grande River to the northeast, and a smaller patch directly to the north.  Comparing this result to the Southwestern NM PFA geothermal gradient data layer from \citet{bielicki_hydrogeolgic_2015}, high-grade predictions match in general spatial location except for the predicted patches to the north. The LR model tends to predict more widespread and spatially-continuous high-grade regions, while under-predicting lower gradient regions to the north (Colorado Plateau), east (Great Plains), and mid-AOI near the Rio Grande River compared to the PFA layer.
 
 \begin{figure}[!htp]
 \centering
@@ -83,9 +83,9 @@ Model predictions for the study area are generated by passing the FDS through th
 
 \section{Decision Trees}\label{ch5:dtree_model}
 \subsection{Hyperparameter Tuning}\label{ch5:dtree_tuning}
-Stepping up in complexity, the scikit-learn version of the decision tree (DT) classifier has over ten adjustable hyperparameters for tuning performance \citep{pedregosa_scikit-learn_2011}. Here, six hyperparameters are tuned using the stratified k-Fold CV method described in Section \ref{ch3:strat_kfold_cv}, with 10 folds and the multi-class OvR ROC AUC as the scoring metric. The tuning process relied on defaults for the scikit-learn \textit{DecisionTreeClassifier} as initial values until a specific hyperparameter was tuned. Figures below illustrate the tuning results for the WDS4 data set.
+Stepping up in complexity, the scikit-learn version of the decision tree (DT) classifier has over ten adjustable hyperparameters for tuning performance \citep{pedregosa_scikit-learn_2011}. Here, six hyperparameters are tuned using the stratified k-Fold CV method described in Section \ref{ch3:strat_kfold_cv}, with 10 folds and the multi-class OvR ROC AUC as the scoring metric. The tuning process relied on defaults for the scikit-learn \textit{DecisionTreeClassifier} to define initial values until a specific hyperparameter was tuned. Figures below illustrate the tuning results for the WDS4 data set.
 
-First, \verb|max_depth| and \verb|criterion| were tuned together. \verb|max_depth| limits tree expansion by capping the number of parameter evaluations (tree nodes) considered before a classification label assignment. \verb|criterion| refers to the quality metric used for tree construction, i.e. Gini index or Entropy. The similarity of AUC curves in Figure \ref{fig:dtree_maxdepth} illustrates the relative insensitivity the classifier has to \verb|criterion|, while \verb|max_depth| plays a stronger role in performance. A maximum AUC score is observed with a \verb|max_depth| of 8 and \verb|criterion| choice of Entropy.
+First, \verb|max_depth| and \verb|criterion| were tuned together. \verb|max_depth| limits tree expansion by capping the number of parameter evaluations (tree nodes) considered before a classification label assignment. \verb|criterion| refers to the quality metric used for tree construction, i.e. Gini index or Entropy. The similarity of AUC curves in Figure \ref{fig:dtree_maxdepth} illustrates a relative insensitivity to \verb|criterion|, while \verb|max_depth| plays a stronger role in classifier performance. A maximum AUC score is observed with a \verb|max_depth| of 8 and \verb|criterion| choice of Entropy.
 
 \begin{figure}[!htp]
 \centering
@@ -112,7 +112,7 @@ One optimization trick when training DT models is to only consider a subset of t
 \label{fig:dtree_max_features}
 \end{figure}
 
-The final hyperparameter, \verb|ccp_alpha|, controls the trade-off between model fit and complexity during the tree-pruning backward pass of tree construction. As the alpha value increases from zero, the difference between in-sample (training) and out-of-sample (validation) performance decreases, but so does the overall performance of the classifier on the validation subset. Figure \ref{fig:dtree_alpha} shows a clear minima in train-validate AUC difference, however the validation set performance drops from 0.95 to under 0.85 when using this value for \verb|ccp_alpha|. The default value of \verb|ccp_alpha| = 0.0 is chosen instead to maximize out-of-sample AUC.
+The final hyperparameter, \verb|ccp_alpha|, controls the trade-off between model fit and complexity during the tree-pruning backward pass of tree construction. As the alpha value increases from zero, the difference between in-sample (training) and out-of-sample (validation) performance decreases, but so does the overall performance of the classifier on the validation subset. Figure \ref{fig:dtree_alpha} shows a clear minimum in train-validate AUC difference, however the validation set performance drops from 0.95 to under 0.85 when using this value for \verb|ccp_alpha|. The default value of \verb|ccp_alpha| = 0.0 is chosen instead to maximize out-of-sample AUC.
 
 \begin{figure}[!htp]
 \centering
@@ -154,7 +154,8 @@ Figure \ref{fig:dtree_feat_import} shows the feature importances determined by m
 \end{figure}
 
 \subsection{Optimized Model Results}\label{dtree_final_results}
-\begin{figure}[!htp]
+
+\begin{figure}%[!htp]
 \centering
 \includegraphics[width=0.5\textwidth]{templates/images/Figure-DT-ConfusionMatrix.png}
 \singlespacing
@@ -162,11 +163,11 @@ Figure \ref{fig:dtree_feat_import} shows the feature importances determined by m
 \label{fig:dtree_conf_matrix}
 \end{figure}
 
-A final DT model trained on WDS4 was constructed using the tuned hyperparameters and 18-predictor reduced feature set. The confusion matrix (Figure \ref{fig:dtree_conf_matrix}) demonstrates an improvement in model results over the logistic regression method. Low-grade gradient locations are correctly predicted for almost double the number of sites, and half as many misclassifications are observed between class 2 (mid-grade) and class 3 (high-grade) geothermal gradient as with the LR model.
+A final DT model trained on WDS4 was constructed using the tuned hyperparameters and 18-predictor reduced feature set. The confusion matrix (Figure \ref{fig:dtree_conf_matrix}) demonstrates an improvement in model results over the logistic regression method. Low-grade gradient locations are correctly predicted for almost double the number of sites, and half as many misclassifications are observed between class 2 (mid-grade) and class 3 (high-grade) geothermal gradient than with the LR model.
 
 Figure \ref{fig:dtree_auc} shows the macro average, micro average, and individual class DT ROC curves. All individual class AUC values exceed 0.90. Class 0 (non-thermal) continues to demonstrate the highest predictive performance (AUC=0.97), but class 3 (high-grade) predictive ability boosts micro-average AUC at higher decision thresholds, i.e., where the class 0 ROC curve steeply drops in TPR for FPR < 0.1. Class 2 (medium-grade) classification performance lags behind all other classes for the DT classifier.
 
-\begin{figure}[!htp]
+\begin{figure}%[!htp]
 \centering
 \includegraphics[width=0.6\textwidth]{templates/images/Figure-DT_AUC.png}
 \caption[Decision tree ROC curves]{ROC curves for the tuned DT model trained on WDS4.}
@@ -175,7 +176,7 @@ Figure \ref{fig:dtree_auc} shows the macro average, micro average, and individua
 
 Model predictions for the study area are generated by passing the FDS through the DT model. Class assignments are plotted in Figure \ref{fig:dtree_final_map}. The high-grade geothermal gradient patches to the southeast and central regions of the AOI are not as broad and continuous as in the LR model (Figure \ref{fig:logreg_final_map}). Predictions for low-grade gradient or non-thermal areas are concentrated to the NW (Colorado Plateau) and central-east (Rio Grade Rift-Great Plains transition). The overall distribution of geothermal gradient classes is similar to the \citet{bielicki_hydrogeolgic_2015} PFA layer (Figure \ref{fig:dtree_final_map}) but with a greater apportionment of high-grade gradient areas and fewer low-grade or non-thermal locations in the DT model.
 
-\begin{figure}[!htp]
+\begin{figure}%[!htp]
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-DT-FinalMap_Joint.png}
 \caption[Decision tree prediction map]{Left: Map predictions of geothermal gradient class from the tuned DT model trained on WDS4. Right: geothermal gradient feature layer from Southwestern NM PFA study \protect\citep{bielicki_hydrogeolgic_2015}}
@@ -209,7 +210,7 @@ The following hyperparameters were tuned for the final model:
     \item \textbf{Scale positive weight}: scales the gradient for the positive class to influence model corrections during training, useful for imbalanced classification. Initially set to 1.0.
 \end{itemize}
 
-The preferred method of tuning for XGBoost is the cross-validation strategy described in Section \ref{ch3:strat_kfold_cv}. Since this method uses the input data to both train and validate, the pre-generated training and validation subsets (Table \ref{tab:stratified_split_counts}) were re-combined before using CV. An initial trial-and-error testing of different hyperparameter combinations found the best starting values for \verb|learning_rate| and \verb|n_estimators| were 0.01 and 200, respectively. Higher learning rates like those suggested by \citet{jain_xgboost_2016} led to a nearly perfect-fitting model before hyperparameters could be tuned, and more estimators created undesirably long training times. In the figures and discussion that follow, results are described for WDS4. Full results for all three data sets are provided in Table \ref{tab:xgb_tuning}.
+The preferred tuning method for XGBoost is the cross-validation strategy described in Section \ref{ch3:strat_kfold_cv}. Since this method uses the input data to both train and validate, the pre-generated training and validation subsets (Table \ref{tab:stratified_split_counts}) were re-combined before using CV. An initial trial-and-error testing of different hyperparameter combinations found the best starting values for \verb|learning_rate| and \verb|n_estimators| were 0.01 and 200, respectively. Higher learning rates like those suggested by \citet{jain_xgboost_2016} led to a nearly perfect-fitting model before hyperparameters could be tuned, and more estimators created undesirably long training times. In the figures and discussion that follow, results are described for WDS4. Full results for all three data sets are provided in Table \ref{tab:xgb_tuning}.
 
 \begin{figure}[!htp]
 \centering
@@ -222,7 +223,7 @@ XGBoost hyperparameters were tuned in succession using 10-fold stratified CV and
 
 Next, tuning was performed on the \verb|min_child_weight| hyperparameter. Results of the 10-fold stratified CV method revealed a clear maximum AUC when \verb|min_child_weight| is 2 (Figure \ref{fig:xgb_hyperparam}B).
 
-XGBoost uses a default value of 0 for the \verb|gamma| hyperparameter, which controls when tree partitioning should stop based on loss reduction. Cross-validation shows nearly level AUC values out to \verb|gamma| = $3.8 \text{x} 10^-3$, after which the AUC score quickly drops. This threshold value was selected for the model (Figure \ref{fig:xgb_hyperparam}C).
+XGBoost uses a default value of 0 for the \verb|gamma| hyperparameter, which controls when tree partitioning should stop based on loss reduction. Cross-validation shows nearly level AUC values out to \verb|gamma| = $3.8\times10^{-3}$, after which the AUC score quickly drops. This threshold value was selected for the model (Figure \ref{fig:xgb_hyperparam}C).
 
 Trees in the XGBoost model can be trained on random subsets of training data observations and individual feature columns. Tuning of \verb|subsample| identified a broad maximum in AUC when using 60-80\% of the training observations to build decision trees (Figure \ref{fig:xgb_hyperparam}D). The selected \verb|subsample| value is 70\%. For \verb|colsample_bytree|, the best AUC results occur when 60\% of the features are included in the training (Figure \ref{fig:xgb_hyperparam}E). A value below 100\% for \verb|colsample_bytree| suggests removing features based on estimates of feature importance could be beneficial, as previously discussed for both logistic regression (Section \ref{ch5:lr_feature_selection}) and decision trees (Section \ref{ch5:dtree_feat_selection}). A more robust method for feature attribution and selection using Shapley values is considered in Section \ref{ch5:xgb_feature_selection}.
 
@@ -233,7 +234,7 @@ Tuning results show model AUC remains flat, then quickly drops for increasing va
 As a final step in model tuning, \verb|learning_rate| was decreased to 0.005 and \verb|n_estimators| increased to 1000.  Using the slower learning rate reduces the chance of overfitting the training data, while the increased number of sequential trees in the model ensures a good fit can be learned. 
 Final hyperparameter values and performance results for WDS, WDS4, and WDS8 are listed in Table \ref{tab:xgb_tuning}. Once again, WDS4 and WDS8 out-perform the original WDS based on AUC values for the test set.
 
-\begin{table}[!htp]
+\begin{table}%[!htp]
     \centering
     \begin{tabular}{l|c|c|c|}
     \cline{2-4}
@@ -257,7 +258,7 @@ Final hyperparameter values and performance results for WDS, WDS4, and WDS8 are 
 \end{table}
 
 \subsection{Feature Selection}\label{ch5:xgb_feature_selection}
-\begin{figure}[htp]
+\begin{figure}%[htp]
 \centering
 \includegraphics[width=\textwidth]{templates/images/Figure-Shapley.png}
 \caption[XGBoost SHAP values]{SHAP values for the XGBoost classifier derived using the testing data subset of WBS4. Step-like tiers in cumulative variable importances separate out the top five predictors, the middle eleven, and four features with low predictive value.}
@@ -422,7 +423,7 @@ Figure \ref{fig:avg_final_map}A illustrates an ensemble average map, where each 
 
 Shannon entropy is calculated on this same averaged model using the underlying class probabilities. The result is shown in Figure \ref{fig:structural_entropy_map}. Normalized entropy values vary from 0 to 1, with high entropy defining locations where there is no clear differentiation between gradient class label probabilities. Regions colored red thus identify locations that are difficult for any model to classify based on inconclusive feature inputs, or alternatively, locations where the predicted class probabilities from the different models varied enough that, upon averaging, they converged to similar values and could not be disentangled.
 
-Figure \ref{fig:avg_gradient_masked_map} illustrates an alternative way of presenting these results. Regions of high entropy (over 0.7) are masked in dark gray because of the uncertainty in their classifications. All other points have a color transparency that scales with entropy. Low uncertainties/entropy values are scarce, focused primarily in the southwest and in small patches to the central west and central east areas. High uncertainties trace the boundaries between areas of consistent gradient classifications to the north and southeast. For example, in the Colorado Plateau province to the north, they form a ring around a non-thermal region (class 0). This highlights model inconsistencies on exactly where the class 0-class 1 boundary should appear based on trends in the input feature data.
+Figure \ref{fig:avg_gradient_masked_map} illustrates an alternative way of presenting these results. Regions of high entropy (over 0.7) are masked in dark gray because of the uncertainty in their classifications. All other points have a color transparency that scales with entropy. Low uncertainty/entropy areas are uncommon, focused primarily in the southwest and in small patches to the central west and central east areas. High uncertainties trace the boundaries between areas of consistent gradient classifications to the north and southeast. For example, in the Colorado Plateau province to the north, they form a ring around a non-thermal region (class 0). This highlights model inconsistencies on exactly where the class 0-class 1 boundary should appear based on trends in the input feature data.
 
 \begin{figure}%[!htp]
 \centering
@@ -439,7 +440,7 @@ Figure \ref{fig:avg_gradient_masked_map} illustrates an alternative way of prese
 \end{figure}
 
 \subsection{Parameter Uncertainty}\label{ch5:param_uncertainty}
-The TensorFlow Probability package was used to transform the ANN from Section \ref{ch5:ann_model} into a Bayesian Neural Network (BNN) for uncertainty estimation \citep{dillon_tensorflow_2017}. Given the sparsity of training data available and the multiplier effect that probabilistic layers have on the number of trainable parameters in a BNN, only the second hidden layer was converted to a TensorFlow \textit{DenseVariational} layer (Figures \ref{fig:bnn_text_structure} and \ref{fig:bnn_dot_structure}). Standard normal ($N(0,1)$) distributions were used as priors for the layer nodes. All of the same hyperparameter values used for the different data set-specific ANNs (Table \ref{tab:bnn_metrics}) were also applied to the BNNs with one exception: the number of epochs was increased by a factor of 3-4. Figure \ref{fig:bnn_loss} shows the training loss and AUC curves for WDS4, which justify this larger number of epochs for training. Table \ref{tab:bnn_metrics} notes the accuracy and AUC scores for the BNNs calculated from a single predictive run on the respective test data subsets.
+The TensorFlow Probability package was used to transform the ANN from Section \ref{ch5:ann_model} into a Bayesian Neural Network (BNN) for uncertainty estimation \citep{dillon_tensorflow_2017}. Given the sparsity of training data available and the multiplier effect that probabilistic layers have on the number of trainable parameters in a BNN, only the second hidden layer was converted to a TensorFlow \textit{DenseVariational} layer (Figures \ref{fig:bnn_text_structure} and \ref{fig:bnn_dot_structure}). Standard normal ($N(0,1)$) distributions were used as priors for the layer nodes. The same hyperparameter values used for ANN construction (Table \ref{tab:bnn_metrics}) were also applied to the BNN with one exception: the number of epochs was increased by a factor of 3-4. Figure \ref{fig:bnn_loss} shows the training loss and AUC curves for WDS4, which justify this larger number of epochs for training. Table \ref{tab:bnn_metrics} notes the accuracy and AUC scores for the BNNs calculated from a single predictive run on the respective test data subsets.
 
 \begin{figure}[!htp]
 \centering
@@ -577,7 +578,7 @@ In the Southwestern NM PFA project, \citet{bielicki_hydrogeolgic_2015} focused o
 \label{fig:pfa_prospects}
 \end{figure}
 
-The PFA study also honed in on specific locations in the study area due to perceived geothermal favorability. Figure \ref{fig:pfa_prospects} highlights four regions of interest in the context of the SW NM physiographic provinces and areas noted for high geothermal gradients (>60 K/km) in the \citeauthor{bielicki_hydrogeolgic_2015} gradient feature map. To the southwest in the BR province lies Lightning Dock, the focus of the cost model case study in Chapters \ref{ch4:cm_prep} and \ref{ch6:cm_results} and a USGS-designated hydrothermal KGRA since 1974. To the south in the RGR province, the Rincon geothermal region is marked by high boron concentrations, high heat flow, and shallow geothermal gradients exceeding 300 K/km \citep{witcher_deep_2002}. North of Rincon is Truth or Consequences, an area locally known for low-temperature hot springs, high permeability, and elevated concentrations of both boron and lithium \citep{pepin_deep_2015}. Finally, a region near the Gila River within the MDVF province was flagged by \citet{bielicki_hydrogeolgic_2015} as prospective based on known hot springs, high heat flow, and positive well geochemistry.
+The PFA study also honed in on specific locations in the study area due to perceived geothermal favorability. Figure \ref{fig:pfa_prospects} highlights four regions of interest combined with the SW NM physiographic province outlines and areas noted for high geothermal gradients (>60 K/km) in the \citeauthor{bielicki_hydrogeolgic_2015} gradient feature map. To the southwest in the BR province lies Lightning Dock, the focus of the cost model case study in Chapters \ref{ch4:cm_prep} and \ref{ch6:cm_results} and a USGS-designated hydrothermal KGRA since 1974. To the south in the RGR province, the Rincon geothermal region is marked by high boron concentrations, high heat flow, and shallow geothermal gradients exceeding 300 K/km \citep{witcher_deep_2002}. North of Rincon is Truth or Consequences, an area locally known for low-temperature hot springs, high permeability, and elevated concentrations of both boron and lithium \citep{pepin_deep_2015}. Finally, a region near the Gila River within the MDVF province was flagged by \citet{bielicki_hydrogeolgic_2015} as prospective based on known hot springs, high heat flow, and positive well geochemistry.
 
 In Figure \ref{fig:ml_models_prospects}, the same prospect polygons are superimposed on the geothermal gradient solutions for the four supervised machine learning models. All models identify high-grade geothermal gradients in the Lightning Dock (LD) and Rincon (RC) areas. Interestingly, the decision tree model predicts a relatively lower gradient at the Radium Springs KGA (marker in RC polygon, Figure \ref{fig:ml_models_prospects}B) where high gradient values have been  directly measured. This serves as a good example of where individual models can deviate from a multi-model consensus. All models predict high gradients in the NW part of the Truth or Consequences (TC) polygon, but not at the marked TC spring (Figure \ref{fig:ml_models_prospects}). Gila (GL) also has mixed signals; the decision tree (Figure \ref{fig:ml_models_prospects}B) and neural network (Figure \ref{fig:ml_models_prospects}D) models suggest isolated patches of high gradient potential, but logistic regression (Figure \ref{fig:ml_models_prospects}A) and XGBoost (Figure \ref{fig:ml_models_prospects}C) make Gila look fairly unremarkable.
 
@@ -589,7 +590,7 @@ In Figure \ref{fig:ml_models_prospects}, the same prospect polygons are superimp
 \label{fig:ml_models_prospects}
 \end{figure}
 
-The uncertainty analysis from Section \ref{ch5:uncertainty_analysis} reveals more about how to manage the four areas as exploration prospects. Figure \ref{fig:structural_uncertainty_prospects} quickly confirms some of the observations just outlined. There is low to moderate-low structural uncertainty (i.e., model agreement) for mid-grade gradients in GL and TC and high-grade gradients at LD. High structural uncertainties appear in the TC and RC polygons. For TC, models disagree on the exact boundary location between mid- and high-gradients. RC uncertainty is more pervasive, so additional modeling or model rationalization would be advised before executing any expensive field operations (e.g., geothermal well drilling) in that area.
+The uncertainty analysis from Section \ref{ch5:uncertainty_analysis} reveals more on how to manage the four areas as exploration prospects. Figure \ref{fig:structural_uncertainty_prospects} quickly confirms some of the observations just outlined. There is low to moderate-low structural uncertainty (i.e., model agreement) for mid-grade gradients in GL and high-grade gradients at LD. High structural uncertainties appear in the TC and RC polygons. For TC, models disagree on the exact boundary between mid- and high-gradient zones. RC uncertainty is more pervasive, so additional modeling or model rationalization would be advised before executing expensive field operations (e.g., drilling) in that area.
 
 \begin{figure}
 \centering
@@ -628,13 +629,13 @@ In summary, the uncertainty analysis shows:
 Treating this analysis as part of a hypothetical exploration program, the overall heat element favorability and low uncertainty would make LD a good prospect to progress to the well-planning stage. High uncertainty at RC would need to be addressed through additional pre-screening efforts before committing the resources and capital to drilling there.
 
 \subsection{Southwestern New Mexico PCA}\label{ch5:case_nm_pca}
-In a more recent study, \citet{pepin_new_2019} applied unsupervised PCA with k-means clustering to assess the geothermal potential of the Southwestern NM study area. \citeauthor{pepin_new_2019} noted the physiographic provinces in NM exert strong controls on the presence and type of USGS-identified KGRAs observed across the state. The cluster analysis identified two high-potential zones with different characteristics. The first defines a predominantly high-temperature hydrothermal zone stretching east-west from LD to the eastern AOI boundary and up along the Rio Grande to just above RC \citep[Figure 3.5A]{pepin_new_2019}. A second high-potential region surrounds the narrow zone where CP, MDVF, and RGR provinces all converge \citep[Figure 3.5C]{pepin_new_2019}, although this second group largely comprises systems with low-temperature hot springs. 
+In a more recent study, \citet{pepin_new_2019} applied unsupervised PCA with k-means clustering to assess the geothermal potential of the Southwestern NM study area. \citeauthor{pepin_new_2019} noted the physiographic provinces in NM exert strong controls on the presence and type of USGS-identified KGRAs observed across the state. The cluster analysis identified two high-potential zones with different characteristics. The first defines a predominantly high-temperature hydrothermal zone stretching east-west from LD to the eastern AOI boundary and up along the Rio Grande to just above RC \citep[Figure 3.5A,][]{pepin_new_2019}. A second high-potential region surrounds the narrow zone where CP, MDVF, RGR, and GP provinces all converge \citep[Figure 3.5C,][]{pepin_new_2019}, although this second group largely comprises systems with low-temperature hot springs. 
 
 The supervised learning results presented in Figures \ref{fig:ml_models_prospects} and \ref{fig:structural_uncertainty_prospects} clearly display a correlation between high-grade geothermal gradient and physiographic province, but the relationship differs from that described by \citet{pepin_new_2019}. Models consistently predict high-grade gradients in the southern RGR and eastern MDVF provinces, with an additional ``hot spot'' where the RGR narrows to the north. This pattern repeats for all four machine learning models, and is present, albeit less obvious, in the geothermal gradient feature map from \citet{bielicki_hydrogeolgic_2015} (see Figure \ref{fig:pfa_prospects}). \citet{pepin_new_2019} places the MDVF province in a low-potential cluster, driven in part to risk elements not considered here like structure/permeability. Nevertheless, the PCA model shows relatively strong overlap between clusters \citep[Figure 3.4,][]{pepin_new_2019}, suggesting additional data engineering or alternative dimensionality-reduction methods could be of value before fully-discounting the prospectivity of the MDVF province.
 
-Cluster analysis shows great promise, particularly in identifying how feature importances change across a study area. \citet{pepin_new_2019}, \citet{vesselinov_discovering_2020}, and \citet{smith_characterizing_2021} all illustrate this point with significantly different dominant predictors for clusters correlated to individual physiographic provinces. Similar variance in feature importances was observed in the Shapley analysis by class (Figure \ref{fig:xgb_shap_global}); e.g., Si Geothermometer Temperatures top the importance list for class 0 and 1, but come in 2nd to Volcanic Dikes for class 3, and 4th from last in importance for class 2.
+Cluster analysis shows great promise, particularly in identifying how the influence of different features changes across a study area. \citet{pepin_new_2019}, \citet{smith_characterizing_2021}, and \citet{vesselinov_discovering_2020} all illustrate this point with significantly different dominant predictors for clusters correlated to individual physiographic provinces. Similar variance in feature importances was observed in the Shapley analysis by class (Figure \ref{fig:xgb_shap_global}); e.g., Si Geothermometer Temperatures top the importance list for class 0 and 1, but come in 2nd to Volcanic Dikes for class 3, and 4th from last in importance for class 2.
 
-Perhaps more interesting is the relationship between high-grade geothermal gradients and complex physiographic province \textit{interfaces} as seen in Figure \ref{fig:ml_models_prospects}. Specifically, the two boundary zones between 3 or 4 provinces within the AOI both have consistent high-grade geothermal gradient classifications. These zones also correspond with the two prospective clusters in the PCA analysis \citep{pepin_new_2019}. Whether greater geothermal potential at complex province junctions is unique to this study area or more broadly applicable requires further research.
+Perhaps more interesting is the relationship between high-grade geothermal gradients and complex physiographic province \textit{junctions} (i.e., system interfaces) as seen in Figure \ref{fig:ml_models_prospects}. Specifically, the two boundary zones between 3 or 4 provinces within the AOI both have consistent high-grade geothermal gradient classifications. These zones also correspond with the two prospective clusters in the PCA analysis \citep{pepin_new_2019}. Whether greater geothermal potential at complex province junctions is unique to this study area or more broadly applicable requires further research.
 
 \section{Recap}\label{ch5:recap}
 This chapter presented the results from applying the four supervised machine learning models described in Chapter \ref{ch3:expl_ml_prep} to the curated data (Appendix \ref{app:A_data_layers}) for the Southwestern NM study area. Uncertainties associated with the choice of models, the model parameters, and data measurements were also examined in the context of next-steps decisions for an explorationist. The chapter concluded with a comparison with other geothermal prospectivity studies for the region.
@@ -649,7 +650,7 @@ Key insights from the work include:
     \item Structural uncertainty analysis highlights areas where models collectively agree or diverge on predictions. This is useful for rationalizing model selection and identifying spatial areas that require further study before taking costly actions.
     \item Parameter uncertainties indicate the ``known unknowns'' for a model, i.e., locations where model predictions are poorly-constrained. Corrective actions include training on more data or relying on a different model technique.
     \item Measurement uncertainties characterize the impact of data reliability on model predictions. If high uncertainty exists in an area of interest, additional data acquisition may be needed, especially from sources with lower standard errors. 
-    \item The value of this approach to exploration risk mitigation is demonstrated for  prospective areas identified in the Southwestern NM PFA study. High favorability, low uncertainty prospects (e.g., Lightning Dock) can progress to a well-planning stage, but areas with mixed favorability and low uncertainty (e.g., Rincon) would require additional pre-screening first.
+    \item The value of this approach to exploration risk mitigation is demonstrated for  prospective areas identified in the Southwestern NM PFA study. High favorability, low uncertainty prospects (e.g., Lightning Dock) could progress to a well-planning stage, but areas with mixed favorability and low uncertainty (e.g., Rincon) would require additional pre-screening first.
     \item A correlation between physiographic provinces and geothermal favorability established in other studies is also observed in the Southwestern NM study area. In addition, high-grade geothermal gradients (positive heat risk element values) align with complex convergence zones between 3 or more physiographic provinces.
 \end{enumerate}
 
