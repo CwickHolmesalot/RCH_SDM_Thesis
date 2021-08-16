@@ -1,0 +1,69 @@
+\chapter{Risk Mitigation Log}\label{app:C_risk_log}
+
+This appendix provides additional context behind the scores assigned to likelihood and consequence for geothermal power generation project risks before and after mitigation as presented in Tables \ref{tab:risk_log} and \ref{tab:mitigation_log} and plotted in Figure \ref{fig:risk_matrix} in Chapter \ref{ch7:discussion}. Each of the risks described below have proposed mitigations using the methods outlined in this thesis. Specifically, machine learning techniques paired with uncertainty analysis can be applied to several risks in the exploration and appraisal phases of the geothermal field lifecycle (Figure \ref{ch7:field_lifecycle}). And multiple risks in the development and production phases of the geothermal lifecycle can be reduced using probabilistic cost models with decision rules for evaluating dynamic operational strategies over the lifetime of a facility.
+
+Table \ref{tab:orig_risk_likelihood} describes the likelihood scores for the six project risks shown in Figure \ref{fig:risk_matrix}. The corresponding consequence scores are reviewed in Table \ref{tab:orig_risk_consequence}. Risk mitigation actions reduce risk likelihood, consequence, or both. Table \ref{tab:mit_risk_likelihood} explains the impact the proposed mitigation strategies have on risk likelihood scores, while Table \ref{tab:mit_risk_consequence} steps through changes to individual consequence scores. Likelihood score definitions follow guidelines adapted from NASA as listed in Table \ref{tab:likelihood_table}. Similarly, consequence scores follow the descriptions in Table \ref{tab:consequence_table}.
+
+\begin{table}[htp]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|L{0.17\linewidth}|L{0.18\linewidth}|c|L{0.60\linewidth}|}
+\hline
+\textbf{ID} & \textbf{Description} & \textbf{Likelihood} & \textbf{Score} & \textbf{Explanation} \\ \hline
+EXP1 & Insufficient exploration budget & Highly Likely & 4 & Primarily due to high cost of gathering sufficient data sets covering risk elements and drilling of exploration wells. Exploration has 31\% success rate \citep{doughty_geovision_2018}. \\ \hline
+EXP2 & Poor subsurface characterization & Highly Likely & 4 & Comprehensive data availability tends to be poor. Seismic is expensive and not as diagnostic for structural elements in geothermal.  Well data available, but provides single borehole views of complex 3D systems. \\ \hline
+DRL2 & Drilling cost overruns & Likely & 3 & Drill bits wearing out on hard rock and heat failure of equipment can require tripping and delays, equating to additional rig and equipment costs. \\ \hline
+PRD1 & Insufficient production budget & Likely & 3 & Production costs depend on flow rate/pumps, thermal drawdown and well recompletion, overestimates of resource temperature, etc., leading to lower efficiency and/or additional costs. \\ \hline
+PRD5 & Demand variability & Low Likelihood & 2 & Large fraction of demand increases due to greater electrification likely be absorbed by other competitive generating technologies (e.g., natural gas, solar, wind). Decrease in electricity demand is unlikely. \\ \hline
+PRD6 & Wrong-sized infrastructure & Likely & 3 & Over-estimation of accessible resource can and has led to over-building of surface facilities. For EGS, these extends to sustainable enthalpy levels (drawdown). \\ \hline
+\end{tabular}}
+\caption[Risk likelihood scores and explanations]{Risk likelihood scores and score explanations for a subset of potential risks in a geothermal power generation project, primarily in the exploration and production phases of a field lifecycle. Likelihood scores correspond with the score rubric listed in Table \ref{tab:likelihood_table}.}
+\label{tab:orig_risk_likelihood}
+\end{table}
+
+\begin{table}[htp]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|L{0.17\linewidth}|L{0.18\linewidth}|c|L{0.60\linewidth}|}
+\hline
+\textbf{ID} & \textbf{Description} & \textbf{Consequence} & \textbf{Score} & \textbf{Explanation} \\ \hline
+EXP1 & Insufficient exploration budget & Medium & 3 & Will impact comprehensive exploration activities, so project may be sub-optimal or opportunities missed. Impacts are cost and performance, but project may stay on schedule. \\ \hline
+EXP2 & Poor subsurface characterization & Medium-High & 4 & Equates to poor understanding of the risk elements (heat, permeability, seal, fluids), each of which could completely derail the project in performance, or in cost or schedule from addressing unexpected conditions. \\ \hline
+DRL2 & Drilling cost overruns & Medium & 3 & Multi-well drilling can be split across multiple years to manage FY budget. Depending on reservoir enthalpy, shallower wells could be drilled. Overall, impact on cost, but potentially on performance and schedule. \\ \hline
+PRD1 & Insufficient production budget & Medium-High & 4 & Underfunded production costs impacts both cost and performance. Reduced power production. Cuts into project revenue, possibly making project uneconomic. Could also require renegotiation of PPA. \\ \hline
+PRD5 & Demand variability & Medium-High & 4 & Missed opportunities for higher demand, but not much risk to the project. Lower demand due to competitive pressures or removal of dedicated carve-outs from state RPS policies could sink a geothermal plant, particularly if subsidies remain lopsided toward solar and wind and natural gas doesn't face abatements like carbon taxes. \\ \hline
+PRD6 & Wrong-sized infrastructure & Medium-High & 4 & Under-sized facilities miss an opportunity to produce more power. Oversized facilities may be unprofitable and require hybrid energy retrofitting, e.g. Stillwater, Nevada. Biggest impacts are on both performance and cost. \\ \hline
+\end{tabular}}
+\caption[Risk consequence scores and explanations]{Risk consequence scores and score explanations for a subset of potential risks in a geothermal power generation project, primarily in the exploration and production phases of a field lifecycle. Consequence scores correspond with the score rubric listed in Table \ref{tab:consequence_table}.}
+\label{tab:orig_risk_consequence}
+\end{table}
+
+\begin{table}[htp]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|L{0.20\linewidth}|L{0.18\linewidth}|c|L{0.60\linewidth}|}
+\hline
+\textbf{ID} & \textbf{Mitigation} & \textbf{\begin{tabular}[c]{@{}l@{}}Updated\\ Likelihood\end{tabular}} & \textbf{Score} & \textbf{Explanation} \\ \hline
+EXP1 & Use ML model predictions to reduce costs in exploration & Low Likelihood & 2 & ML modeling reduces risk of exploration well failures and focuses data acquisition expenditures on the most important data sets to acquire. Costs  are lower and more predictable. \\ \hline
+EXP2 & Use ML for baseline model, acquire data based on importances & Low Likelihood & 2 & ML models integrate many different data sets for a combined assessment of the heat risk element and potentially including permeability, fluids, and seal, for a more complete assessment of reservoir potential. \\ \hline
+DRL2 & Use ML to identify high gradient areas faster, shallower drilling & Low Likelihood & 2 & Focusing on high-gradient areas can reduce overall drill depths. Modeling could also target specific rock types to create a heat map of lithologic complexity or bedrock hardness to better inform the drillers. \\ \hline
+PRD1 & Cost modeling for optimized spending and return & Not Likely & 1 & Economic models that incorporate uncertainty and validated inputs will set realistic bounds on costs both up-front and in the future. Building and revisiting these models will inform budgetary planning and reduce the risk of overruns. \\ \hline
+PRD5 & Flexibility in power generation based on market & Low Likelihood & 2 & Cost models that include decision rules enable testing of field operational strategies, including growth and reduction using plant modularity. With an appropriate range of demand models, project managers can optimize the power plant size to meet variability without large losses. \\ \hline
+PRD6 & Flexibility in design for demand-triggered capacity changes & Not Likely & 1 & Cost models that include flexibility and decision rules allow project managers to examine different build-out schedules that could be sensitive to resource viability. Machine learning can also help in predicting the resource grade, further constraining the surface facility needs. \\ \hline
+\end{tabular}}
+\caption[Updated risk likelihood scores and explanations]{Updated risk likelihood scores and score explanations for a subset of potential risks in a geothermal power generation project. Score updates reflect the impact of proposed mitigation actions. Likelihood scores correspond with the score rubric listed in Table \ref{tab:likelihood_table}.}
+\label{tab:mit_risk_likelihood}
+\end{table}
+
+\begin{table}[htp]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|L{0.20\linewidth}|L{0.18\linewidth}|c|L{0.60\linewidth}|}
+\hline
+\textbf{ID} & \textbf{Mitigation} & \textbf{\begin{tabular}[c]{@{}l@{}}Updated\\ Consequence\end{tabular}} & \textbf{Score} & \textbf{Explanation} \\ \hline
+EXP1 & Use ML model predictions to reduce costs in exploration & Medium-Low & 2 & Use of ML models can better constrain data acquisition needs and derisk further drilling activities, leading to minor cost consequences on project if the budget is exceeded. \\ \hline
+EXP2 & Use ML for baseline model, acquire data based on importances & Medium & 3 & Poor subsurface characterization still impacts performance, cost, and schedule post-mitigation, but to a lesser extent if ML-based uncertainty measures are used to screen out the most at-risk areas for failure. \\ \hline
+DRL2 & Use ML to identify high gradient areas faster, shallower drilling & Medium & 3 & If drilling cost overruns still occur, the same consequences will apply - impact felt in cost itself, but also in project performance from holes that TD too shallow, or schedule due to required approvals and other delays. \\ \hline
+PRD1 & Cost modeling for optimized spending and return & Medium & 3 & Cost models will not always be correct, and decisions may be made on the highside while reality follows the lowside. Nevertheless, early awareness of the scenario ranges enables mitigation behaviors earlier than otherwise true. \\ \hline
+PRD5 & Flexibility in power generation based on market & Medium & 3 & Sudden threshold behavior in demand may occur without warning. Models can pick this up as unlikely scenarios, but if they occur in reality, the impact will be felt as project losses. With appropriate modeling, these losses can be mitigated more than for blind project execution. \\ \hline
+PRD6 & Flexibility in design for demand-triggered capacity changes & Medium & 3 & Economic models will steer project managers toward less risky initial investments, protecting the operator from heavier losses if the accessible resource is below expectations. But the impact of overly-large infrastructure will still hit project performance and cost, just with lesser losses because of a mitigation mentality. \\ \hline
+\end{tabular}}
+\caption[Updated risk consequence scores and explanations]{Updated risk consequence scores and score explanations for a subset of potential risks in a geothermal power generation project. Score updates reflect the impact of proposed mitigation actions. Consequence scores correspond with the score rubric listed in Table \ref{tab:consequence_table}.}
+\label{tab:mit_risk_consequence}
+\end{table}

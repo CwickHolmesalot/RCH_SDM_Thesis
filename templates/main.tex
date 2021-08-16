@@ -19,7 +19,7 @@
 %%  If you want your thesis copyright to you instead of MIT, use the
 %%  ``vi'' option, as above.
 %%
-\documentclass[draft,
+\documentclass[%draft,
 vi,12pt,twoside,leftblank]{mitthesis}
 %%
 %% If you want blank pages before new chapters to be labelled ``This
@@ -29,6 +29,11 @@ vi,12pt,twoside,leftblank]{mitthesis}
 %\documentclass[12pt,twoside]{mitthesis}
 \usepackage{lgrind}
 \usepackage{float}
+\usepackage{mathrsfs}
+\usepackage{calrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+%\newenvironment{frcseries}{\fontfamily{frc}\selectfont}{}
+%\newcommand{\textfrc}[1]{{\frcseries#1}}
 
 %% add watermark
 %\usepackage{draftwatermark}
@@ -85,6 +90,11 @@ vi,12pt,twoside,leftblank]{mitthesis}
 %% tables with wrapping
 \usepackage{array}
 \usepackage{ragged2e}
+
+% Table 5.1
+\usepackage{lmodern}
+\newcommand\bftt[1]{{\ttfamily
+\fontseries{b}\selectfont #1}}
 
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
@@ -165,6 +175,7 @@ vi,12pt,twoside,leftblank]{mitthesis}
 \appendix
 \include{appa}
 \include{appb}
+\include{appc}
 \addcontentsline{toc}{chapter}{References}
 \include{biblio}
 \end{document}
