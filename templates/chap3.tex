@@ -8,8 +8,8 @@ This investigation brings together a total of twenty-five (25) data sets coverin
 
 \begin{table}
 \centering
-\includegraphics[width=\textwidth]{Table-Features.png}
-\caption[Southwestern New Mexico feature list]{List of data sets included in this analysis. Data type, source, and source location are noted. Suggested feature-sensitive risk elements include fluids (F), heat/temperature (T), and structure/permeability (P). Numbered features are treated as predictor variables. `D' indicates the dependent or response variable. See Appendix \ref{app:A_data_layers} for details on how each feature GIS layer was constructed for modeling.}
+\includegraphics[width=\textwidth]{templates/images/Table-FeatureList_crop.pdf}
+\caption[Southwestern New Mexico feature list]{List of data sets included in this analysis. Data type, source, and source location are noted. Suggested feature-sensitive risk elements include fluids (F), heat (H), and structure/permeability (P). Numbered features are treated as predictor variables. `D' indicates the dependent or response variable. See Appendix \ref{app:A_data_layers} for details on how each feature GIS layer was constructed for modeling.}
 \label{tab:features}
 \end{table}
 
@@ -147,7 +147,7 @@ Boron Concentration & $-1.44$ \\ \hline
 Crustal Thickness & 0.42 \\ \hline
 Depth to Water Table & 0.44 \\ \hline
 Drainage Density & 1.04 \\ \hline
-Earthquakes & 1.25 \\ \hline
+Earthquake Density & 1.25 \\ \hline
 Gamma-Ray Dose Rate & 0.36 \\ \hline
 Geodetic Strain Rate & 0.04 \\ \hline
 Gravity Anomaly & 0.92 \\ \hline
@@ -393,7 +393,7 @@ There are three metrics that can play a role in evaluating the quality of a node
     \item \textbf{Classification error rate}: the proportion of training samples that don't match the dominant class in a leaf node \citep[p.\ 312]{james_introduction_2013}:
     \begin{equation}
     \label{eq:error_rate}
-        E = 1 - \max_K(\hat{p}_{\mathpzc{m}k}),
+        E = 1 - \max_{k=1}^K(\hat{p}_{\mathpzc{m}k}),
     \end{equation}
     where $\mathpzc{m}$ is the subset of the training data associated with a tree node, $k$ is a class among $K$ possible classes, and $\hat{p}_{\mathpzc{m}k}$ is the fraction of all training observations in $\mathpzc{m}$ that are of class $k$.
     
@@ -438,8 +438,8 @@ XGBoost, a variant of gradient-boosting tree algorithms, has gained notoriety fr
 \label{eq:xgb_objective}
 \begin{aligned}
     J(\boldsymbol\theta) &= \mathcal{L} + \Omega \\
-    &= \sum_{i}^{n}{l(\hat{y}_i,y_i)}+\sum_{b}^{B}\omega(\hat{f}_b) \\
-    &= \sum_{i}^{n}{l(\hat{y}_i,y_i)}+\sum_{b}^{B}{\left({\gamma \left|T\right|_b}+\frac{1}{2} \lambda \sum_{t=1}^{\left|T\right|}{\theta_{b,t}^2}\right)},
+    &= \sum_{i=1}^{n}{l(\hat{y}_i,y_i)}+\sum_{b=1}^{B}\omega(\hat{f}_b) \\
+    &= \sum_{i=1}^{n}{l(\hat{y}_i,y_i)}+\sum_{b=1}^{B}{\left({\gamma \left|T\right|_b}+\frac{1}{2} \lambda \sum_{t=1}^{\left|T\right|_b}{\theta_{b,t}^2}\right)},
 \end{aligned}
 \end{equation}
 where the first part ($\mathcal{L}$) expresses how poorly the model fits the data, while the second term ($\Omega$) describes the complexity of the model. $\mathcal{L}$ is the sum of individual loss calculations ($l(\hat{y}_i,y_i)$) on the $n$ predicted and observed response variable values. Tree-specific complexity ($\omega(\hat{f}_b)$) calculations balance the number of leaves in a tree ($\left|T\right|_b$) with the L2 norm of leaf weights ($\theta_{b,j}$), which are are unique to XGBoost decision trees. Both $\gamma$ and $\lambda$ serve as regularization factors. 
@@ -500,7 +500,7 @@ The cost function for a neural network takes on the form of a loss term and a co
 \end{equation}
 Note the similarity in appearance to the regularized negative log likelihood cost function for logistic regression (Equation \ref{eq:logreg_cost_reg}). Here, $L$ is the number of layers in the network, $s_\zeta$ defines the number of units in layer $\zeta$, and $\left(h_{\boldsymbol\Theta}\left(\bf{x}_i\right)\right)_k$ is the $k$th output of the network. $\Theta_{ji}^{(\zeta)}$ represents the weight assigned to the connection between unit $i$ in layer $\zeta$ and unit $j$ in layer $\zeta+1$. Both $i$ and $j$ start at 1 because the bias terms (index 0) are unregularized. $\lambda$ controls the balance between the loss and complexity terms. 
 
-Minimizing this objective function is generally accomplished by applying the backpropagation algorithm to compute gradients needed for a gradient descent optimization \citep[p.\ 396]{hastie_elements_2009}.The Adam (\uline{ada}ptive \uline{m}oment) optimization method is used in the present study due to its computational efficiency and current status as the recommended general-purpose optimizer \citep{brownlee_gentle_2017}. A description of Adam is beyond the scope of this thesis, but more information is widely available elsewhere \citep[e.g.,\ ][]{kingma_adam_2017}.
+Minimizing this objective function is generally accomplished by applying the backpropagation algorithm to compute gradients needed for a gradient descent optimization \citep[p.\ 396]{hastie_elements_2009}. The Adam (\uline{ada}ptive \uline{m}oment) optimization method is used in the present study due to its computational efficiency and current status as the recommended general-purpose optimizer \citep{brownlee_gentle_2017}. A description of Adam is beyond the scope of this thesis, but more information is widely available elsewhere \citep[e.g.,\ ][]{kingma_adam_2017}.
 
 The training process updates network weights using gradients calculated from the entire training data in each training epoch \citep[p.\ 397]{hastie_elements_2009}. Successive epochs incrementally adjust the ANN to match the training data, so evaluating loss, AUC, or other metrics on both the training and validation sets is important for identifying the best number of epochs to avoid overfitting. Training can also proceed with mini-batches, that is, small subsets of the training set, rather than the whole set at once. This method makes the training results noisier, but generally speeds up learning while adding a regularization effect to changes in the weights \citep{brownlee_how_2019}.
 
